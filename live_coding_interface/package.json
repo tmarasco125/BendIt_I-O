@@ -1,0 +1,19 @@
+{
+  "name": "arduino_socket_io_project",
+  "version": "1.0.0",
+  "description": "Connecting ESP32 and Web Server through Socket.io",
+  "main": "server.js",
+  "scripts": {
+    "test": "npm start",
+    "start": "node server.js"
+  },
+  "author": "Anthony T. Marasco",
+  "license": "ISC",
+  "dependencies": {
+   
+    "express": "^4.16.3",
+  
+    "socket.io": "^2.1.1"
+  
+  }
+}
