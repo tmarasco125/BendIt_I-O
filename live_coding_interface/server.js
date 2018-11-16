@@ -23,7 +23,10 @@ io.on('connection', function (socket) {
         io.sockets.emit('light', light);
     });
 
-    //socket.on('potTurn', function())
+    socket.on('potTurning', function(position){
+        io.sockets.emit('potTurn', position)
+        console.log("pot turned! position = "+ position);
+    })
 });
 
 http.listen(3000, function () {

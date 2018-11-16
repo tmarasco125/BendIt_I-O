@@ -7,6 +7,8 @@
 
 <body>
     <div id="light">Unknown</div>
+    <div id="pot">Unknown</div>
+    <button id="potButton">Pot</button>
     <button id="toggleButton">Toggle</button>
     <script src="/socket.io/socket.io.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
@@ -15,6 +17,10 @@
         $('#toggleButton').on('click', function () {
             socket.emit('toggle', { state: true });
         });
+
+        $('#potButton').on('click', function(){
+            socket.emit('potTurning', '200');
+        })
 
         socket.on('message', function(){
             console.log(message);
