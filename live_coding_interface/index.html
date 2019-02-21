@@ -2,39 +2,203 @@
 <html>
 
 <head>
-    <title>Socket.io Simple Example</title>
+    <title>BendIt.io Simple Controller</title>
+    <style>
+        .slidecontainer1 {
+            width: 100%;
+        }
+    
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 25px;
+            background: #d3d3d3;
+            outline: none;
+            opacity: 0.7;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+        }
+    
+        .slider:hover {
+            opacity: 1;
+        }
+    
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            background: #4CAF50;
+            cursor: pointer;
+        }
+    
+        .slider::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            background: #4CAF50;
+            cursor: pointer;
+        }
+
+        .slidecontainer2 {
+            width: 100%;
+        }
+    
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 25px;
+            background: #d3d3d3;
+            outline: none;
+            opacity: 0.7;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+        }
+    
+        .slider:hover {
+            opacity: 1;
+        }
+    
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            background: rgb(76, 160, 175);
+            cursor: pointer;
+        }
+    
+        .slider::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            background:rgb(76, 160, 175);
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
-    <div id="light">Unknown</div>
+    <div id="switch">Unknown</div>
     <div id="pot">Unknown</div>
     <button id="potButton">Pot</button>
-    <button id="toggleButton">Toggle</button>
+    <button id="toggleButton1">Toggle Switch 1</button>
+    <button id="toggleButton2">Toggle Switch 2</button>
+    <button id="toggleButton3">Toggle Switch 3</button>
+    <button id="toggleButton4">Toggle Switch 4</button>
+    <button id="toggleButton5">Toggle Switch 5</button>
+    <button id="toggleButton6">Toggle Switch 6</button>
+    <button id="metroButtonSw1">Start Metro Switch 1</button>
+    <button id="metroStopSw1">Stop Metro Switch 1</button>
+    <button id="metroButtonSw2">Start Metro Switch 2</button>
+    <button id="metroStopSw2">Stop Metro Switch 2</button>
+    <button id="device_2_toggleButton1">Dev. 2 Toggle Switch 1</button>
+    <div class="slidecontainer1">
+        <p>Switch 1 Metro Speed:</p>
+        <input type="range" min="250" max="2000" value="250" step="250" class="slider" id="metroSpeedSlider">
+        <p>Metro Speed: <span id="metroSpeedValue"></span></p>
+    </div>
+
+<div class="slidecontainer2">
+    <p>Switch 2 Metro Speed:</p>
+    <input type="range" min="250" max="2000" value="250" step="250" class="slider" id="metroSpeedSlider2">
+    <p>Metro Speed: <span id="metroSpeed2Value"></span></p>
+</div>
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    
     <script>
         var socket = io();
-        $('#toggleButton').on('click', function () {
-            socket.emit('toggle', { state: true });
+       // $('#toggleButton').on('click', function () {
+        //    socket.emit('toggle', { state: true });
+       // });
+
+       var slider = document.getElementById('metroSpeedSlider');
+       var sliderOutput = document.getElementById('metroSpeedValue');
+       var slider2 = document.getElementById('metroSpeedSlider2');
+       var slider2Output = document.getElementById('metroSpeed2Value');
+       var metroSpeed =250;
+       var metro2Speed = 250;
+
+       sliderOutput.innerHTML = slider.value;
+       slider2Output.innerHTML = slider2.value;
+
+       slider.oninput =function(){
+           sliderOutput.innerHTML =this.value;
+           metroSpeed = this.value;
+       }
+
+       slider2.oninput =function(){
+           slider2Output.innerHTML =this.value;
+           metro2Speed = this.value;
+           
+       }
+
+        document.getElementById('toggleButton1').addEventListener('click', function () {
+            socket.emit('toggle1', { state: true, device: 1 });
+       });
+
+        // document.getElementById('toggleButton1').addEventListener('click', function () {
+        //         socket.emit('toggle', { state: true });
+        //     });
+       
+       document.getElementById('toggleButton2').addEventListener('click', function () {
+            socket.emit('toggle2', { state: true, device: 1 });
         });
 
-        $('#potButton').on('click', function(){
-            socket.emit('potTurning', '200');
-        })
+        document.getElementById('toggleButton3').addEventListener('click', function () {
+                socket.emit('toggle3', { state: true, device: 1 });
+            });
+        
+        document.getElementById('toggleButton4').addEventListener('click', function () {
+                socket.emit('toggle4', { state: true, device: 1 });
+            });
+        document.getElementById('toggleButton5').addEventListener('click', function () {
+                socket.emit('toggle5', { state: true, device: 1 });
+            }); 
+        document.getElementById('toggleButton6').addEventListener('click', function () {
+                socket.emit('toggle6', { state: true, device: 1 });
+            });
+            
+        document.getElementById('metroButtonSw1').addEventListener('click', function () {
+                socket.emit('metroSw1Start', {time: metroSpeed, device: 1});
+            });
 
+        document.getElementById('metroStopSw1').addEventListener('click', function () {
+                socket.emit('metroSw1Stop', {device: 1});
+                console.log("Device: " + data.device + "switch 1 metro stopped");
+            });
+
+        document.getElementById('metroButtonSw2').addEventListener('click', function () {
+                socket.emit('metroSw2Start', {time: metro2Speed, device: 1});
+                console.log(metro2Speed);
+            });
+
+            document.getElementById('metroStopSw2').addEventListener('click', function () {
+                socket.emit('metroSw2Stop', {device: 1});
+                console.log("Device: " + data.device + "switch 2 metro stopped");
+            });
+        // $('#potButton').on('click', function(){
+        //     socket.emit('potTurning', '200');
+        // })
+
+    document.getElementById('potButton').addEventListener('click', function () {
+        socket.emit('potTurning', {position: 200, device: 1});
+    })
         socket.on('message', function(){
             console.log(message);
         })
-
-        socket.on('light', function (light) {
-            console.log(light.state);
-            if (light.state) {
-                $('#light').text('ON');
-            }
-            else {
-                $('#light').text('off');
-            }
+    document.getElementById('device_2_toggleButton1').addEventListener('click', function () {
+            socket.emit('toggle1', { state: true, device: 2 });
         });
+        // socket.on('light', function (light) {
+        //     console.log(light.state);
+        //     if (light.state) {
+        //         //document.getElementById('light').text('ON');
+        //     }
+        //     else {
+        //         //document.getElementById('light').text('OFF');
+        //     }
+        // });
     </script>
 </body>
 
