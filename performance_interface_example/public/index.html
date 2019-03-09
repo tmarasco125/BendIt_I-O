@@ -109,10 +109,19 @@
 
 
     <script>
+        /*
+        BendIt.io: Wireless Circuit Bending
+
+            Example Web Performance Interface
+
+                *** Work in Progress ***
+
+                Anthony T.Marasco - 2019
+
+        */
+
         var socket = io();
-        // $('#toggleButton').on('click', function () {
-        //    socket.emit('toggle', { state: true });
-        // });
+        
 
         var dev1_dial1 = new Nexus.Dial('#metro1SpeedSlider', {
             'size': [100, 100],
@@ -128,29 +137,13 @@
             'max': 2000,
             'step': 250
         });
-        //var sliderOutput = document.getElementById('metroSpeedValue');
-        //var slider2 = document.getElementById('metroSpeedSlider2');
-        //var slider2Output = document.getElementById('metroSpeed2Value');
-
+       
 
         var metroSpeed = 250;
         var metro2Speed = 250;
         var metroSpeed_2 = 250;
         var metro2Speed_2 = 250;
 
-        //sliderOutput.innerHTML = slider.value;
-        //slider2Output.innerHTML = slider2.value;
-
-        //    slider.oninput =function(){
-        //        sliderOutput.innerHTML =this.value;
-        //        metroSpeed = this.value;
-        //    }
-
-        //    slider2.oninput =function(){
-        //        slider2Output.innerHTML =this.value;
-        //        metro2Speed = this.value;
-
-        //    }
 
 
         var pb1 = new Nexus.TextButton('#toggleButton1', {

@@ -27,16 +27,6 @@ Anthony T. Marasco - 2019
 #include <Ticker.h>
 
 
-
-
-
-  //const char* ssid = "NETGEAR481"; //theSSID of WiFi to connect to
-  //const char* password ="fearlesssocks430"; //the network password
-
-
-// const char* ssid = "MonAndToneGlow";
-// const char* password = "UncagedNY2013";
-
 WiFiMulti wifiMultiScan;
 int deviceNumber = 0;
 //char host[] = "192.168.1.117";
@@ -114,7 +104,6 @@ void writeDigitalPot(int address, int value) {
   digitalWrite(chipSelect, HIGH);
 }
 
-//pin flip Functions
 
 void setSwitch1() {
   sw1State = 1 - sw1State; // toggle!
