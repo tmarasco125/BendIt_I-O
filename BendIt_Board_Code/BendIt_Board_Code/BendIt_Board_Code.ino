@@ -26,11 +26,14 @@ Anthony T. Marasco - 2019
 #include <analogWrite.h>
 #include <Ticker.h>
 
-
+//instance of WiFiMulti library to hold multiple network ssid/password pairs
 WiFiMulti wifiMultiScan;
+
 int deviceNumber = 0;
-//char host[] = "192.168.1.117";
+
+//server IP
 char host[] = "192.168.1.144";
+//server port
 int port = 3000;
 //Switch and Motor pins
 int switchPins[6] = {15, 32, 14, 22, 23, 21};
