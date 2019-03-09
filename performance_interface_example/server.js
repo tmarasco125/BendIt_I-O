@@ -6,7 +6,6 @@ Server code
 ***Work in Progress***
 
 Anthony T. Marasco - 2019
-
 */
 
 let express = require('express');
