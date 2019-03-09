@@ -1,0 +1,527 @@
+<!doctype html>
+<html>
+
+<head>
+
+    <!-- <script src="/libraries/nexusUI/dist/nexusUI.min.js"></script> -->
+    <script src="/libraries//NexusUI.js"></script>
+
+    <title>BendIt.io Simple Controller</title>
+    <style>
+        body {
+            background: rgb(255, 230, 161);
+            padding: 10px 0;
+        }
+
+        .device1controls {
+            float: left;
+            width: 450px;
+        }
+
+        .device2controls {
+
+            width: 450px;
+            float: left;
+
+        }
+
+        .device1buttongird {
+            display: inline-block;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            width: 400px;
+
+            padding: 5px 0;
+        }
+
+        .device2buttongird {
+            display: inline-block;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            width: 600px;
+
+            padding: 5px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div id="potButton"></div>
+
+    <div class="device1controls">
+        <div class="device1buttongird" id="toggleButton1"></div>
+        <div class="device1buttongird" id="toggleButton2"></div>
+        <div class="device1buttongird" id="toggleButton3"></div>
+        <div class="device1buttongird" id="toggleButton4"></div>
+
+
+        <div class="device1buttongird" id="toggleButton5"></div>
+        <div class="device1buttongird" id="toggleButton6"></div>
+        <div class="device1buttongird" id="metroButtonSw1"></div>
+        <div class="device1buttongird" id="metroStopSw1"></div>
+        <br></br>
+        <div class="device1buttongird" id="metro1SpeedSlider"></div>
+        <br></br>
+        <div class="device1buttongird" id="metroButtonSw2"></div>
+        <div class="device1buttongird" id="metroStopSw2"></div>
+        <br></br>
+        <div class="device1buttongird" id="metro2SpeedSlider"></div>
+    </div>
+
+    <div class="device2controls">
+
+        <div class="device2buttongird" id="2_toggleButton1"></div>
+        <div class="device2buttongird" id="2_toggleButton2"></div>
+        <div class="device2buttongird" id="2_toggleButton3"></div>
+        <div class="device2buttongird" id="2_toggleButton4"></div>
+
+
+        <div class="device2buttongird" id="2_toggleButton5"></div>
+        <div class="device2buttongird" id="2_toggleButton5_label">Mute Latch</div>
+        <div class="device2buttongird" id="2_toggleButton6"></div>
+        <br></br>
+        <div class="device2buttongird" id="2_metroButtonSw1"></div>
+        <div class="device2buttongird" id="2_metroStopSw1"></div>
+        <br></br>
+        <div class="device2buttongird" id="2_metro1SpeedSlider"></div>
+        <br></br>
+        <div class="device2buttongird" id="2_metroButtonSw2"></div>
+        <div class="device2buttongird" id="2_metroStopSw2"></div>
+        <br></br>
+        <div class="device2buttongird" id="2_metro2SpeedSlider"></div>
+
+    </div>
+    <!-- <div class="slidecontainer1">
+        <p>Switch 1 Metro Speed:</p>
+        <input type="range" min="250" max="2000" value="250" step="250" class="slider" id="metroSpeedSlider">
+        <p>Metro Speed: <span id="metroSpeedValue"></span></p>
+    </div> -->
+    <!-- 
+<div class="slidecontainer2">
+    <p>Switch 2 Metro Speed:</p>
+    <input type="range" min="250" max="2000" value="250" step="250" class="slider" id="metroSpeedSlider2">
+    <p>Metro Speed: <span id="metroSpeed2Value"></span></p>
+</div> -->
+
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+
+
+    <script>
+        var socket = io();
+        // $('#toggleButton').on('click', function () {
+        //    socket.emit('toggle', { state: true });
+        // });
+
+        var dev1_dial1 = new Nexus.Dial('#metro1SpeedSlider', {
+            'size': [100, 100],
+            'interaction': 'radial',
+            'min': 250,
+            'max': 2000,
+            'step': 250
+        });
+        var dev1_dial2 = new Nexus.Dial('#metro2SpeedSlider', {
+            'size': [100, 100],
+            'interaction': 'radial',
+            'min': 250,
+            'max': 2000,
+            'step': 250
+        });
+        //var sliderOutput = document.getElementById('metroSpeedValue');
+        //var slider2 = document.getElementById('metroSpeedSlider2');
+        //var slider2Output = document.getElementById('metroSpeed2Value');
+
+
+        var metroSpeed = 250;
+        var metro2Speed = 250;
+        var metroSpeed_2 = 250;
+        var metro2Speed_2 = 250;
+
+        //sliderOutput.innerHTML = slider.value;
+        //slider2Output.innerHTML = slider2.value;
+
+        //    slider.oninput =function(){
+        //        sliderOutput.innerHTML =this.value;
+        //        metroSpeed = this.value;
+        //    }
+
+        //    slider2.oninput =function(){
+        //        slider2Output.innerHTML =this.value;
+        //        metro2Speed = this.value;
+
+        //    }
+
+
+        var pb1 = new Nexus.TextButton('#toggleButton1', {
+            'size': [150, 50],
+            'state': false,
+            'text': 'Play',
+            'alternate': 'Pause'
+        });
+
+        var sb1 = new Nexus.TextButton('#toggleButton2', {
+            'size': [150, 50],
+            'state': false,
+            'text': 'Stop'
+        });
+
+        var ffb1 = new Nexus.TextButton('#toggleButton3', {
+            'size': [150, 50],
+            'state': false,
+            'text': 'Forward'
+        });
+
+        var espb1 = new Nexus.TextButton('#toggleButton4', {
+            'size': [150, 50],
+            'state': false,
+            'text': 'ESP off',
+            'alternate': 'ESP on'
+        });
+
+        var tb5_1 = new Nexus.Toggle('#toggleButton5', {
+            'size': [150, 50],
+            'state': false
+        });
+
+        var tb6_1 = new Nexus.Toggle('#toggleButton6', {
+            'size': [150, 50],
+            'state': false
+        });
+
+        var metroStart1 = new Nexus.TextButton('#metroButtonSw1', {
+            'size': [150, 50],
+            'state': false,
+            'text': 'Start Metro 1'
+        });
+
+        var metroStop1 = new Nexus.TextButton('#metroStopSw1', {
+            'size': [150, 50],
+            'state': false,
+            'text': 'Stop Metro 1'
+        });
+
+        var metroStart2 = new Nexus.TextButton('#metroButtonSw2', {
+            'size': [150, 50],
+            'state': false,
+            'text': 'Start Metro 2'
+        });
+        var metroStop2 = new Nexus.TextButton('#metroStopSw2', {
+            'size': [150, 50],
+            'state': false,
+            'text': 'Stop Metro 2'
+        });
+
+        //Device 2 buttons and dials
+        Nexus.colors.accent = "#FFA07A";
+
+        var dev2_dial1 = new Nexus.Dial('#2_metro1SpeedSlider', {
+            'size': [100, 100],
+            'interaction': 'radial',
+            'min': 250,
+            'max': 2000,
+            'step': 250
+        });
+
+        var dev2_dial2 = new Nexus.Dial('#2_metro2SpeedSlider', {
+            'size': [100, 100],
+            'interaction': 'radial',
+            'min': 250,
+            'max': 2000,
+            'step': 250
+        });
+
+
+        var pb1_2 = new Nexus.TextButton('#2_toggleButton1', {
+            'size': [150, 50],
+            'state': false,
+            'text': 'Play',
+            'alternate': 'Pause'
+        });
+
+
+        var sb1_2 = new Nexus.TextButton('#2_toggleButton2', {
+            'size': [150, 50],
+            'state': false,
+            'text': 'Stop'
+        });
+
+        var ffb1_2 = new Nexus.TextButton('#2_toggleButton3', {
+            'size': [150, 50],
+            'state': false,
+            'text': 'Forward'
+        });
+
+        var espb1_2 = new Nexus.TextButton('#2_toggleButton4', {
+            'size': [150, 50],
+            'state': false,
+            'text': 'ESP off',
+            'alternate': 'ESP on'
+        });
+
+        var tbLatch_1_2 = new Nexus.Toggle('#2_toggleButton5', {
+            'size': [150, 50],
+            'state': false
+        });
+
+        var tb6_1_2 = new Nexus.Toggle('#2_toggleButton6', {
+            'size': [150, 50],
+            'state': false
+        });
+
+        var metroStart1_2 = new Nexus.TextButton('#2_metroButtonSw1', {
+            'size': [150, 50],
+            'state': false,
+            'text': 'Start Metro 1'
+        });
+
+        var metroStop1_2 = new Nexus.TextButton('#2_metroStopSw1', {
+            'size': [150, 50],
+            'state': false,
+            'text': 'Stop Metro 1'
+        });
+
+        var metroStart2_2 = new Nexus.TextButton('#2_metroButtonSw2', {
+            'size': [150, 50],
+            'state': false,
+            'text': 'Start Metro 2'
+        });
+        var metroStop2_2 = new Nexus.TextButton('#2_metroStopSw2', {
+            'size': [150, 50],
+            'state': false,
+            'text': 'Stop Metro 2'
+        });
+
+
+        pb1.on('change', function (v) {
+
+            socket.emit('toggle1', {
+                state: true,
+                device: 1
+            });
+
+
+            // setTimeout(function () {
+            //     socket.emit('toggle1', {
+            //         state: false,
+            //         device: 1
+            //     });
+            // }, 100);
+        });
+
+        sb1.on('change', function (v) {
+            socket.emit('toggle2', {
+                state: true,
+                device: 1
+            });
+
+            // setTimeout(function () {
+            //     socket.emit('toggle2', {
+            //         state: false,
+            //         device: 1
+            //     });
+            // }, 200);
+
+
+        });
+
+        ffb1.on('click', function (v) {
+            socket.emit('toggle3', {
+                state: true,
+                device: 1
+            });
+        });
+
+        ffb1.on('release', function (v) {
+            socket.emit('toggle3', {
+                state: false,
+                device: 1
+            });
+        });
+
+        espb1.on('change', function () {
+            socket.emit('toggle4', {
+                state: true,
+                device: 1
+            });
+            setTimeout(function () {
+                socket.emit('toggle4', {
+                    state: false,
+                    device: 1
+                });
+            }, 200);
+
+        });
+
+        tb5_1.on('change', function () {
+            socket.emit('toggle5', {
+                state: true,
+                device: 1
+            });
+        });
+
+        tb6_1.on('change', function () {
+            socket.emit('toggle6', {
+                state: true,
+                device: 1
+            });
+        });
+
+        metroStart1.on('release', function () {
+            socket.emit('metroSw1Start', {
+                time: metroSpeed,
+                device: 1
+            });
+        });
+
+        metroStop1.on('release', function () {
+            socket.emit('metroSw1Stop', {
+                device: 1
+            });
+            //console.log("Device: " + data.device + "switch 1 metro stopped");
+        });
+
+        metroStart2.on('release', function () {
+            socket.emit('metroSw3Start', {
+                time: metro2Speed,
+                device: 1
+            });
+        });
+
+        metroStop2.on('release', function () {
+            socket.emit('metroSw3Stop', {
+                device: 1
+            });
+        });
+
+        dev1_dial1.on('change', (v) => {
+            metroSpeed = v;
+        });
+
+        dev1_dial2.on('change', (v) => {
+            metro2Speed = v;
+        });
+        //Device 2 Controls!
+
+        pb1_2.on('change', function (v) {
+            socket.emit('toggle1', {
+                state: true,
+                device: 2
+            });
+            // socket.emit('toggle1', {
+            //     state: false,
+            //     device: 2
+            // });
+        });
+
+        sb1_2.on('change', function (v) {
+            socket.emit('toggle2', {
+                state: true,
+                device: 2
+            });
+
+        });
+
+        ffb1_2.on('click', function (v) {
+            socket.emit('toggle3', {
+                state: true,
+                device: 2
+            });
+
+
+        });
+
+        ffb1_2.on('release', function (v) {
+            socket.emit('toggle3', {
+                state: false,
+                device: 2
+            });
+        })
+        //swapping toggle4 and toggle5 events between these two buttons due to wiring change on CD player 2
+        espb1_2.on('change', function () {
+            socket.emit('toggle5', {
+                state: true,
+                device: 2
+            });
+            setTimeout(function () {
+                socket.emit('toggle5', {
+                    state: false,
+                    device: 2
+                });
+            }, 200);
+            // 
+        });
+
+        tbLatch_1_2.on('change', function () {
+            socket.emit('toggle4', {
+                state: true,
+                device: 2
+            });
+        });
+
+        tb6_1_2.on('change', function () {
+            socket.emit('toggle6', {
+                state: true,
+                device: 2
+            });
+        });
+
+        metroStart1_2.on('release', function () {
+            socket.emit('metroSw1Start', {
+                time: metroSpeed_2,
+                device: 2
+            });
+        });
+
+        metroStop1_2.on('release', function () {
+            socket.emit('metroSw1Stop', {
+                device: 2
+            });
+            //console.log("Device: " + data.device + "switch 1 metro stopped");
+        });
+
+        metroStart2_2.on('release', function () {
+            socket.emit('metroSw3Start', {
+                time: metro2Speed_2,
+                device: 2
+            });
+        });
+
+        metroStop2_2.on('release', function () {
+            socket.emit('metroSw3Stop', {
+                device: 2
+            });
+        });
+        //Example of using vanilla JS to do this:
+        //     document.getElementById('toggleButton1').addEventListener('click', function () {
+        //         socket.emit('toggle1', { state: true, device: 1 });
+        //    });
+
+
+        dev2_dial1.on('change', (v) => {
+            metroSpeed_2 = v;
+        });
+
+        dev2_dial2.on('change', (v) => {
+            metro2Speed_2 = v;
+        });
+
+        document.getElementById('potButton').addEventListener('click', function () {
+            socket.emit('potTurning', {
+                position: 200,
+                device: 1
+            });
+        })
+        socket.on('message', function () {
+            console.log(message);
+        })
+        // document.getElementById('device_2_toggleButton1').addEventListener('click', function () {
+        //     socket.emit('toggle1', {
+        //         state: true,
+        //         device: 2
+        //     });
+        // });
+    </script>
+</body>
+
+</html>

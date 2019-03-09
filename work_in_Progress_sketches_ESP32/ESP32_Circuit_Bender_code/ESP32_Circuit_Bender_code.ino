@@ -20,16 +20,17 @@
 
 
 
-  const char* ssid = "NETGEAR481"; //theSSID of WiFi to connect to
-  const char* password ="fearlesssocks430"; //the network password
+  //const char* ssid = "NETGEAR481"; //theSSID of WiFi to connect to
+  //const char* password ="fearlesssocks430"; //the network password
 
 
 // const char* ssid = "MonAndToneGlow";
 // const char* password = "UncagedNY2013";
 
+WiFiMulti wifiMultiScan;
 int deviceNumber = 0;
 //char host[] = "192.168.1.117";
-char host[] = "192.168.1.109";
+char host[] = "192.168.1.144";
 int port = 3000;
 //Switch and Motor pins
 int switchPins[6] = {15, 32, 14, 22, 23, 21};
@@ -51,12 +52,12 @@ char dimWhite[3] = { 30, 30, 30 };
 
 //RGB color arrays for status
 /*
-int* aquaRGB[3] = {0, 255, 255};
-int* purpleRGB[3] = {80, 0, 80};
-int* yellowRGB[3] = {255, 255, 0};
-int* orangeRGB[3] = {255, 165, 0};
-int* greenRGB[3] = {0, 255, 0};
-int* pinkRGB[3] = {255, 182, 193};
+int aquaRGB[3] = {0, 255, 255};
+int purpleRGB[3] = {80, 0, 80};
+int yellowRGB[3] = {255, 255, 0};
+int orangeRGB[3] = {255, 165, 0};
+int greenRGB[3] = {0, 255, 0};
+int pinkRGB[3] = {255, 182, 193};
 */
 
 
@@ -455,7 +456,10 @@ void setDeviceColor(const char *payload, size_t length)
   {
    setColor(80, 0, 80);
   }
-  
+  else if(!strcmp(payload, "[")){
+
+  }
+
 }
 
 void setDeviceNumber(const char *payload, size_t length)
@@ -483,63 +487,86 @@ void setup()
   // ...set up the serial ouput
   Serial.begin(115200);
   delay(100);
+
+
   //Search for WiFi
-  WiFi.begin(ssid, password); //function call to connect to network
-  Serial.print("Connecting to "); //string, needs double quotes
-  Serial.print(ssid); Serial.println(" ...");
+
+  wifiMultiScan.addAP("NETGEAR481", "fearlesssocks430");
+  wifiMultiScan.addAP("MonAndToneGlow", "UncagedNY2013");
+
+  //WiFi.begin(ssid, password); //function call to connect to network
+  Serial.print("Connecting to WiFi "); //string, needs double quotes
+  Serial.println(" ...");
 
 
-  int i = 0; //our loop counter variable
-  while (WiFi.status() != WL_CONNECTED) { //wait for the WiFi to connect
-    delay(1000);//wait a second
-    Serial.print(++i); Serial.print('.');
-    crossFade(green);
-    crossFade(pink);
-    crossFade(yellow);
-    crossFade(orange);
-  }
   
+  
+   
+ int i =0;  
+while (wifiMultiScan.run() !=WL_CONNECTED)
+       {             //wait for the WiFi to connect
+         //delay(50);
+         //Serial.print('.');
+        // Serial.println(++i);
+         crossFade(green);
+         crossFade(pink);
+         crossFade(yellow);
+         crossFade(orange);
+         
+       }
+       
+  if (wifiMultiScan.run() == WL_CONNECTED)
+  {
+    setColor(0, 255, 255); // aqua
+    Serial.println('\n');  //print a new line command
+    Serial.println("WiFi Connection established to ");
+    Serial.println(WiFi.SSID());
+  }
+   
 
-  setColor(0,255,255);  // aqua
+    //try to connect to server
+    webSocket.on("connect", printConnect);
+    webSocket.on("disconnected", printDisconnect);
 
-  Serial.println('\n'); //print a new line command
-  Serial.println("Connection established!");
+    //Set up Client Callbacks to listen for
 
-  //try to connect to server
-  webSocket.on("connect", printConnect);
-  webSocket.on("disconnected", printDisconnect);
+    webSocket.on("toggleSwitch1", toggleSwitch1);
+    webSocket.on("toggleSwitch2", toggleSwitch2);
+    webSocket.on("toggleSwitch3", toggleSwitch3);
+    webSocket.on("toggleSwitch4", toggleSwitch4);
+    webSocket.on("toggleSwitch5", toggleSwitch5);
+    webSocket.on("toggleSwitch6", toggleSwitch6);
 
-  //Set up Client Callbacks to listen for
+    webSocket.on("metroSwitch1", metroSwitch1);
+    webSocket.on("metroSwitch1Stop", metroSwitch1Stop);
+    webSocket.on("metroSwitch2", metroSwitch2);
+    webSocket.on("metroSwitch2Stop", metroSwitch2Stop);
+    webSocket.on("metroSwitch3", metroSwitch3);
+    webSocket.on("metroSwitch3Stop", metroSwitch3Stop);
+    webSocket.on("metroSwitch4", metroSwitch4);
+    webSocket.on("metroSwitch4Stop", metroSwitch4Stop);
+    webSocket.on("metroSwitch5", metroSwitch5);
+    webSocket.on("metroSwitch5Stop", metroSwitch5Stop);
+    webSocket.on("metroSwitch6", metroSwitch6);
+    webSocket.on("metroSwitch6Stop", metroSwitch6Stop);
 
-  webSocket.on("toggleSwitch1", toggleSwitch1);
-  webSocket.on("toggleSwitch2", toggleSwitch2);
-  webSocket.on("toggleSwitch3", toggleSwitch3);
-  webSocket.on("toggleSwitch4", toggleSwitch4);
-  webSocket.on("toggleSwitch5", toggleSwitch5);
-  webSocket.on("toggleSwitch6", toggleSwitch6);
+    webSocket.on("potTurn", potTurn);
 
-  webSocket.on("metroSwitch1", metroSwitch1);
-  webSocket.on("metroSwitch1Stop", metroSwitch1Stop);
-  webSocket.on("metroSwitch2", metroSwitch2);
-  webSocket.on("metroSwitch2Stop", metroSwitch2Stop);
+    // switch/1/toggle
+    // switch/1/toggle 1
+    // switch/1/metro 500
+    // pots/2/value 0.25
+    // pots/2/value 0.25 5000
+    // pots/2/metro 0.25 0.75 500
+    // motor
 
-  webSocket.on("potTurn", potTurn);
-
-  // switch/1/toggle
-  // switch/1/toggle 1
-  // switch/1/metro 500
-  // pots/2/value 0.25
-  // pots/2/value 0.25 5000
-  // pots/2/metro 0.25 0.75 500
-  // motor
-
-  //Open the port
-  webSocket.begin(host, port);
-  //Set up client callbacks to send to server.
- // webSocket.emit("register", "\"device2\"");
-  webSocket.emit("handshake");
-  webSocket.on("setDeviceColor", setDeviceColor);
-  webSocket.on("setDeviceNumber", setDeviceNumber);
+    //Open the port
+    webSocket.begin(host, port);
+    //Set up client callbacks to send to server.
+    // webSocket.emit("register", "\"device2\"");
+    webSocket.emit("handshake");
+    webSocket.on("setDeviceColor", setDeviceColor);
+    webSocket.on("setDeviceNumber", setDeviceNumber);
 }
 
 
@@ -616,7 +643,9 @@ void click() {
 
 // Main program loop
 void loop() {
-  webSocket.loop();
+  
+  
+      webSocket.loop();
 }
 
 

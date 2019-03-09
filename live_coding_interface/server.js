@@ -1,4 +1,5 @@
-let app = require('express')();
+let express = require('express');
+let app = express();
 let http = require('http').Server(app);
 let io = require('socket.io')(http);
 
@@ -11,13 +12,13 @@ var sw6toggle= { state: false };
 
 let switches = [sw1toggle, sw2toggle, sw3toggle, sw4toggle, sw5toggle,sw6toggle];
 let users =[];//array holding all connected client IDs
-let userColors = ["yellow", "orange","green", "pink", "purple"];
+let userColors = ["yellow", "orange", "green", "pink", "purple"]; //example of RGB array to send: "[55,132,12]"
 let deviceNumber =0;
 
-app.get('/', function (req, res) {
-    res.sendFile(__dirname + '/index.html');
-});
-
+// app.get('/', function (req, res) {
+//     res.sendFile(__dirname + '/index.html');
+// });
+app.use(express.static('public'));
 //Open websocket connection when client's connect
 io.on('connection', function (socket) {
     
@@ -62,19 +63,20 @@ io.on('connection', function (socket) {
     });
     socket.on('toggle3', function (data) {//'toggle3' received from web client
         console.log("Switch 3 toggled!")
-        sw3toggle.state = !sw3toggle.state;//boolen to change state of switch
+        sw3toggle.state = data.state;//boolen to change state of switch
         console.log('ID & Device: ' + socket.id + ' : ' + data.device + " " + 'Switch 3: ' + sw3toggle.state);
         socket.to(`${data.device}`).emit('toggleSwitch3', sw3toggle.state);
     });
     socket.on('toggle4', function (data) {//'toggle4' received from web client
         console.log("Switch 4 toggled!")
-        sw4toggle.state = !sw4toggle.state;//boolen to change state of switch
+        sw4toggle.state = data.state;//boolen to change state of switch
         console.log('ID & Device: ' + socket.id + ' : ' + data.device + " " + 'Switch 4: ' + sw4toggle.state);
         socket.to(`${data.device}`).emit('toggleSwitch4', sw4toggle.state);//'toggleSwitch4' is sent to WCB
     });
     socket.on('toggle5', function (data) {//'toggle3' received from web client
         console.log("Switch 5 toggled!")
-        sw5toggle.state = !sw5toggle.state;//boolen to change state of switch
+        sw5toggle.state = data.state;
+        //sw5toggle.state = !sw5toggle.state;//boolen to change state of switch
         console.log('ID & Device: ' + socket.id + ' : ' + data.device + " " + 'Switch 5: ' + sw5toggle.state);        
         socket.to(`${data.device}`).emit('toggleSwitch5', sw5toggle.state);//'toggleSwitch5' is sent to WCB
     });
@@ -91,22 +93,69 @@ io.on('connection', function (socket) {
 
     socket.on('metroSw1Start', function(data){
         socket.to(`${data.device}`).emit('metroSwitch1', data.time);
-        console.log("Device: " + data.device + "switch 1 on metro: "+data.time);
+        console.log("Device: " + data.device + " switch 1 on metro: "+data.time);
     });
 
     socket.on('metroSw1Stop', function(data){
         socket.to(`${data.device}`).emit('metroSwitch1Stop');
+        console.log("Device: " + data.device + " switch 1 metro stopped");
+
     });
 
     socket.on('metroSw2Start', function (data) {
-        socket.to(`${data.device}`).emit('metroSwitch2', time2);
-        console.log("Device: " + data.device + "switch 1 on metro: " + data.time);
+        socket.to(`${data.device}`).emit('metroSwitch2', data.time);
+        console.log("Device: " + data.device + " switch 2 on metro: " + data.time);
     });
 
     socket.on('metroSw2Stop', function (data) {
         socket.to(`${data.device}`).emit('metroSwitch2Stop');
+        console.log("Device: " + data.device + " switch 2 metro stopped");
+
     });
 
+socket.on('metroSw3Start', function (data) {
+    socket.to(`${data.device}`).emit('metroSwitch3', data.time);
+    console.log("Device: " + data.device + " switch 3 on metro: " + data.time);
+});
+
+socket.on('metroSw3Stop', function (data) {
+    socket.to(`${data.device}`).emit('metroSwitch3Stop');
+    console.log("Device: " + data.device + " switch 3 metro stopped");
+
+});
+
+socket.on('metroSw4Start', function (data) {
+    socket.to(`${data.device}`).emit('metroSwitch4', data.time);
+    console.log("Device: " + data.device + " switch 4 on metro: " + data.time);
+});
+
+socket.on('metroSw4Stop', function (data) {
+    socket.to(`${data.device}`).emit('metroSwitch4Stop');
+    console.log("Device: " + data.device + " switch 4 metro stopped");
+
+});
+
+socket.on('metroSw5Start', function (data) {
+    socket.to(`${data.device}`).emit('metroSwitch5', data.time);
+    console.log("Device: " + data.device + " switch 5 on metro: " + data.time);
+});
+
+socket.on('metroSw5Stop', function (data) {
+    socket.to(`${data.device}`).emit('metroSwitch5Stop');
+    console.log("Device: " + data.device + " switch 5 metro stopped");
+
+});
+
+socket.on('metroSw6Start', function (data) {
+    socket.to(`${data.device}`).emit('metroSwitch6', data.time);
+    console.log("Device: " + data.device + " switch 6 on metro: " + data.time);
+});
+
+socket.on('metroSw6Stop', function (data) {
+    socket.to(`${data.device}`).emit('metroSwitch6Stop');
+    console.log("Device: " + data.device + " switch 6 metro stopped");
+
+});
     socket.on('handshake', function(){
 
         console.log('BendIt Board connected: ' + socket.id);
