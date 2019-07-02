@@ -6,7 +6,7 @@
     <!-- <script src="/libraries/nexusUI/dist/nexusUI.min.js"></script> -->
     <script src="/libraries//NexusUI.js"></script>
 
-    <title>BendIt.io Simple Controller</title>
+    <title>Bendit_I/O Simple Controller</title>
     <style>
         body {
             background: rgb(255, 230, 161);
@@ -46,8 +46,6 @@
 <body>
 
 
-    <div id="potButton"></div>
-
     <div class="device1controls">
         <div class="device1buttongird" id="toggleButton1"></div>
         <div class="device1buttongird" id="toggleButton2"></div>
@@ -66,7 +64,14 @@
         <div class="device1buttongird" id="metroStopSw2"></div>
         <br></br>
         <div class="device1buttongird" id="metro2SpeedSlider"></div>
+        <br></br>
+        <div class="device1buttongird" id="potButton"></div>
+        <div class="device1buttongird" id="potPositionSlider"></div>
+
+
+
     </div>
+
 
     <div class="device2controls">
 
@@ -110,9 +115,9 @@
 
     <script>
         /*
-        BendIt.io: Wireless Circuit Bending
+        Bendit_I/O: Wireless Circuit Bending
 
-            Example Web Performance Interface
+            Example Performance: Web Controller Interface
 
                 *** Work in Progress ***
 
@@ -121,7 +126,7 @@
         */
 
         var socket = io();
-        
+
 
         var dev1_dial1 = new Nexus.Dial('#metro1SpeedSlider', {
             'size': [100, 100],
@@ -133,24 +138,36 @@
         var dev1_dial2 = new Nexus.Dial('#metro2SpeedSlider', {
             'size': [100, 100],
             'interaction': 'radial',
-            'min': 250,
-            'max': 2000,
-            'step': 250
+            'min': 0,
+            'max': 255,
+            'step': 1
         });
-       
 
-        var metroSpeed = 250;
-        var metro2Speed = 250;
-        var metroSpeed_2 = 250;
-        var metro2Speed_2 = 250;
+        // var dev1_dial3 = new Nexus.Dial('#potPositionSlider', {
+        //         'size': [100, 100],
+        //         'interaction': 'radial',
+        //         'min': 0,
+        //         'max': 255,
+        //         'step': 1
+        //     });
 
+        let metroSpeed = 250;
+        let metro2Speed = 250;
+        let metroSpeed_2 = 250;
+        let metro2Speed_2 = 250;
+        let pot1Position = 0;
 
+        let pbclickCount = 0;
+        let espclickCount = 0;
+        let playPauseState;
+        let espState;
+        let playingOrPausing;
 
         var pb1 = new Nexus.TextButton('#toggleButton1', {
             'size': [150, 50],
             'state': false,
             'text': 'Play',
-            'alternate': 'Pause'
+            'alternateText': 'Pause'
         });
 
         var sb1 = new Nexus.TextButton('#toggleButton2', {
@@ -168,9 +185,15 @@
         var espb1 = new Nexus.TextButton('#toggleButton4', {
             'size': [150, 50],
             'state': false,
-            'text': 'ESP off',
-            'alternate': 'ESP on'
+            'text': 'ESP on',
+            'alternateText': 'ESP off'
         });
+
+        var pot1 = new Nexus.TextButton('#potButton', {
+                'size': [150, 50],
+                'state': false,
+                'text': 'Set Pot'
+            });
 
         var tb5_1 = new Nexus.Toggle('#toggleButton5', {
             'size': [150, 50],
@@ -286,14 +309,21 @@
         });
 
 
-        pb1.on('change', function (v) {
-
+        pb1.on('click', function (v) {
+            pbclickCount++;
+            playPauseState = (pbclickCount - 1) % 2;
+            if (playPauseState == 0) {
+                playingOrPausing = 0;
+            } else {
+                playingOrPausing = 1;
+            }
             socket.emit('toggle1', {
                 state: true,
                 device: 1
             });
 
-
+            socket.emit('message', playPauseState);
+            socket.emit('playPauseMessage', playingOrPausing);
             // setTimeout(function () {
             //     socket.emit('toggle1', {
             //         state: false,
@@ -302,7 +332,14 @@
             // }, 100);
         });
 
-        sb1.on('change', function (v) {
+        pb1.on('release', function (v) {
+            socket.emit('toggle1', {
+                state: false,
+                device: 1
+            });
+        });
+
+        sb1.on('click', function (v) {
             socket.emit('toggle2', {
                 state: true,
                 device: 1
@@ -314,8 +351,13 @@
             //         device: 1
             //     });
             // }, 200);
+        });
 
-
+        sb1.on('release', function (v) {
+            socket.emit('toggle2', {
+                state: false,
+                device: 1
+            });
         });
 
         ffb1.on('click', function (v) {
@@ -323,6 +365,9 @@
                 state: true,
                 device: 1
             });
+
+            socket.emit('message', "ffDown");
+
         });
 
         ffb1.on('release', function (v) {
@@ -330,9 +375,12 @@
                 state: false,
                 device: 1
             });
+            socket.emit('message', "ffUp");
         });
 
         espb1.on('change', function () {
+            espclickCount++;
+            espState = espclickCount % 2;
             socket.emit('toggle4', {
                 state: true,
                 device: 1
@@ -344,18 +392,40 @@
                 });
             }, 200);
 
+            socket.emit('espMessage', espState);
         });
 
-        tb5_1.on('change', function () {
+
+
+        tb5_1.on('change', function (v) {
+
             socket.emit('toggle5', {
-                state: true,
+                state: v,
                 device: 1
             });
+
+
+
+
+
         });
 
-        tb6_1.on('change', function () {
+        tb6_1.on('change', function (v) {
+
+            let bendTogState;
+
+            if (tb6_1.state == true) {
+                bendTogState = "bend1";
+            } else {
+                bendTogState = "unbend1";
+            }
+
+            socket.emit('message', bendTogState);
+
+            
+
             socket.emit('toggle6', {
-                state: true,
+                state: v,
                 device: 1
             });
         });
@@ -387,29 +457,56 @@
             });
         });
 
+        // 
+
         dev1_dial1.on('change', (v) => {
-            metroSpeed = v;
+        metroSpeed = v;
         });
 
         dev1_dial2.on('change', (v) => {
-            metro2Speed = v;
-        });
-        //Device 2 Controls!
+            // metro2Speed = v;
+            pot1Position = v;
+            socket.emit('potTurning', {
+            position: pot1Position,
+            device: 2
+            });
 
-        pb1_2.on('change', function (v) {
+
+        });
+
+        //    dev1_dial3.on('change', (v) => {
+        //         pot1Position = v;
+        //     });
+
+        //Device 2 Controls!
+        pb1_2.on('click', function (v) {
             socket.emit('toggle1', {
                 state: true,
                 device: 2
             });
-            // socket.emit('toggle1', {
-            //     state: false,
-            //     device: 2
-            // });
         });
 
-        sb1_2.on('change', function (v) {
+
+
+        pb1_2.on('release', function (v) {
+            socket.emit('toggle1', {
+                state: false,
+                device: 2
+            });
+        });
+
+        sb1_2.on('click', function (v) {
             socket.emit('toggle2', {
                 state: true,
+                device: 2
+            });
+
+        });
+
+
+        sb1_2.on('release', function (v) {
+            socket.emit('toggle2', {
+                state: false,
                 device: 2
             });
 
@@ -430,7 +527,7 @@
                 device: 2
             });
         })
-        //swapping toggle4 and toggle5 events between these two buttons due to wiring change on CD player 2
+        // //swapping toggle4 and toggle5 events between these two buttons due to wiring change on CD player 2
         espb1_2.on('change', function () {
             socket.emit('toggle5', {
                 state: true,
@@ -445,68 +542,81 @@
             // 
         });
 
-        tbLatch_1_2.on('change', function () {
+        tbLatch_1_2.on('change', function (v) {
             socket.emit('toggle4', {
-                state: true,
+                state: v,
                 device: 2
             });
         });
 
-        tb6_1_2.on('change', function () {
+        tb6_1_2.on('change', function (v) {
             socket.emit('toggle6', {
-                state: true,
+                state: v,
                 device: 2
             });
         });
 
-        metroStart1_2.on('release', function () {
-            socket.emit('metroSw1Start', {
-                time: metroSpeed_2,
-                device: 2
-            });
-        });
 
-        metroStop1_2.on('release', function () {
-            socket.emit('metroSw1Stop', {
-                device: 2
-            });
-            //console.log("Device: " + data.device + "switch 1 metro stopped");
-        });
-
-        metroStart2_2.on('release', function () {
-            socket.emit('metroSw3Start', {
-                time: metro2Speed_2,
-                device: 2
-            });
-        });
-
-        metroStop2_2.on('release', function () {
-            socket.emit('metroSw3Stop', {
-                device: 2
-            });
-        });
-        //Example of using vanilla JS to do this:
-        //     document.getElementById('toggleButton1').addEventListener('click', function () {
-        //         socket.emit('toggle1', { state: true, device: 1 });
-        //    });
+pot1.on('click', function (v) {
+//  socket.emit('potTurning', {
+//  position: pot1Position,
+//  device: 1
+//  });
+ });
 
 
-        dev2_dial1.on('change', (v) => {
-            metroSpeed_2 = v;
-        });
 
-        dev2_dial2.on('change', (v) => {
-            metro2Speed_2 = v;
-        });
+ 
 
-        document.getElementById('potButton').addEventListener('click', function () {
-            socket.emit('potTurning', {
-                position: 200,
-                device: 1
-            });
-        })
-        socket.on('message', function () {
-            console.log(message);
+
+        // metroStart1_2.on('release', function () {
+        //     socket.emit('metroSw1Start', {
+        //         time: metroSpeed_2,
+        //         device: 2
+        //     });
+        // });
+
+        // metroStop1_2.on('release', function () {
+        //     socket.emit('metroSw1Stop', {
+        //         device: 2
+        //     });
+        //     //console.log("Device: " + data.device + "switch 1 metro stopped");
+        // });
+
+        // metroStart2_2.on('release', function () {
+        //     socket.emit('metroSw3Start', {
+        //         time: metro2Speed_2,
+        //         device: 2
+        //     });
+        // });
+
+        // metroStop2_2.on('release', function () {
+        //     socket.emit('metroSw3Stop', {
+        //         device: 2
+        //     });
+        // });
+        // //Example of using vanilla JS to do this:
+        // //     document.getElementById('toggleButton1').addEventListener('click', function () {
+        // //         socket.emit('toggle1', { state: true, device: 1 });
+        // //    });
+
+
+        // dev2_dial1.on('change', (v) => {
+        //     metroSpeed_2 = v;
+        // });
+
+        // dev2_dial2.on('change', (v) => {
+        //     metro2Speed_2 = v;
+        // });
+
+        // document.getElementById('potButton').addEventListener('click', function () {
+        //     socket.emit('potTurning', {
+        //         position: 200,
+        //         device: 1
+        //     });
+        // })
+        socket.on('message', function (data) {
+            console.log(data);
         })
         // document.getElementById('device_2_toggleButton1').addEventListener('click', function () {
         //     socket.emit('toggle1', {

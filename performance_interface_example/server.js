@@ -1,5 +1,5 @@
 /*
-BendIt.io: Wireless Circuit Bending
+Bendit_I/O: Wireless Circuit Bending
 
 Server code
 
@@ -12,6 +12,11 @@ let express = require('express');
 let app = express();
 let http = require('http').Server(app);
 let io = require('socket.io')(http);
+
+// io.listen(http, {
+//     'heartbeat interval': 5,
+//     'heartbeat timeout': 10
+// });
 
 var sw1toggle = {
     state: false
@@ -43,12 +48,22 @@ app.use(express.static('public'));
 
 //Open websocket connection when clients connect
 io.on('connection', function (socket) {
-
+console.log("a user connected");
     for (var i = 0; i < switches.length; i++) {
         socket.emit('toggleSwitch' + (i + 1), switches[i].state);
     }
 
+    socket.on('message', function(data){
+        socket.broadcast.emit('message', data);
+    });
 
+    socket.on('espMessage', function(data){
+        socket.broadcast.emit('espMessage', data);
+    });
+
+    socket.on('playPauseMessage', function(data){
+        socket.broadcast.emit('playPauseMessage', data);
+    })
     socket.on('disconnect', function () {
         console.log('User disconnected: ' + socket.id);
     });
@@ -58,7 +73,7 @@ io.on('connection', function (socket) {
     socket.on('toggle1', function (data) { //'toggle1' received from web client
 
         console.log("Switch 1 toggled!" + " " + "Device: " + data.device);
-        sw1toggle.state = !sw1toggle.state; //boolen to change state of switch
+        sw1toggle.state = data.state; //boolen to change state of switch
         console.log('ID & Device: ' + socket.id + ' : ' + data.device + " " + 'Switch 1: ' + sw1toggle.state);
         //'toggleSwitch1' is sent to whichever device is chosen by the web client
         socket.to(`${data.device}`).emit('toggleSwitch1', sw1toggle.state);
@@ -66,7 +81,7 @@ io.on('connection', function (socket) {
     });
     socket.on('toggle2', function (data) { //data ='toggle2' received from web client along with device number to control
         console.log("Switch 2 toggled!")
-        sw2toggle.state = !sw2toggle.state; //boolen to change state of switch
+        sw2toggle.state = data.state; //boolen to change state of switch
         console.log('ID & Device: ' + socket.id + ' : ' + data.device + " " + 'Switch 2: ' + sw2toggle.state);
         //reminder!: use BACKTICKS, not quotes around ${data.device}
         socket.to(`${data.device}`).emit('toggleSwitch2', sw2toggle.state);
@@ -92,13 +107,13 @@ io.on('connection', function (socket) {
     });
     socket.on('toggle6', function (data) { //'toggle3' received from web client
         console.log("Switch 6 toggled!")
-        sw6toggle.state = !sw6toggle.state; //boolen to change state of switch
+        sw6toggle.state = data.state; //boolen to change state of switch
         console.log('ID & Device: ' + socket.id + ' : ' + data.device + " " + 'Switch 6: ' + sw6toggle.state);
         socket.to(`${data.device}`).emit('toggleSwitch6', sw6toggle.state); //'toggleSwitch6' is sent to WCB
     });
     socket.on('potTurning', function (data) {
         socket.to(`${data.device}`).emit('potTurn', data.position);
-        console.log("pot turned! position = " + data.position);
+        console.log(data.device + " pot turned! position = " + data.position);
     });
 
     socket.on('metroSw1Start', function (data) {
@@ -168,10 +183,10 @@ io.on('connection', function (socket) {
     });
 
     //'handshake' is specific to BendIt boards
-    socket.on('handshake', function () {
-
+    socket.on('handshake', function (data) {
+        console.log(data.nickname);
         console.log('BendIt Board connected: ' + socket.id);
-
+        
         users.push(socket.id);
         socket.name = socket.id;
 
@@ -197,6 +212,7 @@ io.on('connection', function (socket) {
             console.log("Assigned Color: " + userColorPick);
             console.log("Assigned Device Number: " + userNumberAssignment);
         }, 750);
+    //} 
     });
 
 });
@@ -206,5 +222,5 @@ io.on('connection', function (socket) {
 
 
 http.listen(3000, function () {
-    console.log('listening on *:3000');
+    console.log('Bendit_I/O Server is Running!\n Listening on *:3000');
 });

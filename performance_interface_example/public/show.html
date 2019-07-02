@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Bendit_I/O Reactive Visuals </title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/addons/p5.dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/addons/p5.sound.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+
+    <meta charset="utf-8" />
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        canvas {
+            display: block;
+        }
+    </style>
+
+
+
+</head>
+
+<body>
+
+    <!-- <script src="sketch.js"></script> -->
+    <script>
+        /*
+Bendit_I/O: Wireless Circuit Bending
+
+Example Web Performance: Reactive Visuals
+
+*** Work in Progress ***
+
+Anthony T.Marasco - 2019
+
+ */
+        let angle = 0;
+        let squares;
+        let numbers = [];
+        let state = "normal";
+        let clickCount = 0;
+        let backgroundColor = "tan";
+        let playPauseStatus = 0,
+            espStatus,messageCounts =0, messageCountData, socket;
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight, WEBGL);
+            socket = io();
+            // camera(0, 0, sin(frameCount * 0.01) * 10);
+            rectMode(CENTER);
+            squares = [];
+
+            for (let i = 0; i < 15; i++) {
+                //console.log("hi");
+                squares[i] = new Box3D(random(-500, 300), random(-500, 300), random([60, 20, 80]));
+            }
+
+
+            noStroke();
+            // sq1 = new Box3D(random(-30, -10), random(-30, -10), random([60, 20, 120]));
+            // sq2 = new Box3D(-10, -20, random([60, 20, 120])); 
+
+            socket.on('message', function (data) {
+                
+                messageCounts++;
+                messageCountData = messageCounts %8;
+
+                
+                console.log(data);
+                console.log("got it!");
+                if (data == 0) {
+                    playPauseStatus = "playing";
+                } else if (data == 1) {
+                    playPauseStatus = "paused";
+                } else if (data == "ffDown") {
+                    state = "skipDown";
+                } else if (data == "ffUp") {
+                    state = "skipUp"
+                } else if (data == "bend1") {
+                    state = "ramBend";
+                } else if (data == "unbend1") {
+                    state = "normal";
+                }
+
+            });
+
+            socket.on('espMessage', function (data) {
+                console.log("ESP Button state: " + data);
+                espStatus = data;
+            });
+
+            socket.on('playPauseMessage', function (data) {
+                console.log("Playing Status is: " + data);
+                playPauseStatus = data;
+            });
+        }
+
+        function draw() {
+            // camera(mouseX * 0.25, mouseY * 0.25, 20 + sin(frameCount * 0.01) * 10, 0, 0, 0, 0, 1, 0);
+            if (playPauseStatus == 0) {
+                normalLight();
+                normalPlay();
+                if (state == "skipDown") {
+                    trackSkipAndSpin();
+                } else if (state == "skipUp") {
+                    normalPlay();
+                }
+            } else {
+                normalLight();
+                pauseGlitch();
+                if (state == "skipDown") {
+                    trackSkipAndFreeze();
+                }
+            }
+
+            if (espStatus == 1 && state == "ramBend") {
+                bendLight();
+                dramBend();
+            } else if (espStatus == 0 && state == "ramBend") {
+                if (playPauseStatus == 0) {
+                    normalPlay();
+                } else {
+                    pauseGlitch();
+                }
+
+            }
+
+            // sq1.appear();
+            // sq2.appear();
+
+
+            for (let i = 0; i < squares.length; i++) {
+
+                squares[i].appear();
+            }
+        }
+
+        function normalLight() {
+            backgroundColor = "tan";
+            background(backgroundColor);
+            directionalLight(246, 112, 112, .50, -0.50, -1);
+
+            directionalLight(0, 198, 197, -1, -0.25, 0.25);
+
+            directionalLight(255, 215, 0, 1, 0.25, -.25);
+        };
+
+        function bendLight() {
+            backgroundColor = 100;
+            background(backgroundColor);
+            ambientLight(20);
+
+            directionalLight(176, 147, 197, 1, 0.25, 0.50);
+            //165, 42, 42, -.50, 0.50, -1
+            directionalLight(153, 255, 51, -1, -0.25, 0.75);
+
+            directionalLight(165, 42, 42, -.50, 0.50, -1);
+        };
+
+        function dramBend() {
+
+
+            for (let i = 0; i < squares.length; i++) {
+                squares[i].jitter();
+            }
+
+        }
+
+
+        function pauseGlitch() {
+            
+            
+            // backgroundColor = "tan";
+            // background(backgroundColor);
+
+            // directionalLight(246, 112, 112, .50, -0.50, -1);
+
+            // directionalLight(0, 198, 197, -1, -0.25, 0.25);
+
+            // directionalLight(255, 215, 0, 1, 0.25, -.25);
+            for (let i = 0; i < squares.length; i++) {
+                squares[i].spin(0);
+            }
+        }
+
+        function potValueSet(pot1Position){
+            
+            socket.emit('potTurning', {
+            position: pot1Position,
+            device: 2
+            });
+        }
+        function trackSkipAndFreeze() {
+            // backgroundColor = "tan";
+            // background(backgroundColor);
+            // directionalLight(246, 112, 112, .50, -0.50, -1);
+
+            // directionalLight(0, 198, 197, -1, -0.25, 0.25);
+
+            // directionalLight(255, 215, 0, 1, 0.25, -.25);
+            for (let i = 0; i < squares.length; i++) {
+                squares[i].x = random(-500, 300);
+                squares[i].y = random(-500, 300);
+                squares[i].spin(0);
+            }
+
+        }
+
+
+
+        function trackSkipAndSpin() {
+            // backgroundColor = "tan";
+            // background(backgroundColor);
+            // directionalLight(246, 112, 112, .50, -0.50, -1);
+
+            // directionalLight(0, 198, 197, -1, -0.25, 0.25);
+
+            // directionalLight(255, 215, 0, 1, 0.25, -.25);
+            for (let i = 0; i < squares.length; i++) {
+                squares[i].x = random(-500, 300);
+                squares[i].y = random(-500, 300);
+                squares[i].spin(0.0015);
+            }
+        }
+
+        function normalPlay() {
+            // backgroundColor = "tan";
+            // background(backgroundColor);
+
+            // directionalLight(246, 112, 112, .50, -0.50, -1);
+
+            // directionalLight(0, 198, 197, -1, -0.25, 0.25);
+
+            // directionalLight(255, 215, 0, 1, 0.25, -.25);
+            for (let i = 0; i < squares.length; i++) {
+                squares[i].spin(0.0015);
+            }
+        }
+
+        // function mousePressed() {
+        //     clickCount++;
+        //     if (clickCount % 2 == 0){
+        //         state = "normal";
+        //     } else {
+        //         state = "DRAMBend";
+        //     }
+        // }
+
+        function keyPressed() {
+            trackSkip();
+
+        }
+
+        function Box3D(boxX, boxY, size) {
+
+            this.x = boxX;
+            this.y = boxY;
+            this.size = size;
+
+            this.appear = function () {
+
+                push();
+                translate(this.x, this.y, 0);
+
+                specularMaterial(250);
+                rotateZ(angle);
+                rotateY(angle);
+                rotateX(angle);
+                box(this.size);
+
+                pop();
+
+            }
+
+            this.spin = function (speed) {
+
+                angle += speed;
+            }
+
+            this.jitter = function () {
+                angle += random([0.05, -0.05]);
+            }
+
+
+        }
+    </script>
+</body>
+
+</html>

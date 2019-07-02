@@ -1,7 +1,7 @@
 /*
-BendIt.io: Wireless Circuit Bending
+Bendit_I/O: Wireless Circuit Bending
 
-BendIt Board code
+Bendit Board code
 
 ***Work in Progress***
 
@@ -9,7 +9,7 @@ Anthony T. Marasco - 2019
 */
 
 #include <SocketIoClient.h>
-
+#include <stdlib.h>
 #include <SPI.h>
 #include <WiFi.h>
 #include <WiFiAP.h>
@@ -25,14 +25,14 @@ Anthony T. Marasco - 2019
 
 #include <analogWrite.h>
 #include <Ticker.h>
-
+int i=0;
 //instance of WiFiMulti library to hold multiple network ssid/password pairs
 WiFiMulti wifiMultiScan;
-
-int deviceNumber = 0;
-
-//server IP
-char host[] = "192.168.1.144";
+int deviceNumber =0;
+const char assignedDeviceNumber = 0;
+String deviceColor ="none";
+    //server IP
+    char host[] = "192.168.1.149";
 //server port
 int port = 3000;
 //Switch and Motor pins
@@ -96,7 +96,8 @@ int sw6State = 0;
 SocketIoClient webSocket;
 //Ticker instances
 Ticker switch1, switch2, switch3, switch4, switch5, switch6;
-
+String myString ="00:00:00:00:00:00";
+String deviceNumberString = "0";
 //************************************ Device Functions*****************************
 //digtialPotTurning function
 void writeDigitalPot(int address, int value) {
@@ -244,7 +245,7 @@ void potTurn(const char * payload, size_t length) {
   } else if (i > 255) {
     i = 255;
   }
-  writeDigitalPot(2, i);
+  writeDigitalPot(0, i);
 }
 
 
@@ -258,6 +259,7 @@ void printDisconnect(const char * payload, size_t length) {
 
 void printConnect(const char * payload, size_t length) {
   Serial.println("Sweet! I'm connected.");
+  
 }
 
 //Switches
@@ -439,7 +441,9 @@ void metroSwitch5Stop(const char *payload, size_t length) {
 
 void setDeviceColor(const char *payload, size_t length)
 {
-  
+  //deviceColor.copy(payload, length, 0);
+  char bob[] = "bob";
+  deviceColor = String(strncpy(bob, payload, length));
   Serial.println('\n');
 
 
@@ -466,17 +470,27 @@ void setDeviceColor(const char *payload, size_t length)
 
 void setDeviceNumber(const char *payload, size_t length)
 {
-  deviceNumber = atoi(payload);
-  Serial.printf("Device Number: ", deviceNumber);
+  //deviceNumber = atoi(payload);
+  //deviceNumberString.copy(payload, length, 0);
+  char dnArray[] = "bob";
+deviceNumberString = String(strncpy(dnArray, payload, length));
+ //deviceNumberString = String(payload);
+  Serial.println("Device Number: ");
+  Serial.print(deviceNumberString);
 }
 //******************************************************************Main Code**************************************************
 void setup()
 {
-  // Set up the Switch outputs
-  for (int i = 0; i < 6; i++)
-  {
-    pinMode(switchPins[i], OUTPUT);
-    digitalWrite(switchPins[i], LOW);
+int str_length = myString.length()+1;
+int deviceStr_length = deviceNumberString.length()+1;
+char deviceMACCharArray[str_length];
+char deviceNumberCharArray[deviceStr_length];
+    // Set up the Switch outputs
+
+    for (int i = 0; i < 6; i++)
+{
+  pinMode(switchPins[i], OUTPUT);
+  digitalWrite(switchPins[i], LOW);
   }
   // Set up the LED outputs
   pinMode(ledPins[0], OUTPUT); // sets the pins as output
@@ -490,33 +504,50 @@ void setup()
   Serial.begin(115200);
   delay(100);
 
+  Serial.println("Connecting to WiFi "); //string, needs double quotes
+  Serial.println(" ...");
+
+  if (WiFi.status() != WL_CONNECTED){
+    Serial.print('.');
+      Serial.print(++i);
+
+      crossFade(green);
+      crossFade(pink);
+      crossFade(yellow);
+      crossFade(orange);
+      crossFade(pink);
+      
+  }
+ 
+  wifiMultiScan.addAP("NETGEAR481", "fearlesssocks430");
+      wifiMultiScan.addAP("MonAndToneGlow", "UncagedNY2013");
+  // while (wifiMultiScan.run() != WL_CONNECTED)
+  // { //wait for the WiFi to connect
+  //   //delay(50);
+    
+  //   Serial.print('.');
+  //   Serial.print(++i);
+
+  //   crossFade(green);
+  //   crossFade(pink);
+  //   crossFade(yellow);
+  //   crossFade(orange);
+  //   crossFade(pink);
+  // }
 
   //Search for WiFi
 
-  wifiMultiScan.addAP("NETGEAR481", "fearlesssocks430");
-  wifiMultiScan.addAP("MonAndToneGlow", "UncagedNY2013");
-
-  //WiFi.begin(ssid, password); //function call to connect to network
-  Serial.print("Connecting to WiFi "); //string, needs double quotes
-  Serial.println(" ...");
+ 
 
 
-  
-  
-   
- int i =0;  
-while (wifiMultiScan.run() !=WL_CONNECTED)
-       {             //wait for the WiFi to connect
-         //delay(50);
-         //Serial.print('.');
-        // Serial.println(++i);
-         crossFade(green);
-         crossFade(pink);
-         crossFade(yellow);
-         crossFade(orange);
-         
-       }
-       
+  WiFi.mode(WIFI_MODE_STA);
+  myString = WiFi.macAddress();
+  myString.toCharArray(deviceMACCharArray, str_length);
+
+  Serial.print("MAC Address: ");Serial.println(deviceMACCharArray);
+
+  //char deviceMAC = WiFi.macAddress();
+
   if (wifiMultiScan.run() == WL_CONNECTED)
   {
     setColor(0, 255, 255); // aqua
@@ -566,7 +597,8 @@ while (wifiMultiScan.run() !=WL_CONNECTED)
     webSocket.begin(host, port);
     //Set up client callbacks to send to server.
     // webSocket.emit("register", "\"device2\"");
-    webSocket.emit("handshake");
+    
+    webSocket.emit("handshake", ("{\"MAC\": \"" +String(deviceMACCharArray)+"\", \"color\": \"" + String(deviceColor)+"\", \"nickname\": \"CDplayer\", \"section\": \"none\", \"deviceNumber\": \"" + String(deviceNumberString)+"\"}").c_str());
     webSocket.on("setDeviceColor", setDeviceColor);
     webSocket.on("setDeviceNumber", setDeviceNumber);
 }
@@ -639,15 +671,26 @@ void setColor(int red, int green, int blue) {
   analogWrite(ledPins[1], green);
   analogWrite(ledPins[2], blue);
 }
-void click() {
-  clicked = true;
-}
+
 
 // Main program loop
 void loop() {
-  
-  
-      webSocket.loop();
+  if (WiFi.status() != WL_CONNECTED)
+  { //wait for the WiFi to connect
+    //delay(50);
+    Serial.println("Connecting to WiFi "); //string, needs double quotes
+    Serial.println(" ...");
+    Serial.print('.');
+    Serial.print(++i);
+
+    crossFade(green);
+    crossFade(pink);
+    crossFade(yellow);
+    crossFade(orange);
+    crossFade(pink);
+  }
+
+  webSocket.loop();
 }
 
 
