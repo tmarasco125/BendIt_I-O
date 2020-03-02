@@ -520,7 +520,7 @@ char deviceNumberCharArray[deviceStr_length];
   }
  
   wifiMultiScan.addAP("NETGEAR481", "fearlesssocks430");
-      wifiMultiScan.addAP("MonAndToneGlow", "UncagedNY2013");
+  wifiMultiScan.addAP("MonAndToneGlow", "UncagedNY2013");
   // while (wifiMultiScan.run() != WL_CONNECTED)
   // { //wait for the WiFi to connect
   //   //delay(50);

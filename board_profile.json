@@ -1,0 +1,19 @@
+{
+    "board_firmware_stats": {
+        "version": 1.1,
+        "date": "2/20",
+        "json_version": 1.0
+    },
+
+    "bendit_device": {
+        "board_version": 1.0,
+        "MAC": "00-00-00-00-00-00",
+        "total_switches": 8,
+        "total_pots": 8,
+        "nickname": "CD Player",
+        "device_number": 1,
+        "LED_color": "0xffffff"
+    }
+
+
+}
