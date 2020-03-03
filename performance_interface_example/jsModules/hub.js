@@ -59,6 +59,7 @@ var Hub = function() {
     this.channels = {};
 
     this.io;
+
 }
 
 Hub.prototype.channel = function(oscMessage, nickname, sendTypeArray, callback) {
@@ -246,15 +247,15 @@ Hub.prototype.log = function(l) {
 // TODO: instantiate SocketIO here instead of node file. 
 Hub.prototype.init = function(sio, publicFolder) {
     // Setup web app - using express to serve pages
-    var express = require('../../nexusNode/node_modules/express');
-    // var express = require('../node_modules/express');
+    //var express = require('../../nexusNode/node_modules/express');
+     var express = require('../node_modules/express');
     var http = require('http');
     var serverPort = this.serverPort;
     console.log("Port: " + this.serverPort);
 
     var app = express();
     app.use(express.static(publicFolder));
-    console.log(publicFolder);
+    console.log("Servivg files from " + publicFolder + " folder");
 
     // server is the node server (web app via express)
     // this code can launch the server on port 80 and switch the user id away from sudo

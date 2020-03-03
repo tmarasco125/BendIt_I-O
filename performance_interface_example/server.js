@@ -14,7 +14,7 @@ Anthony T. Marasco - 2020
 //require
 let bendit = require('../lib/benditHub');
 
-bendit.post();
+
 
 
 
@@ -50,6 +50,8 @@ let deviceNumber = 0;
 // io.on('connection', function (socket) {
 //console.log("a user connected");
 bendit.initServer(); //this will be set up once everything is moved to benditHub.js
+
+
     // for (var i = 0; i < switches.length; i++) {
     //     socket.emit('toggleSwitch' + (i + 1), switches[i].state);
     // }
@@ -222,6 +224,6 @@ bendit.initServer(); //this will be set up once everything is moved to benditHub
 
 
 
-http.listen(3000, function () {
-    console.log('Bendit_I/O Server is Running!\n Listening on *:3000');
-});
+// http.listen(3000, function () {
+//     console.log('Bendit_I/O Server is Running!\n Listening on *:3000');
+// });
