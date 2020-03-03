@@ -13,10 +13,7 @@ let app = express();
 let http = require('http').Server(app);
 let io = require('socket.io')(http);
 
-// io.listen(http, {
-//     'heartbeat interval': 5,
-//     'heartbeat timeout': 10
-// });
+
 
 var sw1toggle = {
     state: false
