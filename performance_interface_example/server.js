@@ -49,8 +49,11 @@ let deviceNumber = 0;
 //Open websocket connection when clients connect
 // io.on('connection', function (socket) {
 //console.log("a user connected");
-bendit.initServer(); //this will be set up once everything is moved to benditHub.js
 
+//MUST be called before .initServer if you want to add additional channels!
+//bendit.setAdditionalChannels = ()=> {\\put new socket.on/channel events here}
+bendit.initServer(); //this will be set up once everything is moved to benditHub.js
+bendit.postStats("server");
 
     // for (var i = 0; i < switches.length; i++) {
     //     socket.emit('toggleSwitch' + (i + 1), switches[i].state);

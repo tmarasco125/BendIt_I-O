@@ -1,7 +1,7 @@
 {
-  "name": "arduino_socket_io_project",
-  "version": "1.0.0",
-  "description": "Connecting ESP32 and Web Server through Socket.io",
+  "name": "bendit_io",
+  "version": "1.1.0",
+  "description": "Server and API for Bendit_I/O",
   "main": "server.js",
   "scripts": {
     "test": "npm start",
