@@ -8,6 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/addons/p5.sound.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script type="text/javascript" src="libraries/benditBrowser.js"></script>
 
     <meta charset="utf-8" />
     <style>
@@ -40,6 +41,8 @@ Example Web Performance: Reactive Visuals
 Anthony T.Marasco - 2019
 
  */
+        const BenditDevice = require('bendit');
+        //let cassette = new BenditDevice(4);
         let angle = 0;
         let squares;
         let numbers = [];
@@ -51,6 +54,7 @@ Anthony T.Marasco - 2019
 
         function setup() {
             createCanvas(windowWidth, windowHeight, WEBGL);
+            
             socket = io();
             // camera(0, 0, sin(frameCount * 0.01) * 10);
             rectMode(CENTER);
