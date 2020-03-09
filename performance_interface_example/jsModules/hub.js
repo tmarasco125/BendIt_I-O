@@ -245,13 +245,16 @@ Hub.prototype.log = function(l) {
 };
 
 // TODO: instantiate SocketIO here instead of node file. 
-Hub.prototype.init = function(sio, publicFolder) {
+Hub.prototype.init = function(sio,publicFolder) {
     // Setup web app - using express to serve pages
     //var express = require('../../nexusNode/node_modules/express');
      var express = require('../node_modules/express');
     var http = require('http');
     var serverPort = this.serverPort;
+   //let sio =require('socket.io')(http);
+
     console.log("Port: " + this.serverPort);
+
 
     var app = express();
     app.use(express.static(publicFolder));

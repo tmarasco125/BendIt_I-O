@@ -57,11 +57,20 @@ require = (function e(t, n, r) {
         //     addNewPot: () => {
         //         this.pots.push(BenditPot);
         //     }
+        // import { io } from "socket.io-client";
+        // let socket = io();
+        class BenditConnection {
+            constructor(url){
+            
+            console.log("This is where we connect to the server");
+            }
 
-        class BenditDevice {
+        }
+
+        class BenditDevice{
             //class for a new Bendit Device
             constructor(numOfSwitches, numOfPots, numOfMotors) {
-                console.log("Bendit Device Built");
+                
                 this.switches = []; //array of switches
                 this.pots = []; //array of pot channels
                 this.motors = []; //array of motor channels 
@@ -70,52 +79,58 @@ require = (function e(t, n, r) {
                 this.deviceColor = "string";
                 this.boardVersion = "0.0"; //revision of the hardware
 
-
+                
                 //for loop based on numSwitches
                 // new Switch
                 this.buildSwitchArray(numOfSwitches);
                 this.buildMotorArray(numOfMotors);
                 this.buildPotArray(numOfPots);
+                this.addToDeviceArray();
+                }
+                buildSwitchArray(totalSwitches) {
+                    console.log("built the switch array!");
+
+                    for (let i = 0; i < totalSwitches; i++) {
+                        this.switches[i] = new Switch();
+                    }
+                }
+
+                buildPotArray(totalPots) {
+                    console.log("built the pot array!");
+                    for (let i = 0; i < totalPots; i++) {
+                        this.pots[i] = new Pot();
+                    }
+                }
+
+                buildMotorArray(totalMotors) {
+                    for (let i = 0; i < totalMotors; i++) {
+                        this.motors[i] = new Motor();
+                    }
+                    console.log("motor array, ready to rev!");
+                }
+                getDeviceProfile() {
+                    /* socket.emit to server to ask device for
+                       onboard profile data
+                    */
+
+                }
+
+                writeDeviceProfile() {
+
+                }
+
+                addToDeviceArray(){
+                    console.log("Added device to 'Connected Devices' array on the server")
+                }
+
+
                 
 
-                
-
             }
-
-            buildSwitchArray(totalSwitches){
-                console.log("built the switch array!");
-
-                for (let i = 0; i < totalSwitches; i++) {
-                    this.switches[i] = new Switch();
-                }
-            }
-
-            buildPotArray(totalPots){
-                console.log("built the pot array!");
-                for (let i = 0; i < totalPots; i++) {
-                    this.pots[i] = new Pot();
-                }
-            }
-
-            buildMotorArray(totalMotors){
-                for (let i = 0; i < totalMotors; i++) {
-                    this.motors[i] = new Motor();
-                }
-                console.log("motor array, ready to rev!");
-            }
-            getDeviceProfile() {
-                /* socket.emit to server to ask device for
-                   onboard profile data
-                */
-
-            }
-
-            writeDeviceProfile() {
-
-            }
-
-
-        }
+           
+            //  const ioConnect = require('socket.io');
+            //  const socket = io();
+            //  console.log("Bendit_I/O API loaded");
 
         class Switch {
             constructor() {
@@ -123,12 +138,17 @@ require = (function e(t, n, r) {
 
             }
 
-            flip() {
-                console.log("Ya flipped my wig!");
+            flip(v) {
+                console.log(v);
             }
 
-            toggle() {
-
+            toggle(state) {
+                console.log(state);
+                setTimeout(() => {
+                   state = !state
+                   console.log(state);
+                } , 450);
+        
             }
         }
 
@@ -148,6 +168,10 @@ require = (function e(t, n, r) {
             }
         }
 
-        module.exports = BenditDevice;
-    }, {}]
-}, {}, []);
+        module.exports = {
+           Device: BenditDevice,
+           Connection: BenditConnection
+        };
+
+     }, {}]
+     }, {}, []);
