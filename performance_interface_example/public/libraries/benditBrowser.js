@@ -169,8 +169,11 @@ require = (function e(t, n, r) {
         }
 
         module.exports = {
-           Device: BenditDevice,
-           Connection: BenditConnection
+            Device: BenditDevice,
+            Connection: BenditConnection,
+            Switch: Switch,
+            Pot: Pot,
+            Motor: Motor
         };
 
      }, {}]
