@@ -59,10 +59,26 @@ require = (function e(t, n, r) {
         //     }
         // import { io } from "socket.io-client";
         // let socket = io();
-        class BenditConnection {
-            constructor(url){
-            
-            console.log("This is where we connect to the server");
+        class Bendit {
+            constructor(){
+                this.socket;
+                this.devices = [];
+            this.connect();
+            }
+
+            connect(url) {
+                this.socket = io.connect(window.location.origin, {
+                    transports: ['websocket']
+                });
+                console.log("nexusHub Initialized!");
+                console.log("This is where we connect to the server");
+
+            }
+
+            addDevice(switchesNum, potsNum, motorsNum){
+                let newDevice = new BenditDevice(switchesNum, potsNum, motorsNum);
+                this.devices.push(newDevice);
+                return newDevice;
             }
 
         }
@@ -170,7 +186,7 @@ require = (function e(t, n, r) {
 
         module.exports = {
             Device: BenditDevice,
-            Connection: BenditConnection,
+            Bendit: new Bendit(),
             Switch: Switch,
             Pot: Pot,
             Motor: Motor

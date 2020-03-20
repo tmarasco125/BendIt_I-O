@@ -43,6 +43,7 @@ Anthony T.Marasco - 2019
  */
         
         let Bendit = require('bendit');
+        let bendit = Bendit.Bendit;
         let angle = 0;
         let squares;
         let numbers = [];
@@ -55,7 +56,7 @@ Anthony T.Marasco - 2019
         function setup() {
             createCanvas(windowWidth, windowHeight, WEBGL);
             
-            socket = io();
+            // socket = io();
             // camera(0, 0, sin(frameCount * 0.01) * 10);
             rectMode(CENTER);
             squares = [];
@@ -70,7 +71,7 @@ Anthony T.Marasco - 2019
             // sq1 = new Box3D(random(-30, -10), random(-30, -10), random([60, 20, 120]));
             // sq2 = new Box3D(-10, -20, random([60, 20, 120])); 
 
-            socket.on('message', function (data) {
+            bendit.socket.on('message', function (data) {
                 
                 messageCounts++;
                 messageCountData = messageCounts %8;
@@ -94,12 +95,12 @@ Anthony T.Marasco - 2019
 
             });
 
-            socket.on('espMessage', function (data) {
+            bendit.socket.on('espMessage', function (data) {
                 console.log("ESP Button state: " + data);
                 espStatus = data;
             });
 
-            socket.on('playPauseMessage', function (data) {
+            bendit.socket.on('playPauseMessage', function (data) {
                 console.log("Playing Status is: " + data);
                 playPauseStatus = data;
             });
@@ -195,7 +196,7 @@ Anthony T.Marasco - 2019
 
         function potValueSet(pot1Position){
             
-            socket.emit('potTurning', {
+           bendit.socket.emit('potTurning', {
             position: pot1Position,
             device: 2
             });
