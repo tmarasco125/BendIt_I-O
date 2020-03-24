@@ -75,8 +75,19 @@ require = (function e(t, n, r) {
 
             }
 
-            addDevice(switchesNum, potsNum, motorsNum){
-                let newDevice = new BenditDevice(switchesNum, potsNum, motorsNum);
+            addDevice(options){
+                let newDevice;
+
+                switch (typeof arguments[0]) {
+                    case 'number':
+                        newDevice = new BenditDevice(arguments[0],arguments[1],arguments[2]);
+                        break;
+                    case 'object':
+                        newDevice = new BenditDevice(options.switches, options.pots, options.motors);
+                        break;
+
+                }
+
                 this.devices.push(newDevice);
                 return newDevice;
             }
@@ -85,8 +96,8 @@ require = (function e(t, n, r) {
 
         class BenditDevice{
             //class for a new Bendit Device
-            constructor(numOfSwitches, numOfPots, numOfMotors) {
-                
+            constructor(options) {
+        
                 this.switches = []; //array of switches
                 this.pots = []; //array of pot channels
                 this.motors = []; //array of motor channels 
@@ -96,12 +107,24 @@ require = (function e(t, n, r) {
                 this.boardVersion = "0.0"; //revision of the hardware
 
                 
-                //for loop based on numSwitches
-                // new Switch
-                this.buildSwitchArray(numOfSwitches);
-                this.buildMotorArray(numOfMotors);
-                this.buildPotArray(numOfPots);
+
+                switch(typeof arguments[0]){
+                    case 'number':
+                        this.buildSwitchArray(arguments[0]);
+                        this.buildPotArray(arguments[1]);
+                        this.buildMotorArray(arguments[2]);
+                        break;
+                    case 'object':
+                        this.buildSwitchArray(options.switches);
+                        this.buildPotArray(options.pots);
+                        this.buildMotorArray(options.motors);
+                        break;
+
+                }
+                
+               
                 this.addToDeviceArray();
+
                 }
                 buildSwitchArray(totalSwitches) {
                     console.log("built the switch array!");
@@ -150,21 +173,32 @@ require = (function e(t, n, r) {
 
         class Switch {
             constructor() {
+                this.state = false;
                 console.log("I am a switch!");
 
             }
 
-            flip(v) {
+            set(v) {
+                this.state = v;
                 console.log(v);
             }
 
-            toggle(state) {
+            flip() {
+
+                //check state, change to opposite and STAY
+                //look oup ternary for opposite
                 console.log(state);
-                setTimeout(() => {
-                   state = !state
-                   console.log(state);
-                } , 450);
+                
         
+            }
+
+            toggle(){
+                //check what state it is, flip to the opposite and automatically after
+                //set amount of time, flip back
+                setTimeout(() => {
+                    this.state = !state
+                    console.log(state);
+                }, 450);
             }
         }
 
@@ -186,7 +220,7 @@ require = (function e(t, n, r) {
 
         module.exports = {
             Device: BenditDevice,
-            Bendit: new Bendit(),
+            Hub: new Bendit(),
             Switch: Switch,
             Pot: Pot,
             Motor: Motor
