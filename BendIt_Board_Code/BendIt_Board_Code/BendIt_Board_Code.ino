@@ -1,7 +1,9 @@
 /*
 Bendit_I/O: Wireless Circuit Bending
 
-Bendit Board code
+Bendit Board code - for v1.0 boards
+
+Choose 'Adafruit ESP32 Feather' as board in Tools menu
 
 ***Work in Progress***
 

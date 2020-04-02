@@ -31,47 +31,24 @@ require = (function e(t, n, r) {
           BenditDevice for each device attached to a Bendit board
         */
 
-        // let BenditSwitch = {
-        //     name: 'switch-1',
-        //     state: 0,
-        //     flip: () => {
-        //         this.state = 1
-        //     },
-        //     toggle: () => {
-        //         // toggley stuff
-        //     }
-        // }
-
-        // let BenditPot ={
-        //     name: 'pot-1',
-        //     value: 0,
-        //     set: () => {
-        //         this.value = 0
-        //     }
-        // }
-        // let BenditDevice = {
-        //     switches: [],
-        //     addNewSwitch: () => {
-        //         this.switches.push(BenditSwitch);
-        //     }
-        //     addNewPot: () => {
-        //         this.pots.push(BenditPot);
-        //     }
-        // import { io } from "socket.io-client";
-        // let socket = io();
+       
         class Bendit {
             constructor(){
-                this.socket;
+                
+                //this.socket;
                 this.devices = [];
-            this.connect();
-            }
 
-            connect(url) {
                 this.socket = io.connect(window.location.origin, {
                     transports: ['websocket']
                 });
-                console.log("nexusHub Initialized!");
-                console.log("This is where we connect to the server");
+                console.log("nexusHub Server Initialized!");
+                console.log("The Bendit_I/O Server");
+
+            //this.connect();
+            }
+
+            connect(url) {
+                
 
             }
 
@@ -80,10 +57,10 @@ require = (function e(t, n, r) {
 
                 switch (typeof arguments[0]) {
                     case 'number':
-                        newDevice = new BenditDevice(arguments[0],arguments[1],arguments[2]);
+                        newDevice = new BenditDevice(arguments[0],arguments[1],arguments[2], arguments[3]);
                         break;
                     case 'object':
-                        newDevice = new BenditDevice(options.switches, options.pots, options.motors);
+                        newDevice = new BenditDevice(options.switches, options.pots, options.motors, options.deviceNumber);
                         break;
 
                 }
@@ -94,14 +71,14 @@ require = (function e(t, n, r) {
 
         }
 
-        class BenditDevice{
+        class BenditDevice {
             //class for a new Bendit Device
             constructor(options) {
-        
+
+                this.deviceNumber = 0;
                 this.switches = []; //array of switches
                 this.pots = []; //array of pot channels
                 this.motors = []; //array of motor channels 
-                this.deviceNumber = 0;
                 this.deviceNickname = "string";
                 this.deviceColor = "string";
                 this.boardVersion = "0.0"; //revision of the hardware
@@ -113,37 +90,40 @@ require = (function e(t, n, r) {
                         this.buildSwitchArray(arguments[0]);
                         this.buildPotArray(arguments[1]);
                         this.buildMotorArray(arguments[2]);
+                        this.deviceNumber = arguments[3];
                         break;
                     case 'object':
                         this.buildSwitchArray(options.switches);
                         this.buildPotArray(options.pots);
                         this.buildMotorArray(options.motors);
+                        this.deviceNumber = options.deviceNumber;
                         break;
 
                 }
                 
                
                 this.addToDeviceArray();
+                
 
                 }
                 buildSwitchArray(totalSwitches) {
                     console.log("built the switch array!");
 
                     for (let i = 0; i < totalSwitches; i++) {
-                        this.switches[i] = new Switch();
+                        this.switches[i] = new Switch(i);
                     }
                 }
 
                 buildPotArray(totalPots) {
                     console.log("built the pot array!");
                     for (let i = 0; i < totalPots; i++) {
-                        this.pots[i] = new Pot();
+                        this.pots[i] = new Pot(i);
                     }
                 }
 
                 buildMotorArray(totalMotors) {
                     for (let i = 0; i < totalMotors; i++) {
-                        this.motors[i] = new Motor();
+                        this.motors[i] = new Motor(i);
                     }
                     console.log("motor array, ready to rev!");
                 }
@@ -163,27 +143,39 @@ require = (function e(t, n, r) {
                 }
 
 
-                
+                //get device name
+               
+
 
             }
            
-            //  const ioConnect = require('socket.io');
-            //  const socket = io();
-            //  console.log("Bendit_I/O API loaded");
+            
+        //base Bednit_module that Switch, Pot, and Motor are built from
+        class Bendit_module {
+            constructor(socket) {
+                this.socket = socket;
+            }
+        }
 
-        class Switch {
-            constructor() {
+        class Switch extends Bendit_module  {
+            constructor(swNum) {
+                super(socket);
+                this.number = swNum;
                 this.state = false;
-                console.log("I am a switch!");
-
+                this.socket = socket;
             }
 
-            set(v) {
+            setSwitch(v) {
                 this.state = v;
-                console.log(v);
+                // Bendit.socket.emit('toggle1', {
+                //    state: this.state,
+                //    device: BenditDevice.deviceNumber
+                // })
+                
+               
             }
 
-            flip() {
+            flipSwitch() {
 
                 //check state, change to opposite and STAY
                 //look oup ternary for opposite
@@ -192,7 +184,7 @@ require = (function e(t, n, r) {
         
             }
 
-            toggle(){
+            toggleSwitch(){
                 //check what state it is, flip to the opposite and automatically after
                 //set amount of time, flip back
                 setTimeout(() => {
@@ -203,24 +195,44 @@ require = (function e(t, n, r) {
         }
 
         class Pot {
-            constructor() {
+            constructor(potNum) {
+                this.number = potNum;
+                this.value = 0;
                 console.log("I am a pot channel!");
             }
 
-            set(potValue) {
+            setPot(potValue) {
                 console.log("my value was just set to " + potValue);
             }
         }
 
         class Motor {
-            constructor() {
+            constructor(motNum) {
+                this.number = motNum;
+                this.speed = 0;
+                this.direction = 0;
                 console.log("I'm a new motor!")
             }
+
+            start(){
+
+            }
+
+            stop(){
+
+            }
+
+            flipDirection(){
+
+            }
+
+            
         }
 
         module.exports = {
             Device: BenditDevice,
             Hub: new Bendit(),
+            Module: Bendit_module,
             Switch: Switch,
             Pot: Pot,
             Motor: Motor
