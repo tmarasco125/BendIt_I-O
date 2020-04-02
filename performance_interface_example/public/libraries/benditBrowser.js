@@ -42,7 +42,7 @@ require = (function e(t, n, r) {
                     transports: ['websocket']
                 });
                 console.log("nexusHub Server Initialized!");
-                console.log("The Bendit_I/O Server");
+                console.log("Connected to the Bendit_I/O Server ");
 
             //this.connect();
             }
@@ -150,7 +150,7 @@ require = (function e(t, n, r) {
             }
            
             
-        //base Bednit_module that Switch, Pot, and Motor are built from
+        //base Bendit_module that Switch, Pot, and Motor are built from
         class Bendit_module {
             constructor(socket) {
                 this.socket = socket;
@@ -176,10 +176,10 @@ require = (function e(t, n, r) {
             }
 
             flipSwitch() {
-
+                this.state = this.state ? false : true;
                 //check state, change to opposite and STAY
                 //look oup ternary for opposite
-                console.log(state);
+                console.log(this.state);
                 
         
             }
