@@ -265,21 +265,40 @@ require = (function e(t, n, r) {
         class Motor {
             constructor(motNum, socket, deviceNum) {
                 this.number = motNum;
-                this.speed = 0;
+                this.speed = 1;
                 this.direction = 0;
                 console.log("I'm a new motor!")
             }
 
-            start(){
+            start(speed, direction){
+                this.speed = speed;
+                this.socket.emit('runMotor', {
+                    speed: this.speed,
+                    direction: this.direction,
+                    device: this.deviceNumber
+                });
 
             }
 
             stop(){
 
+
             }
 
             flipDirection(){
 
+            }
+
+            throw(){
+
+            }
+
+            return(){
+
+            }
+
+            throwReturn(){
+                
             }
 
             
