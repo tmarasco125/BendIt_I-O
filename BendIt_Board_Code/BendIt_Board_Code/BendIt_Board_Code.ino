@@ -599,7 +599,7 @@ char deviceNumberCharArray[deviceStr_length];
     // webSocket.emit("register", "\"device2\"");
     
     webSocket.emit("handshake", ("{\"MAC\": \"" +String(deviceMACCharArray)+"\", \"color\": \"" + String(deviceColor)+"\", \"nickname\": \"CDplayer\", \"section\": \"none\", \"deviceNumber\": \"" + String(deviceNumberString)+"\"}").c_str());
-    webSocket.on("setDeviceColor", setDeviceColor);
+    //webSocket.on("setDeviceColor", setDeviceColor);
     webSocket.on("setDeviceNumber", setDeviceNumber);
 }
 
