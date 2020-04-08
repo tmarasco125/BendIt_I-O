@@ -65,9 +65,9 @@ require = (function e(t, n, r) {
                         newDevice = new BenditDevice(args[0],args[1],args[2], args[3], args[4]);
                         break;
                     case 'object':
-                        newDevice = new BenditDevice(options.switches, options.pots, options.motors, options.deviceNumber);
+                        newDevice = new BenditDevice(options.switches, options.pots, options.motors, options.deviceNumber, this.socket);
                         //adding socket property if object passed in
-                        newDevice.socket = this.socket;
+                        //newDevice.socket = this.socket;
                         break;
 
                 }
@@ -91,7 +91,7 @@ require = (function e(t, n, r) {
                 this.deviceNickname = "string";
                 this.deviceColor = "string";
                 this.boardVersion = "0.0"; //revision of the hardware
-                this.socket;
+                this.socket = options.socket;
 
                // arguments.push(this.socket)
                 
@@ -107,8 +107,7 @@ require = (function e(t, n, r) {
                         break;
                     case 'object':
                          this.deviceNumber = options.deviceNumber;
-                         this.socket = options.socket;
-                         this.buildSwitchArray(options.switches, this.socket, this.deviceNumber);
+                         this.buildSwitchArray(options.switches);
                          this.buildPotArray(options.pots);
                          this.buildMotorArray(options.motors);
                         
@@ -190,7 +189,8 @@ require = (function e(t, n, r) {
                     console.log("Invalid state: can only take 'open'/0 or 'closed'/1 ")
                 }
                 
-                this.socket.emit(`toggle${this.number + 1}`, {
+                this.socket.emit('switchEvent', {
+                    switch_number: this.number,
                     state: this.state,
                     device: this.deviceNumber
                  });
@@ -298,7 +298,7 @@ require = (function e(t, n, r) {
             }
 
             throwReturn(){
-                
+
             }
 
             

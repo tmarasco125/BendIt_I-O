@@ -100,6 +100,7 @@ SocketIoClient webSocket;
 Ticker switch1, switch2, switch3, switch4, switch5, switch6;
 String myString ="00:00:00:00:00:00";
 String deviceNumberString = "0";
+String switchPayloadString = "0,false";
 //************************************ Device Functions*****************************
 //digtialPotTurning function
 void writeDigitalPot(int address, int value) {
@@ -264,10 +265,17 @@ void printConnect(const char * payload, size_t length) {
   
 }
 
-//Switches
+//TEST of new switch function
 
-//toggle functions
-void toggleSwitch1(const char * payload, size_t length) {
+void switch_engage(const char *payload, size_t length){
+  Serial.printf("[incoming switch command]: %s\n ", payload);
+}
+
+    //Switches
+
+    //toggle functions
+    void toggleSwitch1(const char *payload, size_t length)
+{
   Serial.printf("[switch]: %s\n ",  payload);
   //Serial.printf("[switchPins[0]: %d\n ",  switchPins[0]);
   if (!strcmp(payload, "true")) { //{\"state\":true}"
@@ -484,9 +492,12 @@ deviceNumberString = String(strncpy(dnArray, payload, length));
 void setup()
 {
 int str_length = myString.length()+1;
+int switchPayload_length = switchPayloadString.length()+1;
 int deviceStr_length = deviceNumberString.length()+1;
 char deviceMACCharArray[str_length];
 char deviceNumberCharArray[deviceStr_length];
+char stringPayloadCharArray[switchPayload_length];
+
     // Set up the Switch outputs
 
     for (int i = 0; i < 6; i++)
@@ -564,7 +575,7 @@ char deviceNumberCharArray[deviceStr_length];
     webSocket.on("disconnected", printDisconnect);
 
     //Set up Client Callbacks to listen for
-
+    webSocket.on("switchEvent", switch_engage);
     webSocket.on("toggleSwitch1", toggleSwitch1);
     webSocket.on("toggleSwitch2", toggleSwitch2);
     webSocket.on("toggleSwitch3", toggleSwitch3);
