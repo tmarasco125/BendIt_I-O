@@ -1,13 +1,13 @@
 /*
-Bendit_I/O: Wireless Circuit Bending
+Bendit_I/O: Networked Circuit Bending
 
 Bendit Board code - for v1.0 boards
 
 Choose 'Adafruit ESP32 Feather' as board in Tools menu
 
 ***Work in Progress***
-
-Anthony T. Marasco - 2019
+version date - 04/09/2020
+Anthony T. Marasco - 2020
 */
 
 #include <SocketIoClient.h>
@@ -27,33 +27,33 @@ Anthony T. Marasco - 2019
 
 #include <analogWrite.h>
 #include <Ticker.h>
-int i=0;
+int i = 0;
 //instance of WiFiMulti library to hold multiple network ssid/password pairs
 WiFiMulti wifiMultiScan;
-int deviceNumber =0;
+int deviceNumber = 0;
 const char assignedDeviceNumber = 0;
-String deviceColor ="none";
-    //server IP
-    char host[] = "192.168.1.149";
+String deviceColor = "none";
+//server IP
+char host[] = "192.168.1.149";
 //server port
 int port = 3000;
 //Switch and Motor pins
 int switchPins[6] = {15, 32, 14, 22, 23, 21};
 // LED pins
 int ledPins[3] = {13, 12, 27};
-int redPin = ledPins[0];   // Red LED,   connected to digital pin 9
-int grnPin = ledPins[1];  // Green LED, connected to digital pin 10
-int bluPin = ledPins[2];  // Blue LED,  connected to digital pin 11
+int redPin = ledPins[0]; // Red LED,   connected to digital pin 9
+int grnPin = ledPins[1]; // Green LED, connected to digital pin 10
+int bluPin = ledPins[2]; // Blue LED,  connected to digital pin 11
 
 // Color arrays for fade
-char black[3]  = { 0, 0, 0 };
-char white[3]  = { 100, 100, 100 };
-char pink[3]    = { 199, 21, 133};
+char black[3] = {0, 0, 0};
+char white[3] = {100, 100, 100};
+char pink[3] = {199, 21, 133};
 char orange[3] = {255, 165, 0};
-char green[3]  = { 0, 100, 0 };
-char blue[3]   = { 0, 0, 100 };
-char yellow[3] = { 40, 95, 0 };
-char dimWhite[3] = { 30, 30, 30 };
+char green[3] = {0, 100, 0};
+char blue[3] = {0, 0, 100};
+char yellow[3] = {40, 95, 0};
+char dimWhite[3] = {30, 30, 30};
 
 //RGB color arrays for status
 /*
@@ -65,13 +65,12 @@ int greenRGB[3] = {0, 255, 0};
 int pinkRGB[3] = {255, 182, 193};
 */
 
-
 // Set initial color
 int redVal = black[0];
 int grnVal = black[1];
 int bluVal = black[2];
 
-int wait = 1;      // 10ms internal crossFade delay; increase for slower fades
+int wait = 1;       // 10ms internal crossFade delay; increase for slower fades
 int hold = 0;       // Optional hold when a color is complete, before the next crossFade
 int DEBUG = 1;      // DEBUG counter; if set to 1, will write values back via serial
 int loopCount = 60; // How often should DEBUG report?
@@ -98,12 +97,13 @@ int sw6State = 0;
 SocketIoClient webSocket;
 //Ticker instances
 Ticker switch1, switch2, switch3, switch4, switch5, switch6;
-String myString ="00:00:00:00:00:00";
+String myString = "00:00:00:00:00:00";
 String deviceNumberString = "0";
 String switchPayloadString = "0,false";
 //************************************ Device Functions*****************************
 //digtialPotTurning function
-void writeDigitalPot(int address, int value) {
+void writeDigitalPot(int address, int value)
+{
   digitalWrite(chipSelect, LOW);
   SPI.transfer(address);
   SPI.transfer(value);
@@ -111,8 +111,8 @@ void writeDigitalPot(int address, int value) {
   digitalWrite(chipSelect, HIGH);
 }
 
-
-void setSwitch1() {
+void setSwitch1()
+{
   sw1State = 1 - sw1State; // toggle!
   digitalWrite(switchPins[0], sw1State);
 }
@@ -131,7 +131,8 @@ void setSwitch1(int state)
   }
 }
 
-void setSwitch2() {
+void setSwitch2()
+{
   sw2State = 1 - sw2State; // toggle!
   digitalWrite(switchPins[1], sw2State);
 }
@@ -150,8 +151,8 @@ void setSwitch2(int state)
   }
 }
 
-
-void setSwitch3() {
+void setSwitch3()
+{
   sw3State = 1 - sw3State; // toggle!
   digitalWrite(switchPins[2], sw3State);
 }
@@ -170,11 +171,11 @@ void setSwitch3(int state)
   }
 }
 
-void setSwitch4() {
+void setSwitch4()
+{
   sw4State = 1 - sw4State; // toggle!
   digitalWrite(switchPins[3], sw4State);
 }
-
 
 void setSwitch4(int state)
 {
@@ -190,7 +191,8 @@ void setSwitch4(int state)
   }
 }
 
-void setSwitch5() {
+void setSwitch5()
+{
   sw5State = 1 - sw5State; // toggle!
   digitalWrite(switchPins[4], sw5State);
 }
@@ -231,96 +233,123 @@ void setSwitch6(int state)
 
 //wrappers to run metros on Switches
 
-void runMetroSw1(int speed) {
+void runMetroSw1(int speed)
+{
   switch1.attach_ms(speed, setSwitch1);
 }
 
-void runMetroSw2(int speed) {
+void runMetroSw2(int speed)
+{
   switch2.attach_ms(speed, setSwitch2);
 }
 //************************************ Socket Callbacks*****************************
 //Digital Pots
-void potTurn(const char * payload, size_t length) {
-  Serial.printf("pot position: %s\n ",  payload);
+void potTurn(const char *payload, size_t length)
+{
+  Serial.printf("pot position: %s\n ", payload);
   int i = atoi(payload);
-  if (i < 0) {
+  if (i < 0)
+  {
     i = 0;
-  } else if (i > 255) {
+  }
+  else if (i > 255)
+  {
     i = 255;
   }
   writeDigitalPot(0, i);
 }
 
-
 //Serial Monitor
-void event(const char * payload, size_t length) {
+void event(const char *payload, size_t length)
+{
   Serial.printf("got message: %s\n", payload);
 }
-void printDisconnect(const char * payload, size_t length) {
+void printDisconnect(const char *payload, size_t length)
+{
   Serial.println("We're disconnected!");
 }
 
-void printConnect(const char * payload, size_t length) {
+void printConnect(const char *payload, size_t length)
+{
   Serial.println("Sweet! I'm connected.");
-  
 }
 
 //TEST of new switch function
 
-void switch_engage(const char *payload, size_t length){
- int swNum = 0;
- char state[5];
- sscanf(payload, "%d,%s",&swNum,&state);
+void switch_engage(const char *payload, size_t length)
+{
+  int swNum = 0;
+  char state[] = "false";
+  sscanf(payload, "%d,%s", &swNum, &state);
   //switchPayloadString.toCharArray(stringPayloadCharArray, switchPayload_length);
   Serial.printf("[incoming switch command]: %s\n ");
   Serial.println(swNum);
   Serial.println(state);
+
+  if (!strcmp(state, "true"))
+  {
+    digitalWrite(switchPins[swNum], HIGH);
+    Serial.println("[Switch ");
+    Serial.println(swNum);
+    Serial.println("Closed]");
+  }
+  else
+  {
+    digitalWrite(switchPins[swNum], LOW);
+    Serial.println("[Switch ");
+    Serial.println(swNum);
+    Serial.println("Open]");
+  }
 }
 
-    //Switches
+//Switches
 
-    //toggle functions
-    void toggleSwitch1(const char *payload, size_t length)
+//toggle functions
+void toggleSwitch1(const char *payload, size_t length)
 {
-  Serial.printf("[switch]: %s\n ",  payload);
+  Serial.printf("[switch]: %s\n ", payload);
   //Serial.printf("[switchPins[0]: %d\n ",  switchPins[0]);
-  if (!strcmp(payload, "true")) { //{\"state\":true}"
+  //the ! is because
+  if (!strcmp(payload, "true"))
+  { //{\"state\":true}"
     Serial.println("[Switch 1] ON");
     //digitalWrite(ledPins[0], HIGH);
     digitalWrite(switchPins[0], HIGH);
   }
-  else {
+  else
+  {
     Serial.println("[Switch 1] off");
     //digitalWrite(ledPins[0], LOW);
     digitalWrite(switchPins[0], LOW);
-
   }
 }
 
-void toggleSwitch2(const char * payload, size_t length) {
-  Serial.printf("[switch]: %s\n ",  payload);
+void toggleSwitch2(const char *payload, size_t length)
+{
+  Serial.printf("[switch]: %s\n ", payload);
   //Serial.printf("[switchPins[1]: %s\n ",  switchPins[1]); //this line causes Core Panic crash Why???
-  if (!strcmp(payload, "true")) { //{\"state\":true}"
+  if (!strcmp(payload, "true"))
+  { //{\"state\":true}"
     Serial.println("[Switch 2] ON");
     //digitalWrite(ledPins[0], HIGH);
     digitalWrite(switchPins[1], HIGH);
   }
-  else {
+  else
+  {
     Serial.println("[Switch 2] off");
     //digitalWrite(ledPins[0], LOW);
     digitalWrite(switchPins[1], LOW);
-
   }
 }
 
 void toggleSwitch3(const char *payload, size_t length)
 {
   Serial.printf("[switch]: %s\n ", payload);
-  
+
   if (!strcmp(payload, "true"))
   { //{\"state\":true}"
     Serial.println("[Switch 3] ON");
-    
+
     digitalWrite(switchPins[2], HIGH);
   }
   else
@@ -390,11 +419,12 @@ void metroSwitch1(const char *payload, size_t length)
 {
   switch1.detach();
   int sw1Speed = atoi(payload);
-  
+
   switch1.attach_ms(sw1Speed, setSwitch1);
 }
 
-void metroSwitch1Stop(const char *payload, size_t length) {
+void metroSwitch1Stop(const char *payload, size_t length)
+{
   switch1.detach();
 }
 
@@ -402,7 +432,7 @@ void metroSwitch2(const char *payload, size_t length)
 {
   switch2.detach();
   int sw2Speed = atoi(payload);
-  
+
   switch2.attach_ms(sw2Speed, setSwitch2);
 }
 
@@ -411,47 +441,50 @@ void metroSwitch2Stop(const char *payload, size_t length)
   switch2.detach();
 }
 
-
 void metroSwitch3(const char *payload, size_t length)
 {
   switch3.detach();
   int sw3Speed = atoi(payload);
-  
+
   switch3.attach_ms(sw3Speed, setSwitch3);
 }
 
-void metroSwitch3Stop(const char *payload, size_t length) {
+void metroSwitch3Stop(const char *payload, size_t length)
+{
   switch3.detach();
 }
-  void metroSwitch4(const char *payload, size_t length)
-  {
+void metroSwitch4(const char *payload, size_t length)
+{
   switch4.detach();
   int sw4Speed = atoi(payload);
-  
+
   switch4.attach_ms(sw4Speed, setSwitch4);
-  }
-void metroSwitch4Stop(const char *payload, size_t length) {
+}
+void metroSwitch4Stop(const char *payload, size_t length)
+{
   switch4.detach();
 }
-  void metroSwitch5(const char *payload, size_t length)
-  {
+void metroSwitch5(const char *payload, size_t length)
+{
   switch5.detach();
   int sw5Speed = atoi(payload);
-  
+
   switch5.attach_ms(sw5Speed, setSwitch5);
-  }
-void metroSwitch5Stop(const char *payload, size_t length) {
+}
+void metroSwitch5Stop(const char *payload, size_t length)
+{
   switch5.detach();
 }
-  void metroSwitch6(const char *payload, size_t length)
-  {
+void metroSwitch6(const char *payload, size_t length)
+{
   switch6.detach();
   int sw6Speed = atoi(payload);
-  
-  switch6.attach_ms(sw6Speed, setSwitch6);
-  }
 
-  void metroSwitch6Stop(const char *payload, size_t length) {
+  switch6.attach_ms(sw6Speed, setSwitch6);
+}
+
+void metroSwitch6Stop(const char *payload, size_t length)
+{
   switch6.detach();
 }
 
@@ -462,26 +495,31 @@ void setDeviceColor(const char *payload, size_t length)
   deviceColor = String(strncpy(bob, payload, length));
   Serial.println('\n');
 
-
   Serial.println(payload);
 
-  if (!strcmp(payload, "green")) {
-    setColor(0,255,0);
-  } else if (!strcmp(payload, "yellow")) {
+  if (!strcmp(payload, "green"))
+  {
+    setColor(0, 255, 0);
+  }
+  else if (!strcmp(payload, "yellow"))
+  {
     setColor(255, 255, 0);
-  } else if (!strcmp(payload, "orange")) {
+  }
+  else if (!strcmp(payload, "orange"))
+  {
     setColor(219, 98, 0);
-  } else if (!strcmp(payload, "pink")) {
+  }
+  else if (!strcmp(payload, "pink"))
+  {
     setColor(231, 84, 128);
   }
   else if (!strcmp(payload, "purple"))
   {
-   setColor(80, 0, 80);
+    setColor(80, 0, 80);
   }
-  else if(!strcmp(payload, "[")){
-
+  else if (!strcmp(payload, "["))
+  {
   }
-
 }
 
 void setDeviceNumber(const char *payload, size_t length)
@@ -490,26 +528,26 @@ void setDeviceNumber(const char *payload, size_t length)
   //deviceNumberString.copy(payload, length, 0);
   char dnArray[] = "bob";
   deviceNumberString = String(strncpy(dnArray, payload, length));
- //deviceNumberString = String(payload);
+  //deviceNumberString = String(payload);
   Serial.println("Device Number: ");
   Serial.print(deviceNumberString);
 }
 //******************************************************************Main Code**************************************************
 void setup()
 {
-int str_length = myString.length()+1;
-//int switchPayload_length = switchPayloadString.length()+1;
-int deviceStr_length = deviceNumberString.length()+1;
-char deviceMACCharArray[str_length];
-char deviceNumberCharArray[deviceStr_length];
-//char stringPayloadCharArray[switchPayload_length];
+  int str_length = myString.length() + 1;
+  //int switchPayload_length = switchPayloadString.length()+1;
+  int deviceStr_length = deviceNumberString.length() + 1;
+  char deviceMACCharArray[str_length];
+  char deviceNumberCharArray[deviceStr_length];
+  //char stringPayloadCharArray[switchPayload_length];
 
-    // Set up the Switch outputs
+  // Set up the Switch outputs
 
-    for (int i = 0; i < 6; i++)
-{
-  pinMode(switchPins[i], OUTPUT);
-  digitalWrite(switchPins[i], LOW);
+  for (int i = 0; i < 6; i++)
+  {
+    pinMode(switchPins[i], OUTPUT);
+    digitalWrite(switchPins[i], LOW);
   }
   // Set up the LED outputs
   pinMode(ledPins[0], OUTPUT); // sets the pins as output
@@ -526,24 +564,24 @@ char deviceNumberCharArray[deviceStr_length];
   Serial.println("Connecting to WiFi "); //string, needs double quotes
   Serial.println(" ...");
 
-  if (WiFi.status() != WL_CONNECTED){
+  if (WiFi.status() != WL_CONNECTED)
+  {
     Serial.print('.');
-      Serial.print(++i);
+    Serial.print(++i);
 
-      crossFade(green);
-      crossFade(pink);
-      crossFade(yellow);
-      crossFade(orange);
-      crossFade(pink);
-      
+    crossFade(green);
+    crossFade(pink);
+    crossFade(yellow);
+    crossFade(orange);
+    crossFade(pink);
   }
- 
+
   wifiMultiScan.addAP("NETGEAR481", "fearlesssocks430");
   wifiMultiScan.addAP("MonAndToneGlow", "UncagedNY2013");
   // while (wifiMultiScan.run() != WL_CONNECTED)
   // { //wait for the WiFi to connect
   //   //delay(50);
-    
+
   //   Serial.print('.');
   //   Serial.print(++i);
 
@@ -556,14 +594,12 @@ char deviceNumberCharArray[deviceStr_length];
 
   //Search for WiFi
 
- 
-
-
   WiFi.mode(WIFI_MODE_STA);
   myString = WiFi.macAddress();
   myString.toCharArray(deviceMACCharArray, str_length);
 
-  Serial.print("MAC Address: ");Serial.println(deviceMACCharArray);
+  Serial.print("MAC Address: ");
+  Serial.println(deviceMACCharArray);
 
   //char deviceMAC = WiFi.macAddress();
 
@@ -574,57 +610,52 @@ char deviceNumberCharArray[deviceStr_length];
     Serial.println("WiFi Connection established to ");
     Serial.println(WiFi.SSID());
   }
-   
 
-    //try to connect to server
-    webSocket.on("connect", printConnect);
-    webSocket.on("disconnected", printDisconnect);
+  //try to connect to server
+  webSocket.on("connect", printConnect);
+  webSocket.on("disconnected", printDisconnect);
 
-    //Set up Client Callbacks to listen for
-    webSocket.on("switchEvent", switch_engage);
-    webSocket.on("toggleSwitch1", toggleSwitch1);
-    webSocket.on("toggleSwitch2", toggleSwitch2);
-    webSocket.on("toggleSwitch3", toggleSwitch3);
-    webSocket.on("toggleSwitch4", toggleSwitch4);
-    webSocket.on("toggleSwitch5", toggleSwitch5);
-    webSocket.on("toggleSwitch6", toggleSwitch6);
+  //Set up Client Callbacks to listen for
+  webSocket.on("switch_event", switch_engage);
+  webSocket.on("toggleSwitch1", toggleSwitch1);
+  webSocket.on("toggleSwitch2", toggleSwitch2);
+  webSocket.on("toggleSwitch3", toggleSwitch3);
+  webSocket.on("toggleSwitch4", toggleSwitch4);
+  webSocket.on("toggleSwitch5", toggleSwitch5);
+  webSocket.on("toggleSwitch6", toggleSwitch6);
 
-    webSocket.on("metroSwitch1", metroSwitch1);
-    webSocket.on("metroSwitch1Stop", metroSwitch1Stop);
-    webSocket.on("metroSwitch2", metroSwitch2);
-    webSocket.on("metroSwitch2Stop", metroSwitch2Stop);
-    webSocket.on("metroSwitch3", metroSwitch3);
-    webSocket.on("metroSwitch3Stop", metroSwitch3Stop);
-    webSocket.on("metroSwitch4", metroSwitch4);
-    webSocket.on("metroSwitch4Stop", metroSwitch4Stop);
-    webSocket.on("metroSwitch5", metroSwitch5);
-    webSocket.on("metroSwitch5Stop", metroSwitch5Stop);
-    webSocket.on("metroSwitch6", metroSwitch6);
-    webSocket.on("metroSwitch6Stop", metroSwitch6Stop);
+  webSocket.on("metroSwitch1", metroSwitch1);
+  webSocket.on("metroSwitch1Stop", metroSwitch1Stop);
+  webSocket.on("metroSwitch2", metroSwitch2);
+  webSocket.on("metroSwitch2Stop", metroSwitch2Stop);
+  webSocket.on("metroSwitch3", metroSwitch3);
+  webSocket.on("metroSwitch3Stop", metroSwitch3Stop);
+  webSocket.on("metroSwitch4", metroSwitch4);
+  webSocket.on("metroSwitch4Stop", metroSwitch4Stop);
+  webSocket.on("metroSwitch5", metroSwitch5);
+  webSocket.on("metroSwitch5Stop", metroSwitch5Stop);
+  webSocket.on("metroSwitch6", metroSwitch6);
+  webSocket.on("metroSwitch6Stop", metroSwitch6Stop);
 
-    webSocket.on("potTurn", potTurn);
+  webSocket.on("potTurn", potTurn);
 
-    // switch/1/toggle
-    // switch/1/toggle 1
-    // switch/1/metro 500
-    // pots/2/value 0.25
-    // pots/2/value 0.25 5000
-    // pots/2/metro 0.25 0.75 500
-    // motor
+  // switch/1/toggle
+  // switch/1/toggle 1
+  // switch/1/metro 500
+  // pots/2/value 0.25
+  // pots/2/value 0.25 5000
+  // pots/2/metro 0.25 0.75 500
+  // motor
 
-    //Open the port
-    webSocket.begin(host, port);
-    //Set up client callbacks to send to server.
-    // webSocket.emit("register", "\"device2\"");
-    
-    webSocket.emit("handshake", ("{\"MAC\": \"" +String(deviceMACCharArray)+"\", \"color\": \"" + String(deviceColor)+"\", \"nickname\": \"CDplayer\", \"section\": \"none\", \"deviceNumber\": \"" + String(deviceNumberString)+"\"}").c_str());
-    webSocket.on("setDeviceColor", setDeviceColor);
-    webSocket.on("setDeviceNumber", setDeviceNumber);
+  //Open the port
+  webSocket.begin(host, port);
+  //Set up client callbacks to send to server.
+  // webSocket.emit("register", "\"device2\"");
+
+  webSocket.emit("handshake", ("{\"MAC\": \"" + String(deviceMACCharArray) + "\", \"color\": \"" + String(deviceColor) + "\", \"nickname\": \"CDplayer\", \"section\": \"none\", \"deviceNumber\": \"" + String(deviceNumberString) + "\"}").c_str());
+  webSocket.on("setDeviceColor", setDeviceColor);
+  webSocket.on("setDeviceNumber", setDeviceNumber);
 }
-
-
-
-
 
 //Color Changing Stuff - April 2007, Clay Shirky <clay.shirky@nyu.edu>
 
@@ -680,7 +711,8 @@ char deviceNumberCharArray[deviceStr_length];
 
   April 2007, Clay Shirky <clay.shirky@nyu.edu>
 */
-void setColor(int red, int green, int blue) {
+void setColor(int red, int green, int blue)
+{
 #ifdef COMMON_ANODE
   red = 255 - red;
   green = 255 - green;
@@ -691,9 +723,9 @@ void setColor(int red, int green, int blue) {
   analogWrite(ledPins[2], blue);
 }
 
-
 // Main program loop
-void loop() {
+void loop()
+{
   if (WiFi.status() != WL_CONNECTED)
   { //wait for the WiFi to connect
     //delay(50);
@@ -711,8 +743,6 @@ void loop() {
 
   webSocket.loop();
 }
-
-
 
 /* BELOW THIS LINE IS THE MATH -- YOU SHOULDN'T NEED TO CHANGE THIS FOR THE BASICS
 
@@ -743,10 +773,12 @@ void loop() {
   between adjustments in the value.
 */
 
-int calculateStep(int prevValue, int endValue) {
+int calculateStep(int prevValue, int endValue)
+{
   int step = endValue - prevValue; // What's the overall gap?
-  if (step) {                      // If its non-zero,
-    step = 1020 / step;            //   divide by 1020
+  if (step)
+  {                     // If its non-zero,
+    step = 1020 / step; //   divide by 1020
   }
   return step;
 }
@@ -757,21 +789,27 @@ int calculateStep(int prevValue, int endValue) {
    (R, G, and B are each calculated separately.)
 */
 
-int calculateVal(int step, int val, int i) {
+int calculateVal(int step, int val, int i)
+{
 
-  if ((step) && i % step == 0) { // If step is non-zero and its time to change a value,
-    if (step > 0) {              //   increment the value if step is positive...
+  if ((step) && i % step == 0)
+  { // If step is non-zero and its time to change a value,
+    if (step > 0)
+    { //   increment the value if step is positive...
       val += 1;
     }
-    else if (step < 0) {         //   ...or decrement it if step is negative
+    else if (step < 0)
+    { //   ...or decrement it if step is negative
       val -= 1;
     }
   }
   // Defensive driving: make sure val stays in the range 0-255
-  if (val > 255) {
+  if (val > 255)
+  {
     val = 255;
   }
-  else if (val < 0) {
+  else if (val < 0)
+  {
     val = 0;
   }
   return val;
@@ -783,7 +821,8 @@ int calculateVal(int step, int val, int i) {
    the color values to the correct pins.
 */
 
-void crossFade(char color[3]) {
+void crossFade(char color[3])
+{
   // Convert to 0-255
   int R = (color[0] * 255) / 100;
   int G = (color[1] * 255) / 100;
@@ -793,18 +832,17 @@ void crossFade(char color[3]) {
   int stepG = calculateStep(prevG, G);
   int stepB = calculateStep(prevB, B);
 
-  for (int i = 0; i <= 1020; i++) {
+  for (int i = 0; i <= 1020; i++)
+  {
     redVal = calculateVal(stepR, redVal, i);
     grnVal = calculateVal(stepG, grnVal, i);
     bluVal = calculateVal(stepB, bluVal, i);
 
-    analogWrite(ledPins[0], redVal);   // Write current values to LED pins
+    analogWrite(ledPins[0], redVal); // Write current values to LED pins
     analogWrite(ledPins[1], grnVal);
     analogWrite(ledPins[2], bluVal);
 
     delay(wait); // Pause for 'wait' milliseconds before resuming the loop
-
-
   }
   // Update current values for next loop
   prevR = redVal;
