@@ -268,7 +268,13 @@ void printConnect(const char * payload, size_t length) {
 //TEST of new switch function
 
 void switch_engage(const char *payload, size_t length){
-  Serial.printf("[incoming switch command]: %s\n ", payload);
+ int swNum = 0;
+ char state[5];
+ sscanf(payload, "%d,%s",&swNum,&state);
+  //switchPayloadString.toCharArray(stringPayloadCharArray, switchPayload_length);
+  Serial.printf("[incoming switch command]: %s\n ");
+  Serial.println(swNum);
+  Serial.println(state);
 }
 
     //Switches
@@ -483,7 +489,7 @@ void setDeviceNumber(const char *payload, size_t length)
   //deviceNumber = atoi(payload);
   //deviceNumberString.copy(payload, length, 0);
   char dnArray[] = "bob";
-deviceNumberString = String(strncpy(dnArray, payload, length));
+  deviceNumberString = String(strncpy(dnArray, payload, length));
  //deviceNumberString = String(payload);
   Serial.println("Device Number: ");
   Serial.print(deviceNumberString);
@@ -492,11 +498,11 @@ deviceNumberString = String(strncpy(dnArray, payload, length));
 void setup()
 {
 int str_length = myString.length()+1;
-int switchPayload_length = switchPayloadString.length()+1;
+//int switchPayload_length = switchPayloadString.length()+1;
 int deviceStr_length = deviceNumberString.length()+1;
 char deviceMACCharArray[str_length];
 char deviceNumberCharArray[deviceStr_length];
-char stringPayloadCharArray[switchPayload_length];
+//char stringPayloadCharArray[switchPayload_length];
 
     // Set up the Switch outputs
 
