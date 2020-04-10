@@ -35,21 +35,23 @@ require = (function e(t, n, r) {
         class Bendit  {
             constructor(){
                 
-                
+                this.users =[];
                 //this.socket;
                 this.devices = [];
 
                 this.socket = io.connect(window.location.origin, {
                     transports: ['websocket']
                 });
-                console.log("nexusHub Server Initialized!");
+                //console.log("nexusHub Server Initialized!");
                 console.log("Connected to the Bendit_I/O Server ");
-
-            //this.connect();
+                this.socket.on('log_user_list', (data)=>{
+                    console.log("IDs of connected web users: " + data);
+                })
+            
             }
 
-            connect(url) {
-                
+            listConnectedUsers() {
+               this.socket.emit('grab_user_list');
 
             }
 
@@ -205,7 +207,13 @@ require = (function e(t, n, r) {
                 //check state, change to opposite and STAY
                 //look oup ternary for opposite
 
-                this.socket.emit(`toggle${this.number + 1}`, {
+                // this.socket.emit(`toggle${this.number + 1}`, {
+                //     state: this.state,
+                //     device: this.deviceNumber
+                // });
+
+                this.socket.emit('switchEvent', {
+                    switch_number: this.number,
                     state: this.state,
                     device: this.deviceNumber
                 });
@@ -220,7 +228,12 @@ require = (function e(t, n, r) {
                 //set amount of time, flip back
                 this.state = !this.state;
                 
-                this.socket.emit(`toggle${this.number + 1}`, {
+                // this.socket.emit(`toggle${this.number + 1}`, {
+                //     state: this.state,
+                //     device: this.deviceNumber
+                // });
+                this.socket.emit('switchEvent', {
+                    switch_number: this.number,
                     state: this.state,
                     device: this.deviceNumber
                 });
@@ -229,7 +242,12 @@ require = (function e(t, n, r) {
 
                 setTimeout(() => {
                     this.state = !this.state;
-                    this.socket.emit(`toggle${this.number + 1}`, {
+                    // this.socket.emit(`toggle${this.number + 1}`, {
+                    //     state: this.state,
+                    //     device: this.deviceNumber
+                    // });
+                    this.socket.emit('switchEvent', {
+                        switch_number: this.number,
                         state: this.state,
                         device: this.deviceNumber
                     });
@@ -252,7 +270,8 @@ require = (function e(t, n, r) {
             setPot(v) {
                 this.position = v;
 
-                this.socket.emit('potTurning', {
+                this.socket.emit('potEvent', {
+                    pot_number: this.number,
                     position: this.position,
                     device: this.deviceNumber
                 });

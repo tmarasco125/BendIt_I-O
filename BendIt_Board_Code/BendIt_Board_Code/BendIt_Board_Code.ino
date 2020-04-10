@@ -244,20 +244,8 @@ void runMetroSw2(int speed)
 }
 //************************************ Socket Callbacks*****************************
 //Digital Pots
-void potTurn(const char *payload, size_t length)
-{
-  Serial.printf("pot position: %s\n ", payload);
-  int i = atoi(payload);
-  if (i < 0)
-  {
-    i = 0;
-  }
-  else if (i > 255)
-  {
-    i = 255;
-  }
-  writeDigitalPot(0, i);
-}
+
+
 
 //Serial Monitor
 void event(const char *payload, size_t length)
@@ -274,7 +262,68 @@ void printConnect(const char *payload, size_t length)
   Serial.println("Sweet! I'm connected.");
 }
 
-//TEST of new switch function
+
+//steps to change:
+//get string from server in format: channel,position
+//splice string, get channel as int and value as int
+
+void pot_engage(const char *payload, size_t length)
+{
+  int potNum = 0;
+  int potPos = 0;
+  sscanf(payload, "%d,%d", &potNum, &potPos);
+
+  Serial.printf("[incoming pot command]: %s\n ");
+  Serial.println(potNum);
+  Serial.println(potPos);
+
+  //int i = atoi(payload);
+  if (potPos < 0)
+  {
+    potPos = 0;
+  }
+  else if (potPos > 255)
+  {
+    potPos = 255;
+  }
+  writeDigitalPot(potNum, potPos);
+}
+
+void setDeviceColor(const char *payload, size_t length)
+{
+  //deviceColor.copy(payload, length, 0);
+  char deviceColor[] = "orange";
+  sscanf(payload, "%s", &deviceColor);
+
+  //deviceColor = String(strncpy(bob, payload, length));
+  Serial.printf("Assigned board color: %s\n ");
+  Serial.println(deviceColor);
+
+
+  if (!strcmp(deviceColor, "green"))
+  {
+    setColor(0, 255, 0);
+  }
+  else if (!strcmp(deviceColor, "yellow"))
+  {
+    setColor(255, 255, 0);
+  }
+  else if (!strcmp(deviceColor, "orange"))
+  {
+    setColor(219, 98, 0);
+  }
+  else if (!strcmp(deviceColor, "pink"))
+  {
+    setColor(231, 84, 128);
+  }
+  else if (!strcmp(deviceColor, "purple"))
+  {
+    setColor(80, 0, 80);
+  }
+  else if (!strcmp(deviceColor, "["))
+  {
+  }
+}
 
 void switch_engage(const char *payload, size_t length)
 {
@@ -488,39 +537,7 @@ void metroSwitch6Stop(const char *payload, size_t length)
   switch6.detach();
 }
 
-void setDeviceColor(const char *payload, size_t length)
-{
-  //deviceColor.copy(payload, length, 0);
-  char bob[] = "bob";
-  deviceColor = String(strncpy(bob, payload, length));
-  Serial.println('\n');
 
-  Serial.println(payload);
-
-  if (!strcmp(payload, "green"))
-  {
-    setColor(0, 255, 0);
-  }
-  else if (!strcmp(payload, "yellow"))
-  {
-    setColor(255, 255, 0);
-  }
-  else if (!strcmp(payload, "orange"))
-  {
-    setColor(219, 98, 0);
-  }
-  else if (!strcmp(payload, "pink"))
-  {
-    setColor(231, 84, 128);
-  }
-  else if (!strcmp(payload, "purple"))
-  {
-    setColor(80, 0, 80);
-  }
-  else if (!strcmp(payload, "["))
-  {
-  }
-}
 
 void setDeviceNumber(const char *payload, size_t length)
 {
@@ -617,6 +634,7 @@ void setup()
 
   //Set up Client Callbacks to listen for
   webSocket.on("switch_event", switch_engage);
+  webSocket.on("pot_event", pot_engage);
   webSocket.on("toggleSwitch1", toggleSwitch1);
   webSocket.on("toggleSwitch2", toggleSwitch2);
   webSocket.on("toggleSwitch3", toggleSwitch3);
@@ -636,8 +654,9 @@ void setup()
   webSocket.on("metroSwitch5Stop", metroSwitch5Stop);
   webSocket.on("metroSwitch6", metroSwitch6);
   webSocket.on("metroSwitch6Stop", metroSwitch6Stop);
-
-  webSocket.on("potTurn", potTurn);
+  webSocket.on("setDeviceColor", setDeviceColor);
+  webSocket.on("setDeviceNumber", setDeviceNumber);
+  //webSocket.on("potTurn", potTurn);
 
   // switch/1/toggle
   // switch/1/toggle 1
@@ -653,8 +672,7 @@ void setup()
   // webSocket.emit("register", "\"device2\"");
 
   webSocket.emit("handshake", ("{\"MAC\": \"" + String(deviceMACCharArray) + "\", \"color\": \"" + String(deviceColor) + "\", \"nickname\": \"CDplayer\", \"section\": \"none\", \"deviceNumber\": \"" + String(deviceNumberString) + "\"}").c_str());
-  webSocket.on("setDeviceColor", setDeviceColor);
-  webSocket.on("setDeviceNumber", setDeviceNumber);
+  
 }
 
 //Color Changing Stuff - April 2007, Clay Shirky <clay.shirky@nyu.edu>
