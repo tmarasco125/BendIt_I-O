@@ -51,9 +51,9 @@ require = (function e(t, n, r) {
     * client and Bendit board activity on the server.
     * @constructor
     * @property {string[]} users - An array of connected client websocket IDs
-    * @property {Object[]} devices - An array of connected Bendit boards' assigned device data
+    * @property {Object[]} devices - An array of created BenditDevices that can assigned to connected Bendit boards 
     * @property {Object} socket - The socket.io socket for this Bendit-class instance
-    * 
+    * @property {Object[]} availableBenditBoards - An array of assigned board data for all connected Bendit Boards
  */
 
         class Bendit  {
@@ -64,6 +64,8 @@ require = (function e(t, n, r) {
                 //this.socket;
                 
                 this.devices = [];
+
+                this.availableBenditBoards = [];
 
                 this.socket = io.connect(window.location.origin, {
                     transports: ['websocket']
@@ -78,7 +80,7 @@ require = (function e(t, n, r) {
 
                 this.socket.on('log_board_list', (data)=> {
                     let currentBoardList = data;
-                    this.devices = currentBoardList;
+                    this.availableBenditBoards = currentBoardList;
                     //console.log("Device Data of connected Bendit boards: " + JSON.stringify(incomingBoardList));
                     //return this.devices;
                 });
@@ -110,7 +112,7 @@ require = (function e(t, n, r) {
 */
             getConnectedBenditBoards(){
                 this.socket.emit('grab_board_list');
-                return this.devices;
+                return this.availableBenditBoards;
             };
 
 
@@ -233,12 +235,7 @@ require = (function e(t, n, r) {
             }
            
             
-        //base Bendit_module that Switch, Pot, and Motor are built from
-        // class Bendit_core {
-        //     constructor(socket) {
-        //         this.socket = socket;
-        //     }
-        // }
+       
 
         class Switch  {
             constructor(swNum, socket, deviceNum) {
@@ -294,10 +291,7 @@ require = (function e(t, n, r) {
                 //set amount of time, flip back
                 this.state = !this.state;
                 
-                // this.socket.emit(`toggle${this.number + 1}`, {
-                //     state: this.state,
-                //     device: this.deviceNumber
-                // });
+                
                 this.socket.emit('switchEvent', {
                     switch_number: this.number,
                     state: this.state,
