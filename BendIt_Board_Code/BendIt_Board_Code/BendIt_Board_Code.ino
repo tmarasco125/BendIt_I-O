@@ -288,10 +288,19 @@ void pot_engage(const char *payload, size_t length)
   }
   writeDigitalPot(potNum, potPos);
 }
+void setDeviceNumber(const char *payload, size_t length)
+{
+  
+
+  sscanf(payload, "%d", &deviceNumber);
+
+  Serial.println("Device Number: ");
+  Serial.print(deviceNumber);
+}
 
 void setDeviceColor(const char *payload, size_t length)
 {
-  //deviceColor.copy(payload, length, 0);
+  
   char deviceColor[] = "orange";
   sscanf(payload, "%s", &deviceColor);
 
@@ -539,16 +548,7 @@ void metroSwitch6Stop(const char *payload, size_t length)
 
 
 
-void setDeviceNumber(const char *payload, size_t length)
-{
-  //deviceNumber = atoi(payload);
-  //deviceNumberString.copy(payload, length, 0);
-  char dnArray[] = "bob";
-  deviceNumberString = String(strncpy(dnArray, payload, length));
-  //deviceNumberString = String(payload);
-  Serial.println("Device Number: ");
-  Serial.print(deviceNumberString);
-}
+
 //******************************************************************Main Code**************************************************
 void setup()
 {

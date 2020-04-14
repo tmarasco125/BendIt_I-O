@@ -1,4 +1,3 @@
-//The Bendit_I/O Browser-side API
 require = (function e(t, n, r) {
     function s(o, u) {
         if (!n[o]) {
@@ -26,17 +25,44 @@ require = (function e(t, n, r) {
     "bendit": [function (require, module, exports) {
 
         'use strict';
+/* 
+=============================================================================
+    Bendit Browser JS: A Client-Side JavaScript Library for Bendit_I/O
+=============================================================================
+*/ 
 
-        /*In a performance interface, we'll start by defining a new
-          BenditDevice for each device attached to a Bendit board
-        */
+/** 
+  @title Bendit Browser JS
+  @overview A client-side JS library for Bendit_I/O
+  @author Anthony T. Marasco
+  @copyright &copy; 2020
+  @license MIT
+ */
 
-       
+ /*
+=============================================================================
+                        Initialization class
+=============================================================================
+*/
+
+/**
+    * To initialize a connection to the server, an instance of the Bendit class needs to be initialized first.
+    * This class handles information about the client's connection to the server as well as information about all
+    * client and Bendit board activity on the server.
+    * @constructor
+    * @property {string[]} users - An array of connected client websocket IDs
+    * @property {Object[]} devices - An array of connected Bendit boards' assigned device data
+    * @property {Object} socket - The socket.io socket for this Bendit-class instance
+    * 
+ */
+
         class Bendit  {
             constructor(){
                 
+
                 this.users =[];
                 //this.socket;
+                
                 this.devices = [];
 
                 this.socket = io.connect(window.location.origin, {
@@ -44,17 +70,57 @@ require = (function e(t, n, r) {
                 });
                 //console.log("nexusHub Server Initialized!");
                 console.log("Connected to the Bendit_I/O Server ");
+                
+
                 this.socket.on('log_user_list', (data)=>{
                     console.log("IDs of connected web users: " + data);
-                })
+                });
+
+                this.socket.on('log_board_list', (data)=> {
+                    let currentBoardList = data;
+                    this.devices = currentBoardList;
+                    //console.log("Device Data of connected Bendit boards: " + JSON.stringify(incomingBoardList));
+                    //return this.devices;
+                });
+
+                this.socket.emit('grab_board_list');
+
             
             }
+/**
+    * Pings the server and returns an updated list of connected web client user IDs
+    * @method getConnectedUsers
+    * @return {
+        string[]
+    } - An array of connected web client user IDs
+*/
 
-            listConnectedUsers() {
+            getConnectedUsers() {
                this.socket.emit('grab_user_list');
+               return this.users;
+            };
 
-            }
+/**
+    * Pings the server and returns an updated list containing the assigned device data
+    * of any connected Bendit boards.
+    * @method getConnectedBenditBoards
+    * @return {
+        Object[]
+    } - An array of objects containing the assigned device data of each connected Bendit board
+*/
+            getConnectedBenditBoards(){
+                this.socket.emit('grab_board_list');
+                return this.devices;
+            };
 
+
+/**
+    * Creates an instance of the BenditDevice class and adds that object to the
+    * @method addDevice
+    * @return {
+        Object
+    } - An instance of the BenditDevice class
+*/
             addDevice(options){
                 let newDevice;
 
