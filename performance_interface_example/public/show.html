@@ -72,39 +72,39 @@ Anthony T.Marasco - 2019
             // sq1 = new Box3D(random(-30, -10), random(-30, -10), random([60, 20, 120]));
             // sq2 = new Box3D(-10, -20, random([60, 20, 120])); 
 
-            bendit.socket.on('message', function (data) {
+        //     bendit.socket.on('message', function (data) {
                 
-                messageCounts++;
-                messageCountData = messageCounts %8;
+        //         messageCounts++;
+        //         messageCountData = messageCounts %8;
 
                 
-                console.log(data);
-                console.log("got it!");
-                if (data == 0) {
-                    playPauseStatus = "playing";
-                } else if (data == 1) {
-                    playPauseStatus = "paused";
-                } else if (data == "ffDown") {
-                    state = "skipDown";
-                } else if (data == "ffUp") {
-                    state = "skipUp"
-                } else if (data == "bend1") {
-                    state = "ramBend";
-                } else if (data == "unbend1") {
-                    state = "normal";
-                }
+        //         console.log(data);
+        //         console.log("got it!");
+        //         if (data == 0) {
+        //             playPauseStatus = "playing";
+        //         } else if (data == 1) {
+        //             playPauseStatus = "paused";
+        //         } else if (data == "ffDown") {
+        //             state = "skipDown";
+        //         } else if (data == "ffUp") {
+        //             state = "skipUp"
+        //         } else if (data == "bend1") {
+        //             state = "ramBend";
+        //         } else if (data == "unbend1") {
+        //             state = "normal";
+        //         }
 
-            });
+        //     });
 
-            bendit.socket.on('espMessage', function (data) {
-                console.log("ESP Button state: " + data);
-                espStatus = data;
-            });
+        //     bendit.socket.on('espMessage', function (data) {
+        //         console.log("ESP Button state: " + data);
+        //         espStatus = data;
+        //     });
 
-            bendit.socket.on('playPauseMessage', function (data) {
-                console.log("Playing Status is: " + data);
-                playPauseStatus = data;
-            });
+        //     bendit.socket.on('playPauseMessage', function (data) {
+        //         console.log("Playing Status is: " + data);
+        //         playPauseStatus = data;
+        //     });
         }
 
         function draw() {

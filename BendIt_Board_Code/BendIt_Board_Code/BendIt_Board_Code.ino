@@ -288,7 +288,7 @@ void pot_engage(const char *payload, size_t length)
   }
   writeDigitalPot(potNum, potPos);
 }
-void setDeviceNumber(const char *payload, size_t length)
+void setBoardNumber(const char *payload, size_t length)
 {
   
 
@@ -298,7 +298,7 @@ void setDeviceNumber(const char *payload, size_t length)
   Serial.print(deviceNumber);
 }
 
-void setDeviceColor(const char *payload, size_t length)
+void setBoardColor(const char *payload, size_t length)
 {
   
   char deviceColor[] = "orange";
@@ -654,8 +654,8 @@ void setup()
   webSocket.on("metroSwitch5Stop", metroSwitch5Stop);
   webSocket.on("metroSwitch6", metroSwitch6);
   webSocket.on("metroSwitch6Stop", metroSwitch6Stop);
-  webSocket.on("setDeviceColor", setDeviceColor);
-  webSocket.on("setDeviceNumber", setDeviceNumber);
+  webSocket.on("setBoardColor", setBoardColor);
+  webSocket.on("setBoardNumber", setBoardNumber);
   //webSocket.on("potTurn", potTurn);
 
   // switch/1/toggle
