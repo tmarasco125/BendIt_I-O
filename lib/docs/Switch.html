@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Class: BenditDevice | benditBrowser.js</title>
+    <title>Class: Switch | benditBrowser.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -57,9 +57,10 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>BenditDevice<span class="signature">()</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>Switch<span class="signature">(swNum, socket, deviceNum)</span><span class="type-signature"></span></h2>
         
-            <div class="class-description"><p>An object that represents a Bendit board/circuit-bent device pair. New devices are added to the Bendit.devices array on creation.</p></div>
+            <div class="class-description"><p>An object that represents a switch output on a Device's associated Bendit board/circuit-bent device pair.
+An array of Switch objects are created when a new BenditDevice object is created.</p></div>
         
     
 </header>
@@ -72,14 +73,14 @@
 
 <dt>
     
-        <h4 class="name" id="BenditDevice">
+        <h4 class="name" id="Switch">
             
-                new <span class="type-signature"></span>BenditDevice<span class="signature">()</span><span class="type-signature"></span>
+                new <span class="type-signature"></span>Switch<span class="signature">(swNum, socket, deviceNum)</span><span class="type-signature"></span>
                 
             
             <div class="container-source members">
                 <code><a href="benditBrowser.js.html">benditBrowser.js</a></code>,
-                <code><a href="benditBrowser.js.html#line189">line 189</a></code>
+                <code><a href="benditBrowser.js.html#line362">line 362</a></code>
             </div>
             
         </h4>
@@ -98,7 +99,106 @@
     
 
     
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
 
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>swNum</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The
+switch channel(relay) of the Bendit board associated with this
+switch 's device. *</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>socket</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The socket.io socket inhereted from the global Bendit - class instance. &lt; i &gt; Do not change this. &lt; /i&gt; *</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>deviceNum</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The number of the Device associated with this
+switch.Passed on
+to be associated with the Bendit board this
+switch 's device is assigned to.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
     
 
     
@@ -112,6 +212,129 @@
     
 
     
+
+    
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>number</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The switch channel (relay) of the Bendit board associated with this switch's device.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>state</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The state of the switch (e.g false == &quot;open&quot;, true == &quot;closed&quot;.)</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>socket</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The socket.io socket inhereted from the global Bendit-class instance. <i>Do not change this.</i></p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>boardNumber</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The number of the Bendit board that this device and this switch are associated with.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
 
 
 <dl class="details">
@@ -146,7 +369,7 @@
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>addDevice</li>
+            <li><a href="BenditDevice.html">BenditDevice</a></li>
         </ul>
     </dd>
     
@@ -176,288 +399,6 @@
     
 
     
-        <h3 class="subsection-title">Members</h3>
-
-        <dl>
-            
-
-<dt>
-<h4 class="name" id="boardNumber">
-    <span class="type-signature"></span>boardNumber<span class="type-signature"></span>
-    
-    <div class="container-source members">
-        <code><a href="benditBrowser.js.html">benditBrowser.js</a></code>,
-        <code><a href="benditBrowser.js.html#line202">line 202</a></code>
-    </div>
-    
-</h4>
-
-
-</dt>
-<dd>
-    
-
-    <!--
-    
-    -->
-
-    
-
-
-    <h5 class="subsection-title">Properties:</h5>
-
-    
-
-<table class="props">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>switches</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;Object></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>An array of Switch objects.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>pots</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;Object></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>An array of Pot objects.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>motors</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;Object></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>An array of Motor objects.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>socket</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The socket.io socket inhereted from the global Bendit-class instance.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>deviceNickname</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>A name to associate with this circuit-bent device/Bendit board pair (e.g. &quot;Walkman&quot; or &quot;Casio keyboad&quot;)</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>deviceColor</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Color assigned to the associated Bendit board's LED by the server.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>boardVersion</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Hardware version of the associated Bendit board.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>boardNumer</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The number of the Bendit board associated with this device.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-</dd>
-
-        </dl>
-    
 
     
         <h3 class="subsection-title">Methods</h3>
@@ -467,14 +408,14 @@
 
 <dt>
     
-        <h4 class="name" id="buildMotorArray">
+        <h4 class="name" id="flipSwitch">
             
-                <span class="type-signature"></span>buildMotorArray<span class="signature">(totalMotors)</span><span class="type-signature"> &rarr; {Array.&lt;Object>}</span>
+                <span class="type-signature"></span>flipSwitch<span class="signature">()</span><span class="type-signature"></span>
                 
             
             <div class="container-source members">
                 <code><a href="benditBrowser.js.html">benditBrowser.js</a></code>,
-                <code><a href="benditBrowser.js.html#line281">line 281</a></code>
+                <code><a href="benditBrowser.js.html#line437">line 437</a></code>
             </div>
             
         </h4>
@@ -486,7 +427,108 @@
 
     
     <div class="description">
-        <p>Builds an array of Motor objects and assigns them to a device's motor array. <i>Called by addDevice</i>.</p>
+        <p>Checks the current state of the switch and &quot;flips&quot; it to be the opposite state.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code>console.log(toy.switches[2].state); //--> prints "false", aka "open"
+
+//Flip the state of Switch 4 channel on this Bendit board
+ toy.switches[2].flipSwitch(); //Switch 4 is now "closed" aka "true"
+  
+ //Flip the state of Switch 4 channel back
+ toy.switches[3].flipSwitch(); //Switch 4 is now "open" aka "false"</code></pre>
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="setSwitch">
+            
+                <span class="type-signature"></span>setSwitch<span class="signature">(v)</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="benditBrowser.js.html">benditBrowser.js</a></code>,
+                <code><a href="benditBrowser.js.html#line396">line 396</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Sets the state of the switch on this device's Bendit board.
+Switches in the BenditDevice.switches array are zero indexed.</p>
     </div>
     
 
@@ -522,7 +564,168 @@
 
         <tr>
             
-                <td class="name"><code>totalMotors</code></td>
+                <td class="name"><code>v</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The state of the switch. Accepts a string (&quot;open&quot;/&quot;closed&quot;) or a number (0/1).</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code>//Create device and attach it to Bendit board 4
+let toy = bendit.addDevice(bendit.addDevice({
+"switches": 4,
+"pots": 8,
+"motors": 0,
+"boardNumber": 4 
+}); 
+//Set state of Switch 4 channel on this Bendit board to "closed"
+ toy.switches[3].setSwitch("closed"); //Switch 4 closes
+  
+ //Set state of Switch 4 channel to "open"
+ toy.switches[3].setSwitch("open"); //Switch 4 is now open</code></pre>
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="toggleSwitch">
+            
+                <span class="type-signature"></span>toggleSwitch<span class="signature">(waitTime)</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="benditBrowser.js.html">benditBrowser.js</a></code>,
+                <code><a href="benditBrowser.js.html#line484">line 484</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Combines two &quot;flips&quot;; Checks the current state of the switch and toggles it to be the opposite state. Pauses for 450ms before toggling back to the starting state.
+Takes an optional argument to adjust the wait time of the toggle.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>waitTime</code></td>
             
 
             <td class="type">
@@ -537,606 +740,15 @@
             
 
             
-
-            <td class="description last"><p>The total number of Motor objects to build.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    </div>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <div class="container-returns">
-        <h5>Returns:</h5>
-        
+                <td class="default">
                 
-
-
-
-<span class="param-type">Array.&lt;Object></span>
-
-
-
-
-
-- <ul>
-<li>An array of Motor objects.</li>
-</ul>
-
-
-
-
-            
-    </div>
-    
-
-    
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-</dd>
-
-            
+                    450
                 
-
-<dt>
-    
-        <h4 class="name" id="buildPotArray">
-            
-                <span class="type-signature"></span>buildPotArray<span class="signature">(totalPots)</span><span class="type-signature"> &rarr; {Array.&lt;Object>}</span>
-                
-            
-            <div class="container-source members">
-                <code><a href="benditBrowser.js.html">benditBrowser.js</a></code>,
-                <code><a href="benditBrowser.js.html#line264">line 264</a></code>
-            </div>
-            
-        </h4>
-
-        
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Builds an array of Pot objects and assigns them to a device's pot array. <i>Called by addDevice</i>.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-
-    
-    <div class="container-params">
-        <h5>Parameters:</h5>
-        
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>totalPots</code></td>
+                </td>
             
 
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The total number of Switch objects to build.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    </div>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <div class="container-returns">
-        <h5>Returns:</h5>
-        
-                
-
-
-
-<span class="param-type">Array.&lt;Object></span>
-
-
-
-
-
-- <ul>
-<li>An array of Pot objects.</li>
-</ul>
-
-
-
-
-            
-    </div>
-    
-
-    
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-</dd>
-
-            
-                
-
-<dt>
-    
-        <h4 class="name" id="buildSwitchArray">
-            
-                <span class="type-signature"></span>buildSwitchArray<span class="signature">(totalSwitches)</span><span class="type-signature"> &rarr; {Array.&lt;Object>}</span>
-                
-            
-            <div class="container-source members">
-                <code><a href="benditBrowser.js.html">benditBrowser.js</a></code>,
-                <code><a href="benditBrowser.js.html#line247">line 247</a></code>
-            </div>
-            
-        </h4>
-
-        
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Builds an array of Switch objects and assigns them to a device's switch array. <i>Called by addDevice</i>.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-
-    
-    <div class="container-params">
-        <h5>Parameters:</h5>
-        
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>totalSwitches</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The total number of Switch objects to build.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    </div>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <div class="container-returns">
-        <h5>Returns:</h5>
-        
-                
-
-
-
-<span class="param-type">Array.&lt;Object></span>
-
-
-
-
-
-- <ul>
-<li>An array of Switch objects.</li>
-</ul>
-
-
-
-
-            
-    </div>
-    
-
-    
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-</dd>
-
-            
-                
-
-<dt>
-    
-        <h4 class="name" id="getDeviceProfile">
-            
-                <span class="type-signature"></span>getDeviceProfile<span class="signature">()</span><span class="type-signature"> &rarr; {Array.&lt;Object>}</span>
-                
-            
-            <div class="container-source members">
-                <code><a href="benditBrowser.js.html">benditBrowser.js</a></code>,
-                <code><a href="benditBrowser.js.html#line297">line 297</a></code>
-            </div>
-            
-        </h4>
-
-        
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Pings the server and retrieves the board data of the associated Bendit board.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <div class="container-returns">
-        <h5>Returns:</h5>
-        
-                
-
-
-
-<span class="param-type">Array.&lt;Object></span>
-
-
-
-
-
-- <ul>
-<li>The board data of the associated Bendit board.</li>
-</ul>
-
-
-
-
-            
-    </div>
-    
-
-    
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-</dd>
-
-            
-                
-
-<dt>
-    
-        <h4 class="name" id="writeDeviceProfile">
-            
-                <span class="type-signature"></span>writeDeviceProfile<span class="signature">(options)</span><span class="type-signature"></span>
-                
-            
-            <div class="container-source members">
-                <code><a href="benditBrowser.js.html">benditBrowser.js</a></code>,
-                <code><a href="benditBrowser.js.html#line310">line 310</a></code>
-            </div>
-            
-        </h4>
-
-        
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Instructs the server to rewrite the board data of the associated Bendit board.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-
-    
-    <div class="container-params">
-        <h5>Parameters:</h5>
-        
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>options</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The new data to write to the device's associated Bendit board.</p></td>
+            <td class="description last"><p><i>[optional]</i> The time in milliseconds to wait between toggling state changes.
+Defaults to 450ms if nothing passed in.</p></td>
         </tr>
 
     
@@ -1194,6 +806,17 @@
     
 </dl>
 
+
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code>console.log(dvd.switches[1].state); //--> prints "false", aka "open"
+
+//Toggle the state of Switch 4 channel on this Bendit board
+ dvd.switches[1].toggleSwitch(); //Switch 4 is now latched "closed" for 450ms, then set "open".
+  
+ //Check state again after toggle
+console.log(dvd.switches[1].state); //--> prints "false", aka "open"</code></pre>
 
     
 
@@ -1224,7 +847,7 @@
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'BenditDevice_sub'.replace(/"/g, '_');
+        var id = 'Switch_sub'.replace(/"/g, '_');
         var selectedApi = document.getElementById(id); // do not use jquery selector
         var $selectedApi = $(selectedApi);
 

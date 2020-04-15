@@ -310,9 +310,9 @@ require = (function e(t, n, r) {
 
             }
 
-            addToDeviceArray() {
-                console.log("Added device to 'Connected Devices' array on the server")
-            }
+            // addToDeviceArray() {
+            //     console.log("Added device to 'Connected Devices' array on the server")
+            // }
 
 
             //get device name
@@ -322,7 +322,15 @@ require = (function e(t, n, r) {
         }
 
 
-
+/**
+ * An object that represents a switch output on a Device's associated Bendit board/circuit-bent device pair. 
+ * An array of Switch objects are created when a new BenditDevice object is created.
+ * 
+ *
+ * 
+ * @see {@link BenditDevice}
+ * 
+ */
 
         class Switch {
             constructor(swNum, socket, deviceNum) {
