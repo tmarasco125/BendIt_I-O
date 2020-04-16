@@ -45,7 +45,7 @@
             </li>
         </ol>
     
-    <div class="lnb-examples hidden"><h3>Examples</h3><ul><li><a href="tutorial-1_gettingStarted.html">Getting Started</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="1_gettingStarted_sub"></div></li><li><a href="tutorial-2_createDevice.html">Creating Devices</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="2_createDevice_sub"></div></li></ul></div><div class="lnb-api hidden"><h3>Classes</h3><ul><li><a href="Bendit.html">Bendit</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Bendit_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="Bendit.html#addDevice">addDevice</a></li><li><a href="Bendit.html#getConnectedBenditBoards">getConnectedBenditBoards</a></li><li><a href="Bendit.html#getConnectedUsers">getConnectedUsers</a></li></ul></div></li><li><a href="BenditDevice.html">BenditDevice</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="BenditDevice_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="BenditDevice.html#boardNumber">boardNumber</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="BenditDevice.html#buildMotorArray">buildMotorArray</a></li><li><a href="BenditDevice.html#buildPotArray">buildPotArray</a></li><li><a href="BenditDevice.html#buildSwitchArray">buildSwitchArray</a></li><li><a href="BenditDevice.html#getDeviceProfile">getDeviceProfile</a></li><li><a href="BenditDevice.html#writeDeviceProfile">writeDeviceProfile</a></li></ul></div></li><li><a href="Motor.html">Motor</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Motor_sub"></div></li><li><a href="Pot.html">Pot</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Pot_sub"></div></li><li><a href="Switch.html">Switch</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Switch_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="Switch.html#flipSwitch">flipSwitch</a></li><li><a href="Switch.html#setSwitch">setSwitch</a></li><li><a href="Switch.html#toggleSwitch">toggleSwitch</a></li></ul></div></li></ul></div>
+    <div class="lnb-examples hidden"><h3>Examples</h3><ul><li><a href="tutorial-1_gettingStarted.html">Getting Started</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="1_gettingStarted_sub"></div></li><li><a href="tutorial-2_createDevice.html">Creating Devices</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="2_createDevice_sub"></div></li></ul></div><div class="lnb-api hidden"><h3>Classes</h3><ul><li><a href="Bendit.html">Bendit</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Bendit_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="Bendit.html#addDevice">addDevice</a></li><li><a href="Bendit.html#getConnectedBenditBoards">getConnectedBenditBoards</a></li><li><a href="Bendit.html#getConnectedUsers">getConnectedUsers</a></li></ul></div></li><li><a href="BenditDevice.html">BenditDevice</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="BenditDevice_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="BenditDevice.html#buildMotorArray">buildMotorArray</a></li><li><a href="BenditDevice.html#buildPotArray">buildPotArray</a></li><li><a href="BenditDevice.html#buildSwitchArray">buildSwitchArray</a></li><li><a href="BenditDevice.html#getDeviceProfile">getDeviceProfile</a></li><li><a href="BenditDevice.html#writeDeviceProfile">writeDeviceProfile</a></li></ul></div></li><li><a href="Motor.html">Motor</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Motor_sub"></div></li><li><a href="Pot.html">Pot</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Pot_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="Pot.html#setPot">setPot</a></li></ul></div></li><li><a href="Switch.html">Switch</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Switch_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="Switch.html#flipSwitch">flipSwitch</a></li><li><a href="Switch.html#setSwitch">setSwitch</a></li><li><a href="Switch.html#toggleSwitch">toggleSwitch</a></li></ul></div></li></ul></div>
 </nav>
 <div id="resizer"></div>
 
@@ -243,20 +243,20 @@
          */
 
         class BenditDevice {
-
+            /** 
+             * 
+             * @prop {Object[]} switches - An array of Switch objects.
+             * @prop {Object[]} pots - An array of Pot objects.
+             * @prop {Object[]} motors - An array of Motor objects.
+             * @prop {Object} socket - The socket.io socket inhereted from the global Bendit-class instance.
+             * @prop {string} deviceNickname - A name to associate with this circuit-bent device/Bendit board pair (e.g. "Walkman" or "Casio keyboad")
+             * @prop {string} deviceColor - Color assigned to the associated Bendit board's LED by the server.
+             * @prop {string} boardVersion - Hardware version of the associated Bendit board.
+             * @prop {number} boardNumer - The number of the Bendit board associated with this device.
+             */
 
             constructor(options) {
-                /** 
-                 * 
-                 * @prop {Object[]} switches - An array of Switch objects.
-                 * @prop {Object[]} pots - An array of Pot objects.
-                 * @prop {Object[]} motors - An array of Motor objects.
-                 * @prop {Object} socket - The socket.io socket inhereted from the global Bendit-class instance.
-                 * @prop {string} deviceNickname - A name to associate with this circuit-bent device/Bendit board pair (e.g. "Walkman" or "Casio keyboad")
-                 * @prop {string} deviceColor - Color assigned to the associated Bendit board's LED by the server.
-                 * @prop {string} boardVersion - Hardware version of the associated Bendit board.
-                 * @prop {number} boardNumer - The number of the Bendit board associated with this device.
-                 */
+                
 
                 this.boardNumber = 0;
                 this.switches = []; //array of switches
@@ -391,21 +391,16 @@
          swNum - The
          switch channel(relay) of the Bendit board associated with this
          switch 's device. *
-         @param {
-             object
-         }
-         socket - The socket.io socket inhereted from the global Bendit - class instance. &lt; i > Do not change this. &lt; /i> *
-             @param {
-                 number
-             }
-         deviceNum - The number of the Device associated with this
+         @param {Object} socket - The socket.io socket inhereted from the global Bendit - class instance. &lt; i > Do not change this. &lt; /i> *
+         @param {number} deviceNum - The number of the Device associated with this
          switch.Passed on
          to be associated with the Bendit board this
          switch 's device is assigned to.
          *
-          * 
-          * 
-          * @property {number} number - The switch channel (relay) of the Bendit board associated with this switch's device.
+         * 
+         * 
+         * @property {number} number - The
+         switch channel of this device's Bendit board.
           * @property {boolean} state - The state of the switch (e.g false == "open", true == "closed".)
           * @property {Object} socket - The socket.io socket inhereted from the global Bendit-class instance. &lt;i>Do not change this.&lt;/i>
           * @property {number} boardNumber - The number of the Bendit board that this device and this switch are associated with.
@@ -573,7 +568,24 @@
         /**
          * An object that represents a potentiometer output channel on a Device's associated Bendit board/circuit-bent device pair. 
          * An array of Pot objects are created when a new BenditDevice object is created.
-         * 
+         * @param {number} potNum - The
+         potentiometer channel of this device's Bendit board.
+         @param {Object} socket - The socket.io socket inhereted from the global Bendit - class instance. &lt;i>Do not change this.&lt;/i>
+         @param {number} deviceNum - The number of the device associated with this pot. Passed on
+         to be associated with the Bendit board this
+         pot's device is assigned to. 
+         *
+         *
+         *
+         *@property {number} number - The
+         potentiometer channel of this device 's Bendit board.
+         @property {number} position - The position of the pot. Range is 0 to 255 (0 ohms to 100k ohms).
+         @property {
+             Object
+         }
+         socket - The socket.io socket inhereted from the global Bendit - class instance. &lt;i>Do not change this.&lt;/i>
+        @property {number} boardNumber - The number of the Bendit board that this device is associated with.
+         
          *
          * 
          * @see {@link BenditDevice}
@@ -589,6 +601,24 @@
                 console.log("I am a pot channel!");
             }
 
+            /**
+             * Sets the position of the pot on this device's Bendit board.
+             * Pots in the BenditDevice.pots array are zero indexed.
+             * 
+             * 
+             * 
+             * @param {number} v - The position of the switch, corresponding to the generated resistance level. 
+             * Range is 0 - 255, corresponding to a resistance range of 0 to 100k ohms.
+             * 
+             * 
+             * @example
+             * 
+             * //Set position of Pot channel 3 on this Bendit board to 127 (midway)
+             *  vhs.pots[2].setPot(127); //circa 50k ohms generated on Pot channel 3
+             * 
+             * 
+             */
+
             setPot(v) {
                 this.position = v;
 
@@ -602,6 +632,7 @@
                 console.log(`Device ${this.boardNumber} was told to set pot ${this.number} to position ${this.position} on ${this.socket.id} `);
             }
         }
+        
         /**
          * An object that represents a motor output channel on a Device's associated Bendit board/circuit-bent device pair. 
          * An array of Motor objects are created when a new BenditDevice object is created.

@@ -128,7 +128,7 @@ require = (function e(t, n, r) {
              * Can be called with individual arguments or with an object.
              * 
              * @param {number} switches - the total number of switches to assign to the device.
-             * @param {number} pots - -the total number of switches to assign to the device.
+             * @param {number} pots - the total number of switches to assign to the device.
              * @param {number} motors - the total number of motors to assign to the device.
              * @param {number} boardNumber - the Bendit board number to assign to the device.
              * @return {Object} - An instance of the BenditDevice class.
@@ -184,19 +184,20 @@ require = (function e(t, n, r) {
          */
 
         class BenditDevice {
-
             /** 
-             * @property {number} boardNumer - The number of the Bendit board associated with this device.
-             * @property {Object[]} switches - An array of Switch objects.
-             * @property {Object[]} pots - An array of Pot objects.
-             * @property {Object[]} motors - An array of Motor objects.
-             * @property {Object} socket - The socket.io socket inhereted from the global Bendit-class instance.
-             * @property {string} deviceNickname - A name to associate with this circuit-bent device/Bendit board pair (e.g. "Walkman" or "Casio keyboad")
-             * @property {string} deviceColor - Color assigned to the associated Bendit board's LED by the server.
-             * @property {string} boardVersion - Hardware version of the associated Bendit board.
              * 
+             * @prop {Object[]} switches - An array of Switch objects.
+             * @prop {Object[]} pots - An array of Pot objects.
+             * @prop {Object[]} motors - An array of Motor objects.
+             * @prop {Object} socket - The socket.io socket inhereted from the global Bendit-class instance.
+             * @prop {string} deviceNickname - A name to associate with this circuit-bent device/Bendit board pair (e.g. "Walkman" or "Casio keyboad")
+             * @prop {string} deviceColor - Color assigned to the associated Bendit board's LED by the server.
+             * @prop {string} boardVersion - Hardware version of the associated Bendit board.
+             * @prop {number} boardNumer - The number of the Bendit board associated with this device.
              */
+
             constructor(options) {
+
 
                 this.boardNumber = 0;
                 this.switches = []; //array of switches
@@ -322,24 +323,71 @@ require = (function e(t, n, r) {
         }
 
 
-/**
- * An object that represents a switch output on a Device's associated Bendit board/circuit-bent device pair. 
- * An array of Switch objects are created when a new BenditDevice object is created.
- * 
- *
- * 
- * @see {@link BenditDevice}
- * 
- */
+        /**
+         * An object that represents a switch output on a Device's associated Bendit board/circuit-bent device pair. 
+         * An array of Switch objects are created when a new BenditDevice object is created.
+         * @param {
+             number
+         }
+         swNum - The
+         switch channel(relay) of the Bendit board associated with this
+         switch 's device. *
+         @param {Object} socket - The socket.io socket inhereted from the global Bendit - class instance. < i > Do not change this. < /i> *
+         @param {number} deviceNum - The number of the Device associated with this
+         switch.Passed on
+         to be associated with the Bendit board this
+         switch 's device is assigned to.
+         *
+         * 
+         * 
+         * @property {number} number - The
+         switch channel of this device's Bendit board.
+          * @property {boolean} state - The state of the switch (e.g false == "open", true == "closed".)
+          * @property {Object} socket - The socket.io socket inhereted from the global Bendit-class instance. <i>Do not change this.</i>
+          * @property {number} boardNumber - The number of the Bendit board that this device and this switch are associated with.
+        
+         * 
+         * @see {@link BenditDevice}
+         * 
+         */
 
         class Switch {
+
+
             constructor(swNum, socket, deviceNum) {
+
+
                 this.number = swNum;
                 this.state = false;
                 this.socket = socket;
                 this.boardNumber = deviceNum;
             }
-
+            /**
+             * Sets the state of the switch on this device's Bendit board.
+             * Switches in the BenditDevice.switches array are zero indexed.
+             * 
+             * 
+             * 
+             * @param {string|number} v - The state of the switch. Accepts a string ("open"/"closed") or a number (0/1).
+             * 
+             * @example
+             * 
+             *
+             * //Create device and attach it to Bendit board 4
+             * let toy = bendit.addDevice(bendit.addDevice({
+             * "switches": 4,
+             * "pots": 8,
+             * "motors": 0,
+             * "boardNumber": 4 
+             * }); 
+             * //Set state of Switch 4 channel on this Bendit board to "closed"
+             *  toy.switches[3].setSwitch("closed"); //Switch 4 closes
+             *   
+             *  //Set state of Switch 4 channel to "open"
+             *  toy.switches[3].setSwitch("open"); //Switch 4 is now open
+             * 
+             * 
+             */
             setSwitch(v) {
                 if (v == "open" || v == 0) {
                     this.state = false;
@@ -357,6 +405,29 @@ require = (function e(t, n, r) {
 
                 console.log(`Device ${this.boardNumber} was told to set switch ${this.number} ${v} on ${this.socket.id} `);
             }
+
+            /**
+             * Checks the current state of the switch and "flips" it to be the opposite state. 
+             * 
+             * 
+             * 
+             * 
+             * 
+             * 
+             * 
+             * @example
+             * 
+             *
+             * console.log(toy.switches[2].state); //--> prints "false", aka "open"
+             * 
+             * //Flip the state of Switch 4 channel on this Bendit board
+             *  toy.switches[2].flipSwitch(); //Switch 4 is now "closed" aka "true"
+             *   
+             *  //Flip the state of Switch 4 channel back
+             *  toy.switches[3].flipSwitch(); //Switch 4 is now "open" aka "false"
+             * 
+             * 
+             */
 
             flipSwitch() {
                 this.state = this.state ? false : true;
@@ -381,7 +452,31 @@ require = (function e(t, n, r) {
 
             }
 
-            toggleSwitch() {
+
+            /**
+             * Combines two "flips"; Checks the current state of the switch and toggles it to be the opposite state. Pauses for 450ms before toggling back to the starting state. 
+             * Takes an optional argument to adjust the wait time of the toggle.
+             * 
+             * 
+             * @param {number} waitTime - <i>[optional]</i> The time in milliseconds to wait between toggling state changes.
+             * Defaults to 450ms if nothing passed in.
+             * 
+             * 
+             * 
+             * @example
+             * 
+             *
+             * console.log(dvd.switches[1].state); //--> prints "false", aka "open"
+             * 
+             * //Toggle the state of Switch 4 channel on this Bendit board
+             *  dvd.switches[1].toggleSwitch(); //Switch 4 is now latched "closed" for 450ms, then set "open".
+             *   
+             *  //Check state again after toggle
+             * console.log(dvd.switches[1].state); //--> prints "false", aka "open"
+             * 
+             * 
+             */
+            toggleSwitch(waitTime = 450) {
                 //check what state it is, flip to the opposite and automatically after
                 //set amount of time, flip back
                 this.state = !this.state;
@@ -408,10 +503,35 @@ require = (function e(t, n, r) {
                     });
                     console.log(`Device ${this.boardNumber} was told to set switch ${this.number} ${this.state} on ${this.socket.id} `);
 
-                }, 450);
+                }, waitTime);
             }
         }
-
+        /**
+         * An object that represents a potentiometer output channel on a Device's associated Bendit board/circuit-bent device pair. 
+         * An array of Pot objects are created when a new BenditDevice object is created.
+         * @param {number} potNum - The
+         potentiometer channel of this device's Bendit board.
+         @param {Object} socket - The socket.io socket inhereted from the global Bendit - class instance. <i>Do not change this.</i>
+         @param {number} deviceNum - The number of the device associated with this pot. Passed on
+         to be associated with the Bendit board this
+         pot's device is assigned to. 
+         *
+         *
+         *
+         *@property {number} number - The
+         potentiometer channel of this device 's Bendit board.
+         @property {number} position - The position of the pot. Range is 0 to 255 (0 ohms to 100k ohms).
+         @property {
+             Object
+         }
+         socket - The socket.io socket inhereted from the global Bendit - class instance. <i>Do not change this.</i>
+        @property {number} boardNumber - The number of the Bendit board that this device is associated with.
+         
+         *
+         * 
+         * @see {@link BenditDevice}
+         * 
+         */
         class Pot {
             constructor(potNum, socket, deviceNum) {
                 this.number = potNum;
@@ -421,6 +541,24 @@ require = (function e(t, n, r) {
 
                 console.log("I am a pot channel!");
             }
+
+            /**
+             * Sets the position of the pot on this device's Bendit board.
+             * Pots in the BenditDevice.pots array are zero indexed.
+             * 
+             * 
+             * 
+             * @param {number} v - The position of the switch, corresponding to the generated resistance level. 
+             * Range is 0 - 255, corresponding to a resistance range of 0 to 100k ohms.
+             * 
+             * 
+             * @example
+             * 
+             * //Set position of Pot channel 3 on this Bendit board to 127 (midway)
+             *  vhs.pots[2].setPot(127); //circa 50k ohms generated on Pot channel 3
+             * 
+             * 
+             */
 
             setPot(v) {
                 this.position = v;
@@ -436,16 +574,28 @@ require = (function e(t, n, r) {
             }
         }
 
+        /**
+         * An object that represents a motor output channel on a Device's associated Bendit board/circuit-bent device pair. 
+         * An array of Motor objects are created when a new BenditDevice object is created.
+         * 
+         *
+         * 
+         * @see {@link BenditDevice}
+         * 
+         */
         class Motor {
             constructor(motNum, socket, deviceNum) {
                 this.number = motNum;
                 this.speed = 1;
                 this.direction = 0;
+                this.socket = socket;
+                this.boardNumber = deviceNum;
                 console.log("I'm a new motor!")
             }
 
-            start(speed, direction) {
+            run(speed, direction) {
                 this.speed = speed;
+                this.direction = direction;
                 this.socket.emit('runMotor', {
                     speed: this.speed,
                     direction: this.direction,
@@ -455,12 +605,23 @@ require = (function e(t, n, r) {
             }
 
             stop() {
-
-
+                this.speed = 0;
+                this.direction = 0;
+                this.socket.emit('runMotor', {
+                    speed: this.speed,
+                    direction: this.direction,
+                    device: this.boardNumber
+                });
             }
 
             flipDirection() {
-
+                this.direction = this.direction === -1 ? 1 : -1;
+                this.socket.emit('runMotor', {
+                    speed: this.speed,
+                    direction: this.direction,
+                    device: this.boardNumber
+                });
+                console.log(this.direction);
             }
 
             throw () {
