@@ -510,23 +510,24 @@ require = (function e(t, n, r) {
          * An object that represents a potentiometer output channel on a Device's associated Bendit board/circuit-bent device pair. 
          * An array of Pot objects are created when a new BenditDevice object is created.
          * @param {number} potNum - The
-         potentiometer channel of this device's Bendit board.
-         @param {Object} socket - The socket.io socket inhereted from the global Bendit - class instance. <i>Do not change this.</i>
-         @param {number} deviceNum - The number of the device associated with this pot. Passed on
-         to be associated with the Bendit board this
-         pot's device is assigned to. 
+         *potentiometer channel of this device's Bendit board.
+         *@param {Object} socket - The socket.io socket inhereted from the global Bendit - class instance. <i>Do not change this.</i>
+         * @param {
+             number
+         }
+        * deviceNum - The number of the device associated with this pot. Passed on
+        * to be associated with the Bendit board this
+        * pot's device is assigned to. 
          *
          *
          *
          *@property {number} number - The
-         potentiometer channel of this device 's Bendit board.
-         @property {number} position - The position of the pot. Range is 0 to 255 (0 ohms to 100k ohms).
-         @property {
+         *potentiometer channel of this device 's Bendit board.
+         *@property {number} position - The position of the pot. Range is 0 to 255 (0 ohms to 100k ohms).
+         *@property {
              Object
-         }
-         socket - The socket.io socket inhereted from the global Bendit - class instance. <i>Do not change this.</i>
-        @property {number} boardNumber - The number of the Bendit board that this device is associated with.
-         
+         }socket - The socket.io socket inhereted from the global Bendit - class instance. <i>Do not change this.</i>
+         * @property {number} boardNumber - The number of the Bendit board that this device and this pot are associated with.
          *
          * 
          * @see {@link BenditDevice}
@@ -578,7 +579,25 @@ require = (function e(t, n, r) {
          * An object that represents a motor output channel on a Device's associated Bendit board/circuit-bent device pair. 
          * An array of Motor objects are created when a new BenditDevice object is created.
          * 
-         *
+         * @param {
+             number
+         } motNum - The 
+             motor channel of this device 's Bendit board. 
+        * @param {
+                 Object
+             }socket - The socket.io socket inhereted from the global Bendit - class instance. <i>Do not change this.</i> 
+        * @param {
+                 number
+             } deviceNum - The number of the device associated with this motor. Passed on
+             to be associated with the Bendit board this
+             motor's device is assigned to.
+
+         * @property {number} number - The motor channel of this device's Bendit board.
+          * @property {number} speed - The speed of the motor.
+          * @property {number} direction - The running direction of DC motors/position of solenoids (1 == forward/thrown, -1 == backwards/retracted)
+          * @property {Object} socket - The socket.io socket inhereted from the global Bendit-class instance. <i>Do not change this.</i>
+          * @property {number} boardNumber - The number of the Bendit board that this device and this motor are associated with.
+        
          * 
          * @see {@link BenditDevice}
          * 
@@ -592,6 +611,26 @@ require = (function e(t, n, r) {
                 this.boardNumber = deviceNum;
                 console.log("I'm a new motor!")
             }
+            /**
+             * For DC motors. Starts this channel's motor on this device's Bendit board.
+             * Motors in the BenditDevice.motors array are zero indexed.
+             * 
+             * 
+             * 
+             * @param {number} speed - The speed of the motor. Range is 0 (stopped) to 255 (ful speed).
+             * @param {number} direction - The direction of the motor. Options are 1 (forward) and -1 (backwards).
+             * 
+             * 
+             * 
+             * @example
+             * 
+             * //Set speed and direction of Motor channel 1 on this Bendit board to forward at 127 (half-speed)
+             *  tapeDeck.motors[0].run(127, 1);
+             * 
+             * //Set speed and direction of Motor channel 1 on this Bendit board to backwards at 64 (quarter-speed)
+             * tapeDeck.motors[0].run(64, -1);
+             * 
+             */
 
             run(speed, direction) {
                 this.speed = speed;
@@ -604,6 +643,22 @@ require = (function e(t, n, r) {
 
             }
 
+            /**
+             * For DC motors. Stops this channel's motor on this device's Bendit board.
+             * Motors in the BenditDevice.motors array are zero indexed.
+             * 
+             * 
+             * 
+             * 
+             * 
+             * 
+             * @example
+             * 
+             * //Stop a currently-running motor 
+             *  tapeDeck.motors[0].stop();
+             * 
+             */
+
             stop() {
                 this.speed = 0;
                 this.direction = 0;
@@ -613,6 +668,27 @@ require = (function e(t, n, r) {
                     device: this.boardNumber
                 });
             }
+
+            /**
+             * For DC motors. Reverses this channel's motor on this device's Bendit board. Speed is kept at most recently set value.
+             * Motors in the BenditDevice.motors array are zero indexed.
+             * 
+             * 
+             * 
+             *  
+             * @example
+             * 
+             * console.log(walkman.motors[1].direction); //--> prints 1, aka forward
+             *
+             * //Flip the direction of Motor channel 2 on this Bendit board
+             *
+             * walkman.motors[1].flipDirection(); //Motor 2 is now running backwards, aka -1
+             *
+             * //Flip the direction of Motor 2 channel back
+             *
+             * walkman.motors[1].flipDirection(); //Motor 2 is now running forwards, aka 1
+             * 
+             */
 
             flipDirection() {
                 this.direction = this.direction === -1 ? 1 : -1;
