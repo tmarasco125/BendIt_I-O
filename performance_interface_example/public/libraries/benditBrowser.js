@@ -56,123 +56,134 @@ require = (function e(t, n, r) {
          * client and Bendit board activity on the server.
          */
 
-        class Bendit {
-            /**
-             * @property {string[]} users - An array of connected client websocket IDs
-             * @property {Object[]} devices - An array of created BenditDevices that can assigned to connected Bendit boards 
-             * @property {Object} socket - The socket.io socket for this Bendit-class instance
-             * @property {Object[]} availableBenditBoards - An array of assigned board data for all connected Bendit Boards
+     class Bendit {
+         /**
+          * @property {string[]} users - An array of connected client websocket IDs
+          * @property {Object[]} devices - An array of created BenditDevices that can assigned to connected Bendit boards 
+          * @property {Object} socket - The socket.io socket for this Bendit-class instance. <em> Read only.</em>
+          * @property {Object[]} availableBoards - An array of assigned board data for all connected Bendit Boards
+          * 
+          */
+         constructor() {
+
+
+             this.users = [];
+             //this.socket;
+
+             this.devices = [];
+
+             this.availableBoards = [];
+
+            this._socket = io.connect(window.location.origin, {
+                 transports: ['websocket']
+             });
+             //console.log("nexusHub Server Initialized!");
+             console.log("Connected to the Bendit_I/O Server ");
+
+
+             this._socket.on('log_user_list', (data) => {
+                 console.log("IDs of connected web users: " + data);
+             });
+
+             this._socket.on('log_board_list', (data) => {
+                 let currentBoardList = data;
+                 this.availableBoards = currentBoardList;
+                 //console.log("Device Data of connected Bendit boards: " + JSON.stringify(incomingBoardList));
+                 //return this.devices;
+             });
+
+             this._socket.emit('grab_board_list');
+
+
+         }
+
+         set socket(value){
+             if(value != this._socket) throw new Error("Socket is read-only. Silly Rabbit, sockets arent for kids.");
+         }
+
+         get socket() {
+             return this._socket;
+         }
+
+         /**
+             * Pings the server and returns an updated list of connected web client user IDs
              * 
-             */
-            constructor() {
+             * @return {
+                 string[]
+             } - An array of connected web client user IDs
+         */
 
+         
 
-                this.users = [];
-                //this.socket;
+         getConnectedUsers() {
+             this._socket.emit('grab_user_list');
+             return this.users;
+         };
 
-                this.devices = [];
-
-                this.availableBenditBoards = [];
-
-                this.socket = io.connect(window.location.origin, {
-                    transports: ['websocket']
-                });
-                //console.log("nexusHub Server Initialized!");
-                console.log("Connected to the Bendit_I/O Server ");
-
-
-                this.socket.on('log_user_list', (data) => {
-                    console.log("IDs of connected web users: " + data);
-                });
-
-                this.socket.on('log_board_list', (data) => {
-                    let currentBoardList = data;
-                    this.availableBenditBoards = currentBoardList;
-                    //console.log("Device Data of connected Bendit boards: " + JSON.stringify(incomingBoardList));
-                    //return this.devices;
-                });
-
-                this.socket.emit('grab_board_list');
-
-
-            }
-            /**
-                * Pings the server and returns an updated list of connected web client user IDs
-                * 
-                * @return {
-                    string[]
-                } - An array of connected web client user IDs
-            */
-
-            getConnectedUsers() {
-                this.socket.emit('grab_user_list');
-                return this.users;
-            };
-
-            /**
-                * Pings the server and returns an updated list containing the assigned device data
-                * of any connected Bendit boards.
-                * 
-                * @return {
-                    Object[]
-                } - An array of objects containing the assigned device data of each connected Bendit board
-            */
-            getConnectedBenditBoards() {
-                this.socket.emit('grab_board_list');
-                return this.availableBenditBoards;
-            };
-
-
-            /**
-             * Creates an instance of the BenditDevice class and adds that object to the Bendit.devices array.
-             * Can be called with individual arguments or with an object.
+         /**
+             * Pings the server and returns an updated list containing the assigned device data
+             * of any connected Bendit boards.
              * 
-             * @param {number} switches - the total number of switches to assign to the device.
-             * @param {number} pots - the total number of switches to assign to the device.
-             * @param {number} motors - the total number of motors to assign to the device.
-             * @param {number} boardNumber - the Bendit board number to assign to the device.
-             * @return {Object} - An instance of the BenditDevice class.
-             * @example 
-             * //Create Bendit instance
-             * let bendit = Bendit.Hub;
-             * 
-             * let speakNspell = bendit.addDevice(6,5,1,2);// possible switches, pots, and motors to control on board 2
-             * 
-             * or
-             * 
-             * let speakNspell = bendit.addDevice({
-             *       "switches": 6,
-             *       "pots": 5,
-             *       "motors": 1,
-             *       "boardNumber": 2     
-             *       });
-             */
-            addDevice(options) {
-                let newDevice;
-
-                switch (typeof arguments[0]) {
-                    case 'number':
-                        //convert arguments to actual array
-                        let args = [...arguments];
-                        //add the Bendit-class socket 
-                        args.push(this.socket);
-                        newDevice = new BenditDevice(args[0], args[1], args[2], args[3], args[4]);
-                        break;
-                    case 'object':
-                        newDevice = new BenditDevice(options.switches, options.pots, options.motors, options.boardNumber, this.socket);
-                        //adding socket property if object passed in
-                        //newDevice.socket = this.socket;
-                        break;
-
-                }
+             * @return {
+                 Object[]
+             } - An array of objects containing the assigned device data of each connected Bendit board
+         */
+         getConnectedBenditBoards() {
+             this._socket.emit('grab_board_list');
+             return this.availableBoards;
+         };
 
 
+         /**
+          * Creates an instance of the BenditDevice class and adds that object to the Bendit.devices array.
+          * Can be called with individual arguments or with an object.
+          * 
+          * @param {number} switches - the total number of switches to assign to the device.
+          * @param {number} pots - the total number of switches to assign to the device.
+          * @param {number} motors - the total number of motors to assign to the device.
+          * @param {number} boardNumber - the Bendit board number to assign to the device.
+          * @return {Object} - An instance of the BenditDevice class.
+          * @example 
+          * //Create Bendit instance
+          * let bendit = Bendit.Hub;
+          * 
+          * let speakNspell = bendit.addDevice(6,5,1,2);// possible switches, pots, and motors to control on board 2
+          * 
+          * or
+          * 
+          * let speakNspell = bendit.addDevice({
+          *       "switches": 6,
+          *       "pots": 5,
+          *       "motors": 1,
+          *       "boardNumber": 2     
+          *       });
+          */
+         addDevice(options) {
+             let newDevice;
 
-                this.devices.push(newDevice);
-                return newDevice;
-            }
+             switch (typeof arguments[0]) {
+                 case 'number':
+                     //convert arguments to actual array
+                     let args = [...arguments];
+                     //add the Bendit-class socket 
+                     args.push(this._socket);
+                     newDevice = new BenditDevice(args[0], args[1], args[2], args[3], args[4]);
+                     break;
+                 case 'object':
+                     newDevice = new BenditDevice(options.switches, options.pots, options.motors, options.boardNumber, this._socket);
+                     //adding socket property if object passed in
+                     //newDevice.socket = this.socket;
+                     break;
 
-        }
+             }
+
+
+
+             this.devices.push(newDevice);
+             return newDevice;
+         }
+
+     }
 
         /**
          * An object that represents a Bendit board/circuit-bent device pair. New devices are added to the Bendit.devices array on creation.
@@ -189,7 +200,7 @@ require = (function e(t, n, r) {
              * @prop {Object[]} switches - An array of Switch objects.
              * @prop {Object[]} pots - An array of Pot objects.
              * @prop {Object[]} motors - An array of Motor objects.
-             * @prop {Object} socket - The socket.io socket inhereted from the global Bendit-class instance.
+             * @prop {Object} socket - The socket.io socket inhereted from the global Bendit-class instance.<em> Read only.</em>
              * @prop {string} deviceNickname - A name to associate with this circuit-bent device/Bendit board pair (e.g. "Walkman" or "Casio keyboad")
              * @prop {string} deviceColor - Color assigned to the associated Bendit board's LED by the server.
              * @prop {string} boardVersion - Hardware version of the associated Bendit board.
@@ -206,7 +217,7 @@ require = (function e(t, n, r) {
                 this.deviceNickname = "string";
                 this.deviceColor = "string";
                 this.boardVersion = "0.0"; //revision of the hardware
-                this.socket = options.socket;
+                this._socket = options.socket;
 
                 // arguments.push(this.socket)
 
@@ -214,7 +225,7 @@ require = (function e(t, n, r) {
                 switch (typeof arguments[0]) {
                     case 'number':
                         this.boardNumber = arguments[3];
-                        this.socket = arguments[4];
+                        this._socket = arguments[4];
                         this.buildSwitchArray(arguments[0]);
                         this.buildPotArray(arguments[1]);
                         this.buildMotorArray(arguments[2]);
@@ -235,6 +246,16 @@ require = (function e(t, n, r) {
 
 
             }
+
+             set socket(value) {
+                 if (value != this._socket) throw new Error("Socket is read-only. Silly Rabbit, sockets arent for kids.");
+             }
+
+             get socket() {
+                 return this._socket;
+             }
+
+
             /**
                 * Builds an array of Switch objects and assigns them to a device's switch array. <i>Called by {@link addDevice}</i>.
                 * 
@@ -248,7 +269,7 @@ require = (function e(t, n, r) {
                 console.log("built the switch array!");
 
                 for (let i = 0; i < totalSwitches; i++) {
-                    this.switches[i] = new Switch(i, this.socket, this.boardNumber);
+                    this.switches[i] = new Switch(i, this._socket, this.boardNumber);
                 }
             }
 
@@ -264,7 +285,7 @@ require = (function e(t, n, r) {
             buildPotArray(totalPots) {
                 console.log("built the pot array!");
                 for (let i = 0; i < totalPots; i++) {
-                    this.pots[i] = new Pot(i, this.socket, this.boardNumber);
+                    this.pots[i] = new Pot(i, this._socket, this.boardNumber);
                 }
             }
 
@@ -280,7 +301,7 @@ require = (function e(t, n, r) {
             */
             buildMotorArray(totalMotors) {
                 for (let i = 0; i < totalMotors; i++) {
-                    this.motors[i] = new Motor(i, this.socket, this.boardNumber);
+                    this.motors[i] = new Motor(i, this._socket, this.boardNumber);
                 }
                 console.log("motor array, ready to rev!");
             }
@@ -332,7 +353,7 @@ require = (function e(t, n, r) {
          swNum - The
          switch channel(relay) of the Bendit board associated with this
          switch 's device. *
-         @param {Object} socket - The socket.io socket inhereted from the global Bendit - class instance. < i > Do not change this. < /i> *
+         @param {Object} socket - The socket.io socket inhereted from the global Bendit - class instance. <em> Read only.</em> *
          @param {number} deviceNum - The number of the Device associated with this
          switch.Passed on
          to be associated with the Bendit board this
@@ -343,7 +364,7 @@ require = (function e(t, n, r) {
          * @property {number} number - The
          switch channel of this device's Bendit board.
           * @property {boolean} state - The state of the switch (e.g false == "open", true == "closed".)
-          * @property {Object} socket - The socket.io socket inhereted from the global Bendit-class instance. <i>Do not change this.</i>
+          * @property {Object} socket - The socket.io socket inhereted from the global Bendit-class instance. <em> Read only.</em>
           * @property {number} boardNumber - The number of the Bendit board that this device and this switch are associated with.
         
          * 
@@ -359,8 +380,16 @@ require = (function e(t, n, r) {
 
                 this.number = swNum;
                 this.state = false;
-                this.socket = socket;
+                this._socket = socket;
                 this.boardNumber = deviceNum;
+            }
+
+            set socket(value) {
+                if (value != this._socket) throw new Error("Socket is read-only. Silly Rabbit, sockets arent for kids.");
+            }
+
+            get socket() {
+                return this._socket;
             }
             /**
              * Sets the state of the switch on this device's Bendit board.
@@ -397,13 +426,13 @@ require = (function e(t, n, r) {
                     console.log("Invalid state: can only take 'open'/0 or 'closed'/1 ")
                 }
 
-                this.socket.emit('switchEvent', {
+                this._socket.emit('switchEvent', {
                     switch_number: this.number,
                     state: this.state,
                     device: this.boardNumber
                 });
 
-                console.log(`Device ${this.boardNumber} was told to set switch ${this.number} ${v} on ${this.socket.id} `);
+                console.log(`Device ${this.boardNumber} was told to set switch ${this.number} ${v} on ${this._socket.id} `);
             }
 
             /**
@@ -441,13 +470,13 @@ require = (function e(t, n, r) {
                 //     device: this.boardNumber
                 // });
 
-                this.socket.emit('switchEvent', {
+                this._socket.emit('switchEvent', {
                     switch_number: this.number,
                     state: this.state,
                     device: this.boardNumber
                 });
 
-                console.log(`Device ${this.boardNumber} was told to set switch ${this.number} ${this.state} on ${this.socket.id} `);
+                console.log(`Device ${this.boardNumber} was told to set switch ${this.number} ${this.state} on ${this._socket.id} `);
 
 
             }
@@ -482,12 +511,12 @@ require = (function e(t, n, r) {
                 this.state = !this.state;
 
 
-                this.socket.emit('switchEvent', {
+                this._socket.emit('switchEvent', {
                     switch_number: this.number,
                     state: this.state,
                     device: this.boardNumber
                 });
-                console.log(`Device ${this.boardNumber} was told to set switch ${this.number} ${this.state} on ${this.socket.id} `);
+                console.log(`Device ${this.boardNumber} was told to set switch ${this.number} ${this.state} on ${this._socket.id} `);
 
 
                 setTimeout(() => {
@@ -496,12 +525,12 @@ require = (function e(t, n, r) {
                     //     state: this.state,
                     //     device: this.boardNumber
                     // });
-                    this.socket.emit('switchEvent', {
+                    this._socket.emit('switchEvent', {
                         switch_number: this.number,
                         state: this.state,
                         device: this.boardNumber
                     });
-                    console.log(`Device ${this.boardNumber} was told to set switch ${this.number} ${this.state} on ${this.socket.id} `);
+                    console.log(`Device ${this.boardNumber} was told to set switch ${this.number} ${this.state} on ${this._socket.id} `);
 
                 }, waitTime);
             }
@@ -537,10 +566,18 @@ require = (function e(t, n, r) {
             constructor(potNum, socket, deviceNum) {
                 this.number = potNum;
                 this.position = 0;
-                this.socket = socket;
+                this._socket = socket;
                 this.boardNumber = deviceNum;
 
                 console.log("I am a pot channel!");
+            }
+
+            set socket(value) {
+                if (value != this._socket) throw new Error("Socket is read-only. Silly Rabbit, sockets arent for kids.");
+            }
+
+            get socket() {
+                return this._socket;
             }
 
             /**
@@ -564,14 +601,14 @@ require = (function e(t, n, r) {
             setPot(v) {
                 this.position = v;
 
-                this.socket.emit('potEvent', {
+                this._socket.emit('potEvent', {
                     pot_number: this.number,
                     position: this.position,
                     device: this.boardNumber
                 });
 
 
-                console.log(`Device ${this.boardNumber} was told to set pot ${this.number} to position ${this.position} on ${this.socket.id} `);
+                console.log(`Device ${this.boardNumber} was told to set pot ${this.number} to position ${this.position} on ${this._socket.id} `);
             }
         }
 
@@ -607,9 +644,17 @@ require = (function e(t, n, r) {
                 this.number = motNum;
                 this.speed = 1;
                 this.direction = 0;
-                this.socket = socket;
+                this._socket = socket;
                 this.boardNumber = deviceNum;
                 console.log("I'm a new motor!")
+            }
+
+            set socket(value) {
+                if (value != this._socket) throw new Error("Socket is read-only. Silly Rabbit, sockets arent for kids.");
+            }
+
+            get socket() {
+                return this._socket;
             }
             /**
              * For DC motors. Starts this channel's motor on this device's Bendit board.
@@ -635,7 +680,7 @@ require = (function e(t, n, r) {
             run(speed, direction) {
                 this.speed = speed;
                 this.direction = direction;
-                this.socket.emit('runMotor', {
+                this._socket.emit('runMotor', {
                     speed: this.speed,
                     direction: this.direction,
                     device: this.boardNumber
@@ -662,7 +707,7 @@ require = (function e(t, n, r) {
             stop() {
                 this.speed = 0;
                 this.direction = 0;
-                this.socket.emit('runMotor', {
+                this._socket.emit('runMotor', {
                     speed: this.speed,
                     direction: this.direction,
                     device: this.boardNumber
@@ -692,7 +737,7 @@ require = (function e(t, n, r) {
 
             flipDirection() {
                 this.direction = this.direction === -1 ? 1 : -1;
-                this.socket.emit('runMotor', {
+                this._socket.emit('runMotor', {
                     speed: this.speed,
                     direction: this.direction,
                     device: this.boardNumber
