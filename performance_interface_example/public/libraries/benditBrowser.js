@@ -530,10 +530,7 @@ require = (function e(t, n, r) {
 
                 setTimeout(() => {
                     this.state = !this.state;
-                    // this.socket.emit(`toggle${this.number + 1}`, {
-                    //     state: this.state,
-                    //     device: this.boardNumber
-                    // });
+                  
                     this._socket.emit('switchEvent', {
                         switch_number: this.number,
                         state: this.state,
