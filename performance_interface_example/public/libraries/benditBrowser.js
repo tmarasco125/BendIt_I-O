@@ -51,139 +51,148 @@ require = (function e(t, n, r) {
 
         /**
          *
-         * To initialize a connection to the server, an instance of the Bendit class needs to be initialized first.
+         * To initialize a connection to the server, an instance of the Bendit class needs to be initialized first by declaring a new Bendit.Browser().
          * This class handles information about the client's connection to the server as well as information about all
          * client and Bendit board activity on the server.
+         * @param {string} url - <i>[optional]</i> The address of the Bendit_I/O server. Defaults to the host address of the page.
+         * @example
+         * //load Bendit modules (require can be used)
+         * let Bendit = require('bendit');
+         * 
+         * //start the connection to the server
+         * let bendit = new Bendit.Browser();
+         * 
          */
 
-     class Bendit {
-         /**
-          * @property {string[]} users - An array of connected client websocket IDs
-          * @property {Object[]} devices - An array of created BenditDevices that can assigned to connected Bendit boards 
-          * @property {Object} socket - The socket.io socket for this Bendit-class instance. <em> Read only.</em>
-          * @property {Object[]} availableBoards - An array of assigned board data for all connected Bendit Boards
-          * 
-          */
-         constructor() {
 
-
-             this.users = [];
-             //this.socket;
-
-             this.devices = [];
-
-             this.availableBoards = [];
-
-            this._socket = io.connect(window.location.origin, {
-                 transports: ['websocket']
-             });
-             //console.log("nexusHub Server Initialized!");
-             console.log("Connected to the Bendit_I/O Server ");
-
-
-             this._socket.on('log_user_list', (data) => {
-                 console.log("IDs of connected web users: " + data);
-             });
-
-             this._socket.on('log_board_list', (data) => {
-                 let currentBoardList = data;
-                 this.availableBoards = currentBoardList;
-                 //console.log("Device Data of connected Bendit boards: " + JSON.stringify(incomingBoardList));
-                 //return this.devices;
-             });
-
-             this._socket.emit('grab_board_list');
-
-
-         }
-
-         set socket(value){
-             if(value != this._socket) throw new Error("Socket is read-only. Silly Rabbit, sockets arent for kids.");
-         }
-
-         get socket() {
-             return this._socket;
-         }
-
-         /**
-             * Pings the server and returns an updated list of connected web client user IDs
+        class Bendit {
+            /**
+             * @property {string[]} users - An array of connected client websocket IDs
+             * @property {Object[]} devices - An array of created BenditDevices that can assigned to connected Bendit boards 
+             * @property {Object} socket - The socket.io socket for this Bendit-class instance. <em> Read only.</em>
+             * @property {Object[]} availableBoards - An array of assigned board data for all connected Bendit Boards
              * 
-             * @return {
-                 string[]
-             } - An array of connected web client user IDs
-         */
+             */
+            constructor(url = window.location.origin) {
 
-         
 
-         getConnectedUsers() {
-             this._socket.emit('grab_user_list');
-             return this.users;
-         };
+                this.users = [];
+                //this.socket;
 
-         /**
-             * Pings the server and returns an updated list containing the assigned device data
-             * of any connected Bendit boards.
+                this.devices = [];
+
+                this.availableBoards = [];
+
+                this._socket = io.connect(url, {
+                    transports: ['websocket']
+                });
+                //console.log("nexusHub Server Initialized!");
+                console.log("Connected to the Bendit_I/O Server ");
+
+
+                this._socket.on('log_user_list', (data) => {
+                    console.log("IDs of connected web users: " + data);
+                });
+
+                this._socket.on('log_board_list', (data) => {
+                    let currentBoardList = data;
+                    this.availableBoards = currentBoardList;
+                    //console.log("Device Data of connected Bendit boards: " + JSON.stringify(incomingBoardList));
+                    //return this.devices;
+                });
+
+                this._socket.emit('grab_board_list');
+
+
+            }
+
+            set socket(value) {
+                if (value != this._socket) throw new Error("Socket is read-only. Silly Rabbit, sockets arent for kids.");
+            }
+
+            get socket() {
+                return this._socket;
+            }
+
+            /**
+                * Pings the server and returns an updated list of connected web client user IDs
+                * 
+                * @return {
+                    string[]
+                } - An array of connected web client user IDs
+            */
+
+
+
+            getConnectedUsers() {
+                this._socket.emit('grab_user_list');
+                return this.users;
+            };
+
+            /**
+                * Pings the server and returns an updated list containing the assigned device data
+                * of any connected Bendit boards.
+                * 
+                * @return {
+                    Object[]
+                } - An array of objects containing the assigned device data of each connected Bendit board
+            */
+            getConnectedBenditBoards() {
+                this._socket.emit('grab_board_list');
+                return this.availableBoards;
+            };
+
+
+            /**
+             * Creates an instance of the BenditDevice class and adds that object to the Bendit.devices array.
+             * Can be called with individual arguments or with an object.
              * 
-             * @return {
-                 Object[]
-             } - An array of objects containing the assigned device data of each connected Bendit board
-         */
-         getConnectedBenditBoards() {
-             this._socket.emit('grab_board_list');
-             return this.availableBoards;
-         };
+             * @param {number} switches - the total number of switches to assign to the device.
+             * @param {number} pots - the total number of switches to assign to the device.
+             * @param {number} motors - the total number of motors to assign to the device.
+             * @param {number} boardNumber - the Bendit board number to assign to the device.
+             * @return {Object} - An instance of the BenditDevice class.
+             * @example 
+             * //Create Bendit instance
+             * let bendit = new Bendit.Connection();
+             * 
+             * let speakNspell = bendit.addDevice(6,5,1,2);// possible switches, pots, and motors to control on board 2
+             * 
+             * or
+             * 
+             * let speakNspell = bendit.addDevice({
+             *       "switches": 6,
+             *       "pots": 5,
+             *       "motors": 1,
+             *       "boardNumber": 2     
+             *       });
+             */
+            addDevice(options) {
+                let newDevice;
 
+                switch (typeof arguments[0]) {
+                    case 'number':
+                        //convert arguments to actual array
+                        let args = [...arguments];
+                        //add the Bendit-class socket 
+                        args.push(this._socket);
+                        newDevice = new BenditDevice(args[0], args[1], args[2], args[3], args[4]);
+                        break;
+                    case 'object':
+                        newDevice = new BenditDevice(options.switches, options.pots, options.motors, options.boardNumber, this._socket);
+                        //adding socket property if object passed in
+                        //newDevice.socket = this.socket;
+                        break;
 
-         /**
-          * Creates an instance of the BenditDevice class and adds that object to the Bendit.devices array.
-          * Can be called with individual arguments or with an object.
-          * 
-          * @param {number} switches - the total number of switches to assign to the device.
-          * @param {number} pots - the total number of switches to assign to the device.
-          * @param {number} motors - the total number of motors to assign to the device.
-          * @param {number} boardNumber - the Bendit board number to assign to the device.
-          * @return {Object} - An instance of the BenditDevice class.
-          * @example 
-          * //Create Bendit instance
-          * let bendit = Bendit.Hub;
-          * 
-          * let speakNspell = bendit.addDevice(6,5,1,2);// possible switches, pots, and motors to control on board 2
-          * 
-          * or
-          * 
-          * let speakNspell = bendit.addDevice({
-          *       "switches": 6,
-          *       "pots": 5,
-          *       "motors": 1,
-          *       "boardNumber": 2     
-          *       });
-          */
-         addDevice(options) {
-             let newDevice;
-
-             switch (typeof arguments[0]) {
-                 case 'number':
-                     //convert arguments to actual array
-                     let args = [...arguments];
-                     //add the Bendit-class socket 
-                     args.push(this._socket);
-                     newDevice = new BenditDevice(args[0], args[1], args[2], args[3], args[4]);
-                     break;
-                 case 'object':
-                     newDevice = new BenditDevice(options.switches, options.pots, options.motors, options.boardNumber, this._socket);
-                     //adding socket property if object passed in
-                     //newDevice.socket = this.socket;
-                     break;
-
-             }
+                }
 
 
 
-             this.devices.push(newDevice);
-             return newDevice;
-         }
+                this.devices.push(newDevice);
+                return newDevice;
+            }
 
-     }
+        }
 
         /**
          * An object that represents a Bendit board/circuit-bent device pair. New devices are added to the Bendit.devices array on creation.
@@ -247,13 +256,13 @@ require = (function e(t, n, r) {
 
             }
 
-             set socket(value) {
-                 if (value != this._socket) throw new Error("Socket is read-only. Silly Rabbit, sockets arent for kids.");
-             }
+            set socket(value) {
+                if (value != this._socket) throw new Error("Socket is read-only. Silly Rabbit, sockets arent for kids.");
+            }
 
-             get socket() {
-                 return this._socket;
-             }
+            get socket() {
+                return this._socket;
+            }
 
 
             /**
@@ -762,7 +771,7 @@ require = (function e(t, n, r) {
 
         module.exports = {
             Device: BenditDevice,
-            Hub: new Bendit(),
+            Browser: Bendit,
             //Module: Bendit_module,
             Switch: Switch,
             Pot: Pot,
