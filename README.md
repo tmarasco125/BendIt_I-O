@@ -1,22 +1,3 @@
-# Bendit_I/O
+# Bendit_I/O: A Framework for Networked Performance of Circuit-Bent Devices
 
-Example Performance interface and board code.
-
-
-
-# Road Map to API/software framework v 1.1:
-
-## On Boards:
-
-- [ ] pot ramp function (using ticker?)
-
-## On BenditHub:
-
-- [ ] finish .addAdditionalChannels() method
-- [ ] add method to send connectedDevices and connectUsers array to web clients
-
-## On BenditBrowser:
-
-- [ ] make method to call BenditHub method to poll stats (connectedUsers, connectedDevices)
-
-*Work in Progress
+Check back 5/1/2020 for more info.
