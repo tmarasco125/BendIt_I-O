@@ -1,5 +1,5 @@
 //Bendit Board Code: Configuring Board Profile with JSON from Server
-
+//STILL IN DEVELOPMENT!
 
 #include <ArduinoJson.h>
 #include <SPIFFS.h>
