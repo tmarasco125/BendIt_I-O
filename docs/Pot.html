@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Class: Pot | benditBrowser.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
+
+    
+</head>
+<body>
+<nav class="lnb" id="lnb">
+    <div class="logo" style="width: 150px; height: 30px">
+        
+            <a href="http://www.benditio.com" rel="noopener noreferrer" target="_blank">
+                <img src="https://www.benditio.com/images/Bendit_font.png" width="100%" height="100%">
+            </a>
+        
+    </div>
+    <div class="title">
+        <h1><a href="index.html" class="link">benditBrowser.js</a></h1>
+        
+    </div>
+    <div class="search-container" id="search-container">
+        <input type="text" placeholder="Search">
+        <ul></ul>
+    </div>
+    
+        <ol class="lnb-tab">
+            <li id="api-tab">
+                <a href="#"><h4>API</h4></a>
+            </li>
+            <li id="examples-tab">
+                <a href="#"><h4>Examples</h4></a>
+            </li>
+        </ol>
+    
+    <div class="lnb-examples hidden"><h3>Examples</h3><ul><li><a href="tutorial-gettingStarted.html">gettingStarted</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="gettingStarted_sub"></div></li></ul></div><div class="lnb-api hidden"><h3>Classes</h3><ul><li><a href="Bendit.html">Bendit</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Bendit_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="Bendit.html#addDevice">addDevice</a></li><li><a href="Bendit.html#getConnectedBenditBoards">getConnectedBenditBoards</a></li><li><a href="Bendit.html#getConnectedUsers">getConnectedUsers</a></li></ul></div></li><li><a href="BenditDevice.html">BenditDevice</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="BenditDevice_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="BenditDevice.html#buildMotorArray">buildMotorArray</a></li><li><a href="BenditDevice.html#buildPotArray">buildPotArray</a></li><li><a href="BenditDevice.html#buildSwitchArray">buildSwitchArray</a></li><li><a href="BenditDevice.html#getDeviceProfile">getDeviceProfile</a></li><li><a href="BenditDevice.html#writeDeviceProfile">writeDeviceProfile</a></li></ul></div></li><li><a href="Motor.html">Motor</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Motor_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="Motor.html#flipDirection">flipDirection</a></li><li><a href="Motor.html#run">run</a></li><li><a href="Motor.html#stop">stop</a></li></ul></div></li><li><a href="Pot.html">Pot</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Pot_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="Pot.html#setPot">setPot</a></li></ul></div></li><li><a href="Switch.html">Switch</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Switch_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="Switch.html#flipSwitch">flipSwitch</a></li><li><a href="Switch.html#setSwitch">setSwitch</a></li><li><a href="Switch.html#toggleSwitch">toggleSwitch</a></li></ul></div></li></ul></div>
+</nav>
+<div id="resizer"></div>
+
+<div class="main" id="main">
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2><span class="attribs"><span class="type-signature"></span></span>Pot<span class="signature">(potNum, socket, deviceNum)</span><span class="type-signature"></span></h2>
+        
+            <div class="class-description"><p>An object that represents a potentiometer output channel on a Device's associated Bendit board/circuit-bent device pair.
+An array of Pot objects are created when a new BenditDevice object is created.</p></div>
+        
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+
+<dt>
+    
+        <h4 class="name" id="Pot">
+            
+                new <span class="type-signature"></span>Pot<span class="signature">(potNum, socket, deviceNum)</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="benditBrowser.js.html">benditBrowser.js</a></code>,
+                <code><a href="benditBrowser.js.html#line575">line 575</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>potNum</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The
+potentiometer channel of this device's Bendit board.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>socket</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The socket.io socket inhereted from the global Bendit - class instance. <i>Do not change this.</i></p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>deviceNum</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The number of the device associated with this pot. Passed on
+to be associated with the Bendit board this
+pot's device is assigned to.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>number</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The
+potentiometer channel of this device 's Bendit board.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>position</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The position of the pot. Range is 0 to 255 (0 ohms to 100k ohms).</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>socket</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The socket.io socket inhereted from the global Bendit - class instance. <i>Do not change this.</i></p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>boardNumber</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The number of the Bendit board that this device and this pot are associated with.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="BenditDevice.html">BenditDevice</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+        
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+                
+
+<dt>
+    
+        <h4 class="name" id="setPot">
+            
+                <span class="type-signature"></span>setPot<span class="signature">(v)</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="benditBrowser.js.html">benditBrowser.js</a></code>,
+                <code><a href="benditBrowser.js.html#line610">line 610</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Sets the position of the pot on this device's Bendit board.
+Pots in the BenditDevice.pots array are zero indexed.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>v</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The position of the switch, corresponding to the generated resistance level.
+Range is 0 - 255, corresponding to a resistance range of 0 to 100k ohms.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code>//Set position of Pot channel 3 on this Bendit board to 127 (midway)
+ vhs.pots[2].setPot(127); //circa 50k ohms generated on Pot channel 3</code></pre>
+
+    
+
+</dd>
+
+            </dl>
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<footer>
+    <img class="logo" src="https://www.benditio.com/images/Bendit_font.png" style="width: 150px; height: 30px">
+    <div class="footer-text">© Anthony T. Marasco, 2020</div>
+</footer>
+<script>prettyPrint();</script>
+<script src="scripts/jquery.min.js"></script>
+<script src="scripts/tui-doc.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+    <script>
+        var id = 'Pot_sub'.replace(/"/g, '_');
+        var selectedApi = document.getElementById(id); // do not use jquery selector
+        var $selectedApi = $(selectedApi);
+
+        $selectedApi.removeClass('hidden');
+        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+        showLnbApi();
+    </script>
+
+</body>
+</html>
