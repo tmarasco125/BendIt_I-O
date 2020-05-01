@@ -1,0 +1,42 @@
+{
+    "source": {
+        "includePattern": ".+\\.js(doc|x)?$", 
+        "include": ["benditBrowser.js", "README.md"], 
+        "exclude": ["node_modules"] 
+    },
+
+    "plugins": ["plugins/markdown"],
+
+    "markdown": {
+        "parser": "gfm",
+        "hardwrap": false
+    },
+
+    "recurseDepth": 10, 
+
+    "opts": {
+        "destination": "../docs/", 
+        "recurse": true, 
+        "template": "node_modules/tui-jsdoc-template",
+        "hardwrap": false,
+        "tutorials": "tutorials"
+    },
+
+   "templates": {
+       "tabNames": {
+           "api": "API",
+           "tutorials": "Examples"
+       },
+
+       "name": "benditBrowser.js",
+       "version": "1.0",
+       
+        "footerText": "© Anthony T. Marasco, 2020",
+       "logo": {
+           "url": "https://www.benditio.com/images/Bendit_font.png",
+           "width": "150px",
+           "height": "30px",
+           "link": "http://www.benditio.com"
+       }
+   }
+}

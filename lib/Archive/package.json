@@ -1,0 +1,17 @@
+{
+  "name": "bendit-browswer-api",
+  "version": "1.0.0",
+  "description": "An API for benditBrowswer.js client-side library for Bendit_I/O",
+  "main": "benditBrowser.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "tui-jsdoc-template": "^1.2.2"
+  }
+}

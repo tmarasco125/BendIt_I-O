@@ -1,0 +1,37 @@
+{
+    "source": {
+        "includePattern": ".+\\.js(doc|x)?$", // Only process file ending in .js, .jsdoc or .jsx
+        "include": ["benditBrowser.js", "README.md"], 
+        "exclude": ["node_modules"] // Be gone, node_modules.
+    },
+    "plugins": ["plugins/markdown"],
+    "markdown": {
+        "parser": "gfm",
+        "hardwrap": false
+    },
+    "recurseDepth": 10, // Only go 10 levels deep.
+    "opts": {
+        "destination": "./docs/", // Where I want my docs to be generated.
+        "recurse": true, // Same as using -r or --recurse
+        "template": "node_modules/tui-jsdoc-template",
+        "hardwrap": false,
+        "tutorials": "./docs/tutorials"
+    },
+
+   "templates": {
+       "tabNames": {
+           "api": "API",
+           "tutorials": "Examples"
+       },
+       "name": "benditBrowser.js",
+       "version": "1.0",
+       
+        "footerText": "© Anthony T. Marasco, 2020",
+       "logo": {
+           "url": "img/Bendit_font.png",
+           "width": "150px",
+           "height": "30px",
+           "link": "http://www.benditio.com"
+       }
+   }
+}

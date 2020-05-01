@@ -1,5 +1,3 @@
-# Bendit_I/O
+# Bendit_I/O: A Framework for Networked Performance of Circuit-Bent Devices
 
-Example Performance interface and board code.
-
-*Work in Progress
+Check back 5/1/2020 for more info.

@@ -8,6 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/addons/p5.sound.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script type="text/javascript" src="libraries/benditBrowser.js"></script>
 
     <meta charset="utf-8" />
     <style>
@@ -33,13 +34,16 @@
         /*
 Bendit_I/O: Wireless Circuit Bending
 
-Example Web Performance: Reactive Visuals
+Example Web Performance: Reactive Visuals with BenditAPI
 
 *** Work in Progress ***
 
 Anthony T.Marasco - 2019
 
  */
+        
+        let Bendit = require('bendit');
+        let bendit = new Bendit.Browser();
         let angle = 0;
         let squares;
         let numbers = [];
@@ -50,8 +54,10 @@ Anthony T.Marasco - 2019
             espStatus,messageCounts =0, messageCountData, socket;
 
         function setup() {
+            
             createCanvas(windowWidth, windowHeight, WEBGL);
-            socket = io();
+            
+            // socket = io();
             // camera(0, 0, sin(frameCount * 0.01) * 10);
             rectMode(CENTER);
             squares = [];
@@ -66,39 +72,39 @@ Anthony T.Marasco - 2019
             // sq1 = new Box3D(random(-30, -10), random(-30, -10), random([60, 20, 120]));
             // sq2 = new Box3D(-10, -20, random([60, 20, 120])); 
 
-            socket.on('message', function (data) {
+        //     bendit.socket.on('message', function (data) {
                 
-                messageCounts++;
-                messageCountData = messageCounts %8;
-
+        //         messageCounts++;
+        //         messageCountData = messageCounts %8;
+          
                 
-                console.log(data);
-                console.log("got it!");
-                if (data == 0) {
-                    playPauseStatus = "playing";
-                } else if (data == 1) {
-                    playPauseStatus = "paused";
-                } else if (data == "ffDown") {
-                    state = "skipDown";
-                } else if (data == "ffUp") {
-                    state = "skipUp"
-                } else if (data == "bend1") {
-                    state = "ramBend";
-                } else if (data == "unbend1") {
-                    state = "normal";
-                }
+        //         console.log(data);
+        //         console.log("got it!");
+        //         if (data == 0) {
+        //             playPauseStatus = "playing";
+        //         } else if (data == 1) {
+        //             playPauseStatus = "paused";
+        //         } else if (data == "ffDown") {
+        //             state = "skipDown";
+        //         } else if (data == "ffUp") {
+        //             state = "skipUp"
+        //         } else if (data == "bend1") {
+        //             state = "ramBend";
+        //         } else if (data == "unbend1") {
+        //             state = "normal";
+        //         }
 
-            });
+        //     });
 
-            socket.on('espMessage', function (data) {
-                console.log("ESP Button state: " + data);
-                espStatus = data;
-            });
+        //     bendit.socket.on('espMessage', function (data) {
+        //         console.log("ESP Button state: " + data);
+        //         espStatus = data;
+        //     });
 
-            socket.on('playPauseMessage', function (data) {
-                console.log("Playing Status is: " + data);
-                playPauseStatus = data;
-            });
+        //     bendit.socket.on('playPauseMessage', function (data) {
+        //         console.log("Playing Status is: " + data);
+        //         playPauseStatus = data;
+        //     });
         }
 
         function draw() {
@@ -191,7 +197,7 @@ Anthony T.Marasco - 2019
 
         function potValueSet(pot1Position){
             
-            socket.emit('potTurning', {
+           bendit.socket.emit('potTurning', {
             position: pot1Position,
             device: 2
             });
