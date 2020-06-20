@@ -30,7 +30,7 @@ require = (function e(t, n, r) {
             benditBrowser JS: A Client-Side JavaScript Library for Bendit_I/O
         =============================================================================
         */
-
+        
         /** 
         Bendit Browser JS
           @name benditBrowser.js
@@ -83,6 +83,8 @@ require = (function e(t, n, r) {
 
                 this.availableBoards = [];
 
+                this.messageFromBoard = null;
+
                 this._socket = io.connect(url, {
                     transports: ['websocket']
                 });
@@ -103,7 +105,11 @@ require = (function e(t, n, r) {
 
                 this._socket.emit('grab_board_list');
 
+                this._socket.on('message_from_bendit_board', (data)=>{
+                    let currentMessage = data;
 
+                    this.messageFromBoard = currentMessage;
+                });
             }
 
             set socket(value) {
@@ -142,6 +148,7 @@ require = (function e(t, n, r) {
                 return this.availableBoards;
             };
 
+           
 
             /**
              * Creates an instance of the BenditDevice class and adds that object to the Bendit.devices array.

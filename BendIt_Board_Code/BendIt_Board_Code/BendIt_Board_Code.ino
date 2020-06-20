@@ -30,6 +30,9 @@ Anthony T. Marasco - 2020
 int i = 0;
 //instance of WiFiMulti library to hold multiple network ssid/password pairs
 WiFiMulti wifiMultiScan;
+string wifiNetwork = "WiFi_Network_Goes_Here";
+string password = "WiFi_Password_Goes_Here";
+
 int deviceNumber = 0;
 const char assignedDeviceNumber = 0;
 String deviceColor = "none";
@@ -593,8 +596,9 @@ void setup()
     crossFade(pink);
   }
 
-  wifiMultiScan.addAP("NETGEAR481", "fearlesssocks430");
-  wifiMultiScan.addAP("MonAndToneGlow", "UncagedNY2013");
+  wifiMultiScan.addAP(wifiNetwork, password);
+
+  
   // while (wifiMultiScan.run() != WL_CONNECTED)
   // { //wait for the WiFi to connect
   //   //delay(50);

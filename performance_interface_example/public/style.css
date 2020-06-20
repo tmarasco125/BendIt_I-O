@@ -7,3 +7,9 @@ p{
   font-family: 'K2D', sans-serif;
   font-family: 'Source Code Pro', monospace; 
 }
+
+.toggleButton1:disabled {
+  background: #999;
+  color: #555;
+  cursor: not-allowed;
+}

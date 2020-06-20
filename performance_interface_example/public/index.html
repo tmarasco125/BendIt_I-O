@@ -332,6 +332,7 @@
             //         device: 1
             //     });
             // }, 100);
+            console.log("WOW!");
         });
 
         pb1.on('release', function (v) {
@@ -342,6 +343,7 @@
         });
 
         sb1.on('click', function (v) {
+            pb1.disabled = "disabled";
             socket.emit('toggle2', {
                 state: true,
                 device: 1
