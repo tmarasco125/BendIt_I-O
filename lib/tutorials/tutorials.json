@@ -5,6 +5,14 @@
 
     "2_createDevice":{
         "title": "Creating Devices"
+    },
+
+    "3_browserInterface": {
+        "title": "Making a Web Interface with benditBrowser.js"
+    },
+
+    "4_maxBendit": {
+        "title": "Using Bendit-Max"
     }
   
    
