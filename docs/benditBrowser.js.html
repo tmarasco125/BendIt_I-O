@@ -142,6 +142,8 @@
 
                 this.availableBoards = [];
 
+                this.messageFromBoard = null;
+
                 this._socket = io.connect(url, {
                     transports: ['websocket']
                 });
@@ -162,7 +164,11 @@
 
                 this._socket.emit('grab_board_list');
 
+                 this._socket.on('message_from_bendit_board', (data) => {
+                     let currentMessage = data;
 
+                     this.messageFromBoard = currentMessage;
+                 });
             }
 
             set socket(value) {
