@@ -1,1 +1,11 @@
-{}
+{
+    "1_gettingStarted":{
+        "title": "Getting Started"
+    },
+
+    "2_createDevice":{
+        "title": "Creating Devices"
+    }
+  
+   
+}
