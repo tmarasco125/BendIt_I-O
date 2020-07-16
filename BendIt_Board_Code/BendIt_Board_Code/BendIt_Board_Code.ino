@@ -38,8 +38,12 @@ const char assignedDeviceNumber = 0;
 String deviceColor = "none";
 //server IP
 char host[] = "192.168.1.149";
-//server port
+//server IP Heroku
+//char host[] = "";
+//server port (local)
 int port = 3000;
+//sever port (Heroku)
+//const int port = 80;
 //Switch and Motor pins
 int switchPins[6] = {15, 32, 14, 22, 23, 21};
 // LED pins

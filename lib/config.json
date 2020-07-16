@@ -33,7 +33,7 @@
        
         "footerText": "© Anthony T. Marasco, 2020",
        "logo": {
-           "url": "/doc_images/Bendit_font.png",
+           "url": "./doc_images/Bendit_font.png",
            "width": "150px",
            "height": "30px",
            "link": "http://www.benditio.com"

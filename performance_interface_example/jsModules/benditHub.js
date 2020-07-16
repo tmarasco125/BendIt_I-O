@@ -13,7 +13,7 @@ class BenditHub {
         this.removeBoardOnDisconnect = this.removeBoardOnDisconnect.bind(this);
 
         this.version = 1.0;
-        this.serverPort = 3000;
+        this.serverPort = process.env.PORT || 80;
         this.connectedUsers = [];
         this.connectedBenditBoards = [];
         this.boardColors = ["yellow", "orange", "green", "pink", "purple"]; //example of RGB array to send: "[55,132,12]"
@@ -65,6 +65,7 @@ class BenditHub {
     initServer() {
         console.log('************* Welcome to Bendit_I/O! *************** \nThe Bendit Server is up and running\nServer software version: ' + this.version);
         const NexusHub = require('../jsModules/hub.js');
+        const benditServerPort = this.serverPort;
         // let express = require('express');
         // let app = express();
         let http = require('http');
@@ -72,7 +73,7 @@ class BenditHub {
 
         let theHub = new NexusHub();
 
-        theHub.init(io, 'public');
+        theHub.init(io, 'public', benditServerPort);
 
 
 
