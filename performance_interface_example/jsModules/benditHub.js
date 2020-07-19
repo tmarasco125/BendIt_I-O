@@ -281,7 +281,7 @@ class BenditHub {
             //'handshake' is specific to Bendit boards
             socket.on('handshake', (data) => {
 
-
+                console.log("Here is the BN from the board: " + data.deviceNumber);
                 console.log(this.connectedBenditBoards);
                 
 
@@ -293,22 +293,27 @@ class BenditHub {
                 //connectedBenditBoards.push(socket.id);
                 socket.name = socket.id;
 
-                boardNumber++;
+                //server-counting board number
+                //boardNumber++;
                 //the server now knows that the boardNumber is tied to a socket.id
-                socket.boardNumber = boardNumber;
+                //socket.boardNumber = boardNumber;
 
+                //Lets grab the board number from the board itself:
+                socket.boardNumber = data.deviceNumber;
+
+                //Have the server open a room just for this board and put this baord in it
                 socket.join(`${socket.boardNumber}`);
-                //console.log("Total Bendit Boards Connected: " + this.connectedBenditBoards.length);
+                console.log("Total Bendit Boards Connected: " + this.connectedBenditBoards.length);
                 let boardAssignedColor = this.boardColors[Math.floor(Math.random() * this.boardColors.length)];
 
 
                 setTimeout(function () {
-                    //do these two need to be io instead of socket?
-                    io.to(`${socket.id}`).emit("setBoardColor", boardAssignedColor);
-                    console.log(`here is the color message sent to the Bendit board: ${boardAssignedColor}`);
-                    io.to(`${socket.id}`).emit("setBoardNumber", socket.boardNumber);
-                    //console.log("Assigned Color: " + userColorPick);
-                    //console.log("Assigned Device Number: " + userNumberAssignment);
+                //     //do these two need to be io instead of socket?
+                     io.to(`${socket.id}`).emit("setBoardColor", boardAssignedColor);
+                     console.log(`here is the color message sent to the Bendit board: ${boardAssignedColor}`);
+                //     io.to(`${socket.id}`).emit("setBoardNumber", socket.boardNumber);
+                     console.log("Assigned Color: " + boardAssignedColor);
+                //     //console.log("Assigned Device Number: " + userNumberAssignment);
                 }, 850);
 
                 socket.boardAssignedData = {

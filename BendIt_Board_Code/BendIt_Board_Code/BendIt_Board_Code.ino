@@ -39,7 +39,7 @@ String deviceColor = "none";
 //server IP
 char host[] = "192.168.1.149";
 //server IP Heroku
-//char host[] = "";
+//char host[] = "http://bendit-web-interface.herokuapp.com";
 //server port (local)
 int port = 3000;
 //sever port (Heroku)
