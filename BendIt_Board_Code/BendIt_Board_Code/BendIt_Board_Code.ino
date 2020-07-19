@@ -30,20 +30,20 @@ Anthony T. Marasco - 2020
 int i = 0;
 //instance of WiFiMulti library to hold multiple network ssid/password pairs
 WiFiMulti wifiMultiScan;
-string wifiNetwork = "WiFi_Network_Goes_Here";
-string password = "WiFi_Password_Goes_Here";
+const char *wifiNetwork = "Put_WIFI_Here";
+const char *password = "Password_Here";
 
 int deviceNumber = 0;
 const char assignedDeviceNumber = 0;
 String deviceColor = "none";
-//server IP
-char host[] = "192.168.1.149";
-//server IP Heroku
-//char host[] = "http://bendit-web-interface.herokuapp.com";
+//server IP - Local Router
+//char host[] = "192.168.1.149";
+//server IP - Heroku
+char host[] = "bendit-web-interface.herokuapp.com";
 //server port (local)
-int port = 3000;
+//int port = 3000;
 //sever port (Heroku)
-//const int port = 80;
+int port = 80;
 //Switch and Motor pins
 int switchPins[6] = {15, 32, 14, 22, 23, 21};
 // LED pins
@@ -105,7 +105,7 @@ SocketIoClient webSocket;
 //Ticker instances
 Ticker switch1, switch2, switch3, switch4, switch5, switch6;
 String myString = "00:00:00:00:00:00";
-String deviceNumberString = "0";
+String deviceNumberString = "1";
 String switchPayloadString = "0,false";
 //************************************ Device Functions*****************************
 //digtialPotTurning function
@@ -252,8 +252,6 @@ void runMetroSw2(int speed)
 //************************************ Socket Callbacks*****************************
 //Digital Pots
 
-
-
 //Serial Monitor
 void event(const char *payload, size_t length)
 {
@@ -268,7 +266,6 @@ void printConnect(const char *payload, size_t length)
 {
   Serial.println("Sweet! I'm connected.");
 }
-
 
 //steps to change:
 //get string from server in format: channel,position
@@ -297,7 +294,6 @@ void pot_engage(const char *payload, size_t length)
 }
 void setBoardNumber(const char *payload, size_t length)
 {
-  
 
   sscanf(payload, "%d", &deviceNumber);
 
@@ -307,14 +303,13 @@ void setBoardNumber(const char *payload, size_t length)
 
 void setBoardColor(const char *payload, size_t length)
 {
-  
+
   char deviceColor[] = "orange";
   sscanf(payload, "%s", &deviceColor);
 
   //deviceColor = String(strncpy(bob, payload, length));
   Serial.printf("Assigned board color: %s\n ");
   Serial.println(deviceColor);
-
 
   if (!strcmp(deviceColor, "green"))
   {
@@ -553,9 +548,6 @@ void metroSwitch6Stop(const char *payload, size_t length)
   switch6.detach();
 }
 
-
-
-
 //******************************************************************Main Code**************************************************
 void setup()
 {
@@ -602,7 +594,6 @@ void setup()
 
   wifiMultiScan.addAP(wifiNetwork, password);
 
-  
   // while (wifiMultiScan.run() != WL_CONNECTED)
   // { //wait for the WiFi to connect
   //   //delay(50);
@@ -664,7 +655,6 @@ void setup()
   webSocket.on("metroSwitch6Stop", metroSwitch6Stop);
   webSocket.on("setBoardColor", setBoardColor);
   webSocket.on("setBoardNumber", setBoardNumber);
-  
 
   //Open the port
   webSocket.begin(host, port);
@@ -672,7 +662,6 @@ void setup()
   // webSocket.emit("register", "\"device2\"");
 
   webSocket.emit("handshake", ("{\"MAC\": \"" + String(deviceMACCharArray) + "\", \"color\": \"" + String(deviceColor) + "\", \"nickname\": \"CDplayer\", \"section\": \"none\", \"deviceNumber\": \"" + String(deviceNumberString) + "\"}").c_str());
-  
 }
 
 //Color Changing Stuff - April 2007, Clay Shirky <clay.shirky@nyu.edu>
