@@ -71,6 +71,7 @@ require = (function e(t, n, r) {
              * @property {Object[]} devices - An array of created BenditDevices that can assigned to connected Bendit boards 
              * @property {Object} socket - The socket.io socket for this Bendit-class instance. <em> Read only.</em>
              * @property {Object[]} availableBoards - An array of assigned board data for all connected Bendit Boards
+             * @property {string} messageFromBoard - A message received from a Bendit board.
              * 
              */
             constructor(url = window.location.origin) {
@@ -105,7 +106,7 @@ require = (function e(t, n, r) {
 
                 this._socket.emit('grab_board_list');
 
-                this._socket.on('message_from_bendit_board', (data)=>{
+                this._socket.on('fromBoard', (data)=>{
                     let currentMessage = data;
 
                     this.messageFromBoard = currentMessage;
@@ -148,7 +149,14 @@ require = (function e(t, n, r) {
                 return this.availableBoards;
             };
 
-           
+           receivedBoardMessage() {
+               if (this.messageFromBoard === undefined || this.messageFromBoard === null || this.messageFromBoard === '') {
+                   return false;
+               } else {
+                   return true;
+               }
+
+           };
 
             /**
              * Creates an instance of the BenditDevice class and adds that object to the Bendit.devices array.

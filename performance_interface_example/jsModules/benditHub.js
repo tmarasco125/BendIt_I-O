@@ -132,9 +132,18 @@ class BenditHub {
                 socket.broadcast.emit('message', data);
             });
 
-            socket.on('board_to_board_message', function (data) {
-                socket.broadcast.emit('espMessage', data);
+            socket.on('message_from_board', (data)=>{
+               
+                console.log(`Got this from Board ${data.Board}: ${data}`);
+                let payload = data.Board + "," + Math.floor(Math.random() * Math.floor(127));
+                payload.toString();
+                console.log(`Sending this message from Board ${data.Board} to all clients: ${payload}`);
+                socket.broadcast.emit('fromBoard', payload);
             });
+
+            //socket.on('board_to_board_message', function (data) {
+            //    socket.broadcast.emit('espMessage', data);
+           // });
 
             socket.on('playPauseMessage', function (data) {
                 socket.broadcast.emit('playPauseMessage', data);
