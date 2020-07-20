@@ -100,6 +100,7 @@ require = (function e(t, n, r) {
                 this._socket.on('log_board_list', (data) => {
                     let currentBoardList = data;
                     this.availableBoards = currentBoardList;
+                    //this.getConnectedBenditBoards();
                     //console.log("Device Data of connected Bendit boards: " + JSON.stringify(incomingBoardList));
                     //return this.devices;
                 });
@@ -146,7 +147,21 @@ require = (function e(t, n, r) {
             */
             getConnectedBenditBoards() {
                 this._socket.emit('grab_board_list');
-                return this.availableBoards;
+                console.log("Updating Available Board List...")
+                
+                setTimeout(() => {
+                    if (typeof this.availableBoards != "undefined" &&
+                       this.availableBoards != null &&
+                        this.availableBoards.length != null &&
+                        this.availableBoards.length > 0){
+                            console.log(this.availableBoards);
+                        } else {
+                            console.log("There are no Bendit boards connected.")
+                        }
+                   
+
+                }, 800);
+                
             };
 
            receivedBoardMessage() {

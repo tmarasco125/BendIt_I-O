@@ -1,4 +1,9 @@
-//The Bendit_I/O Server Hub
+//**********************************************************
+//*  BenditHub: Server-side Library for Building Bendit_I/O*
+//   Servers                                               *
+//*	 by Anthony T. Marasco                                 *
+//*  v1.0 - 2020                                           *
+//**********************************************************
 
 'use strict';
 
@@ -52,7 +57,11 @@ class BenditHub {
 
     }
 
-    removeBoardOnDisconnect(id) {
+    removeBoardOnDisconnect(incomingArray, idToRemove) {
+        
+        return incomingArray.filter(board => board.id != idToRemove);
+        
+        
         // this.connectedBenditBoards.splice(this.connectedBenditBoards.findIndex(this.connectedBenditBoards, function (item) {
         //     return item.value === id;
         // }), 1);
@@ -151,8 +160,11 @@ class BenditHub {
 
             socket.on('disconnect', ()=> {
                 console.log('User disconnected: ' + socket.id);
-                this.removeBoardOnDisconnect(socket.id);
-                // console.log("Remaining users:" +this.connectedBenditBoards);
+               let remainingBoards = this.removeBoardOnDisconnect(this.connectedBenditBoards, socket.id);
+               console.log("Remaining Bendit Boards:" + remainingBoards);
+               this.connectedBenditBoards = remainingBoards;
+               socket.emit('log_board_list', this.connectedBenditBoards);
+
             });
 
 
