@@ -28,6 +28,8 @@ require = (function e(t, n, r) {
         /* 
         =============================================================================
             benditBrowser JS: A Client-Side JavaScript Library for Bendit_I/O
+            by Anthony T. Marasco
+            v1.0 - 2020
         =============================================================================
         */
         

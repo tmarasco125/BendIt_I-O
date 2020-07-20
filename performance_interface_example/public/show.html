@@ -32,16 +32,15 @@
     <!-- <script src="sketch.js"></script> -->
     <script>
         /*
-Bendit_I/O: Wireless Circuit Bending
+Bendit_I/O: Networked Circuit Bending
 
-Example Web Performance: Reactive Visuals with BenditAPI
+Example Web Page: Reactive Visuals with BenditBrowser
 
-*** Work in Progress ***
 
-Anthony T.Marasco - 2019
+Anthony T.Marasco - 2020
 
  */
-        
+
         let Bendit = require('bendit');
         let bendit = new Bendit.Browser();
         let angle = 0;
@@ -50,95 +49,65 @@ Anthony T.Marasco - 2019
         let state = "normal";
         let clickCount = 0;
         let backgroundColor = "tan";
+        let messageValues = [];
+
         let playPauseStatus = 0,
-            espStatus,messageCounts =0, messageCountData, socket;
+            espStatus, messageCounts = 0,
+            messageCountData, socket;
 
         function setup() {
-            
+
             createCanvas(windowWidth, windowHeight, WEBGL);
-            
-            // socket = io();
-            // camera(0, 0, sin(frameCount * 0.01) * 10);
             rectMode(CENTER);
             squares = [];
 
             for (let i = 0; i < 15; i++) {
-                //console.log("hi");
                 squares[i] = new Box3D(random(-500, 300), random(-500, 300), random([60, 20, 80]));
             }
 
 
             noStroke();
-            // sq1 = new Box3D(random(-30, -10), random(-30, -10), random([60, 20, 120]));
-            // sq2 = new Box3D(-10, -20, random([60, 20, 120])); 
 
-        //     bendit.socket.on('message', function (data) {
-                
-        //         messageCounts++;
-        //         messageCountData = messageCounts %8;
-          
-                
-        //         console.log(data);
-        //         console.log("got it!");
-        //         if (data == 0) {
-        //             playPauseStatus = "playing";
-        //         } else if (data == 1) {
-        //             playPauseStatus = "paused";
-        //         } else if (data == "ffDown") {
-        //             state = "skipDown";
-        //         } else if (data == "ffUp") {
-        //             state = "skipUp"
-        //         } else if (data == "bend1") {
-        //             state = "ramBend";
-        //         } else if (data == "unbend1") {
-        //             state = "normal";
-        //         }
+            //on load, lets grab data on any connected Bendit boards from the server:
+            bendit.getConnectedBenditBoards();
 
-        //     });
 
-        //     bendit.socket.on('espMessage', function (data) {
-        //         console.log("ESP Button state: " + data);
-        //         espStatus = data;
-        //     });
-
-        //     bendit.socket.on('playPauseMessage', function (data) {
-        //         console.log("Playing Status is: " + data);
-        //         playPauseStatus = data;
-        //     });
+           
         }
 
         function draw() {
             // camera(mouseX * 0.25, mouseY * 0.25, 20 + sin(frameCount * 0.01) * 10, 0, 0, 0, 0, 1, 0);
-            if (playPauseStatus == 0) {
+            if (bendit.receivedBoardMessage()){
+                messageValues = bendit.messageFromBoard.split(",");
+                console.log(`Got This Message from Board ${messageValues[0]}: ${messageValues[1]}`);   
+            }
+
+            if (messageValues[1] >= 0 && messageValues[1] <= 50) {
                 normalLight();
                 normalPlay();
-                if (state == "skipDown") {
-                    trackSkipAndSpin();
-                } else if (state == "skipUp") {
+                if (messageValues[1] >=20 && messageValues[1] <= 40) {
+                    skipAndSpin();
+                } else {
                     normalPlay();
                 }
             } else {
                 normalLight();
-                pauseGlitch();
-                if (state == "skipDown") {
-                    trackSkipAndFreeze();
+                glitchVis();
+                if (messageValues[1] >= 10 && messageValues[1] <= 19) {
+                    skipAndFreeze();
                 }
             }
 
-            if (espStatus == 1 && state == "ramBend") {
+            if (messageValues[1] >= 51 && messageValues[1] <=127) {
                 bendLight();
                 dramBend();
-            } else if (espStatus == 0 && state == "ramBend") {
-                if (playPauseStatus == 0) {
-                    normalPlay();
-                } else {
-                    pauseGlitch();
+            } else {
+                normalPlay();
+                if (messageValues[1] >= 80 && messageValues[1] <= 100) {
+                    glitchVis();
                 }
 
             }
-
-            // sq1.appear();
-            // sq2.appear();
 
 
             for (let i = 0; i < squares.length; i++) {
@@ -170,8 +139,6 @@ Anthony T.Marasco - 2019
         };
 
         function dramBend() {
-
-
             for (let i = 0; i < squares.length; i++) {
                 squares[i].jitter();
             }
@@ -179,37 +146,15 @@ Anthony T.Marasco - 2019
         }
 
 
-        function pauseGlitch() {
-            
-            
-            // backgroundColor = "tan";
-            // background(backgroundColor);
-
-            // directionalLight(246, 112, 112, .50, -0.50, -1);
-
-            // directionalLight(0, 198, 197, -1, -0.25, 0.25);
-
-            // directionalLight(255, 215, 0, 1, 0.25, -.25);
+        function glitchVis() {
             for (let i = 0; i < squares.length; i++) {
                 squares[i].spin(0);
             }
         }
 
-        function potValueSet(pot1Position){
-            
-           bendit.socket.emit('potTurning', {
-            position: pot1Position,
-            device: 2
-            });
-        }
-        function trackSkipAndFreeze() {
-            // backgroundColor = "tan";
-            // background(backgroundColor);
-            // directionalLight(246, 112, 112, .50, -0.50, -1);
 
-            // directionalLight(0, 198, 197, -1, -0.25, 0.25);
+        function skipAndFreeze() {
 
-            // directionalLight(255, 215, 0, 1, 0.25, -.25);
             for (let i = 0; i < squares.length; i++) {
                 squares[i].x = random(-500, 300);
                 squares[i].y = random(-500, 300);
@@ -220,14 +165,8 @@ Anthony T.Marasco - 2019
 
 
 
-        function trackSkipAndSpin() {
-            // backgroundColor = "tan";
-            // background(backgroundColor);
-            // directionalLight(246, 112, 112, .50, -0.50, -1);
+        function skipAndSpin() {
 
-            // directionalLight(0, 198, 197, -1, -0.25, 0.25);
-
-            // directionalLight(255, 215, 0, 1, 0.25, -.25);
             for (let i = 0; i < squares.length; i++) {
                 squares[i].x = random(-500, 300);
                 squares[i].y = random(-500, 300);
@@ -236,27 +175,13 @@ Anthony T.Marasco - 2019
         }
 
         function normalPlay() {
-            // backgroundColor = "tan";
-            // background(backgroundColor);
 
-            // directionalLight(246, 112, 112, .50, -0.50, -1);
-
-            // directionalLight(0, 198, 197, -1, -0.25, 0.25);
-
-            // directionalLight(255, 215, 0, 1, 0.25, -.25);
             for (let i = 0; i < squares.length; i++) {
                 squares[i].spin(0.0015);
             }
         }
 
-        // function mousePressed() {
-        //     clickCount++;
-        //     if (clickCount % 2 == 0){
-        //         state = "normal";
-        //     } else {
-        //         state = "DRAMBend";
-        //     }
-        // }
+
 
         function keyPressed() {
             trackSkip();
