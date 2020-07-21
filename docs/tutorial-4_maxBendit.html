@@ -60,6 +60,7 @@
     
         <article class="readme">
             <h2>Setting it Up</h2>
+<p>To grab the example patches and the Bendit-Max library discussed below, <a href="https://github.com/tmarasco125/Bendit-Max">clone the Bendit-Max repo found here</a>.</p>
 <h2>Sending and receiving messages</h2>
 <p>In any of the included patches, start by clicking the install message labelled '1' of you have never run the Bendit programs before, followed by the start message labeled '2'. This will begin the connection to Bendit_io, and allow the patches to respond to messages from the board. Then, click on the message &quot;getConnectedBoards&quot; located next to 'start' and you will be able to use the interface below.</p>
 <p>When the Bendit boards receive a switch-based command, they will return a message containing an identification number and a random value between 0 and 127. These patches will utilize thin information in order to create and alter aspects of the patch based on the interactions with Bendit_io via internet server connection. Each of the patches contained in this folder interact with the incoming data differently, and can be configured to fit a variety of needs. All included patches are set up to route data both to and from up to 4 connected boards, and indicate when a message is received from each board. In the patches utilizing inputs from multiple boards, all inputs from one board are independent from the other boards.</p>

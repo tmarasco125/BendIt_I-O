@@ -1,5 +1,6 @@
-
 ## Setting it Up
+
+To grab the example patches and the Bendit-Max library discussed below, [clone the Bendit-Max repo found here](https://github.com/tmarasco125/Bendit-Max).
 
 ## Sending and receiving messages
 
