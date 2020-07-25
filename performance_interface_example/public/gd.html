@@ -4,18 +4,9 @@
 <head>
 
     <!-- <script src="/libraries/nexusUI/dist/nexusUI.min.js"></script> -->
-    
-<title>Bendit_I/O Web Controller </title>
-<script src="/libraries//NexusUI.js"></script>
+    <script src="/libraries//NexusUI.js"></script>
 
-<script src="/socket.io/socket.io.js"></script>
-<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-<script type="text/javascript" src="libraries/benditBrowser.js"></script>
-
-<meta charset="utf-8" />
-
-
-    
+    <title>Bendit_I/O Simple Controller</title>
     <style>
         body {
             background: rgb(255, 230, 161);
@@ -67,7 +58,7 @@
         <div class="device1buttongird" id="metroButtonSw1"></div>
         <div class="device1buttongird" id="metroStopSw1"></div>
         <br></br>
-        <div class="device1buttongird" id="pot0Dev2Slider"></div>
+        <div class="device1buttongird" id="metro1SpeedSlider"></div>
         <br></br>
         <div class="device1buttongird" id="metroButtonSw2"></div>
         <div class="device1buttongird" id="metroStopSw2"></div>
@@ -97,7 +88,7 @@
         <div class="device2buttongird" id="2_metroButtonSw1"></div>
         <div class="device2buttongird" id="2_metroStopSw1"></div>
         <br></br>
-        <div class="device2buttongird" id="2_pot0Dev2Slider"></div>
+        <div class="device2buttongird" id="2_metro1SpeedSlider"></div>
         <br></br>
         <div class="device2buttongird" id="2_metroButtonSw2"></div>
         <div class="device2buttongird" id="2_metroStopSw2"></div>
@@ -123,7 +114,6 @@
 
 
     <script>
-        /*
           /*
           The Spinning Earth Shall Spread Before You (2020)
           Performance Interface
@@ -132,7 +122,6 @@
           //Init Bendit and BenditDevices
           const Bendit = require('bendit');
           const bendit = new Bendit.Browser();
-          let potValue =0;
           let cd1 = bendit.addDevice(6, 0, 0, 1);
           let cd2 = bendit.addDevice({
           "switches": 6,
@@ -158,10 +147,10 @@
           'text': 'Stop'
           });
 
-          let ffb1 = new Nexus.Toggle('#toggleButton3', {
+          let ffb1 = new Nexus.TextButton('#toggleButton3', {
           'size': [150, 50],
           'state': false,
-          
+          'text': 'Forward'
           });
 
           let espb1 = new Nexus.TextButton('#toggleButton4', {
@@ -182,20 +171,12 @@
           'state': false
           });
 
-          let dev1_dial1 = new Nexus.Dial('#pot0Dev2Slider', {
+          let dev1_dial1 = new Nexus.Dial('#metro1SpeedSlider', {
           'size': [100, 100],
           'interaction': 'radial',
-          'min': 0,
-          'max': 255,
-          'step': 1
-          });
-
-          //Pot Controls
-
-          let pot1 = new Nexus.TextButton('#potButton', {
-          'size': [150, 50],
-          'state': false,
-          'text': 'Set Pot'
+          'min': 250,
+          'max': 2000,
+          'step': 250
           });
 
           //CD Player 2 Controls
@@ -219,9 +200,10 @@
           'text': 'Stop'
           });
 
-          let ffb1_2 = new Nexus.Toggle('#2_toggleButton3', {
+          let ffb1_2 = new Nexus.TextButton('#2_toggleButton3', {
           'size': [150, 50],
-          'state': false
+          'state': false,
+          'text': 'Forward'
           });
 
           let espb1_2 = new Nexus.TextButton('#2_toggleButton4', {
@@ -244,7 +226,7 @@
 
           //React to Messages from Bendit Boards
 
-          /*
+/*
           switch (bendit.messageFromBoard.boardNumber) {
           case 1:
           //Disable Performer Controls
@@ -300,52 +282,48 @@
           break;
           };
 
+          
 
+*/
 
-          */
+//Device 2 Pedal Controls
+pot1.on('click', function (v) {
+cd2.pots[0].setPot(v);
+});
 
-          //Device 2 Pedal Controls
-          pot1.on('click', function (v) {
-          cd2.pots[0].setPot(potValue);
-          });
-
-          dev1_dial1.on('change', (v) => {
-          potValue = v;
-          });
+dev1_dial1.on('change', (v) => {
+metroSpeed = v;
+});
           //CD 1 Controls
 
           //Play Button
           pb1.on('click', function () {
-          cd1.switches[0].toggleSwitch();
+          cd1.switches[0].setSwitch("close");
           });
-        
-          /*
+
           pb1.on('release', function () {
           cd1.switches[0].setSwitch("open");
           });
-          */
           //Stop Button
           sb1.on('click', function () {
-          cd1.switches[1].toggleSwitch();
+          cd1.switches[1].setSwitch("close");
           });
-          /*
+
           sb1.on('release', function () {
           cd1.switches[1].setSwitch("open");
           });
-          */
           //Forward Seek Button
-          ffb1.on('change', function () {
-          cd1.switches[2].setSwitch("closed");
+          ffb1.on('click', function () {
+          cd1.switches[2].setSwitch("close");
 
           });
-          
-          //ffb1.on('release', function () {
-          //cd1.switches[2].setSwitch("open");
-          //});
-          
+
+          ffb1.on('release', function () {
+          cd1.switches[2].setSwitch("open");
+          });
           //ESP Toggle - needs .toggleSwitch to avoid holding system pin high for too long
-          espb1.on('click', function () {
-          cd1.switches[3].toggleSwitch();
+          espb1.on('change', function () {
+          cd1.switches[3].toggleSwitch(300);
           });
 
           //Mute Latch
@@ -363,36 +341,36 @@
 
           //Play Button
           pb1_2.on('click', function (v) {
-          cd2.switches[0].toggleSwitch();
+          cd1.switches[0].setSwitch("close");
           });
-/*
+
           pb1_2.on('release', function (v) {
-          cd2.switches[0].setSwitch("open");
+          cd1.switches[0].setSwitch("open");
           });
-*/
+
           //Stop Button
           sb1_2.on('click', function (v) {
-          cd2.switches[1].toggleSwitch();
+          cd1.switches[1].setSwitch("close");
 
           });
 
-          //sb1_2.on('release', function (v) {
-          //cd2.switches[1].setSwitch("open");
+          sb1_2.on('release', function (v) {
+          cd1.switches[1].setSwitch("open");
 
-         // });
+          });
 
           //Forward Seek Button
-          ffb1_2.on('change', function (v) {
-          cd2.switches[2].flipSwitch();
+          ffb1_2.on('click', function (v) {
+          cd1.switches[2].setSwitch("close");
           });
 
-          //ffb1_2.on('change', function (v) {
-          //cd2.switches[2].setSwitch("open");
-          //})
+          ffb1_2.on('release', function (v) {
+          cd1.switches[2].setSwitch("open");
+          })
 
           //ESP Toggle - needs .toggleSwitch to avoid holding system pin high for too long
           espb1_2.on('change', function () {
-          cd2.switches[4].toggleSwitch();
+          cd2.switches[4].toggleSwitch(300);
           });
 
           //Mute Latch
