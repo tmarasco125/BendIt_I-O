@@ -239,7 +239,7 @@
         });
 
         //Collect info on connected boards from server, fill .availableBoards, and log to console
-        bendit.getConnectedBenditBoards(function () {
+        bendit.getConnectedBenditBoards(() => {
 
             //Init BenditDevices based on amount of connected boards
             switch (bendit.availableBoards.length) {
@@ -258,6 +258,9 @@
                     break;
             }
         });
+
+
+
 
 
 
