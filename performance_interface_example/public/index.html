@@ -241,60 +241,65 @@
           'state': false
           });
 
+          //Log available boards to console
+          bendit.getConnectedBenditBoards();
+
+
 
           //React to Messages from Bendit Boards
+          //Board 2 communicates with performer 1, board 1 communicates with performer 2
 
-          /*
+          
           switch (bendit.messageFromBoard.boardNumber) {
           case 1:
           //Disable Performer Controls
-          if (bendit.messageFromBoard.content === "performer_2_disable_play") {
+          if (bendit.messageFromBoard.content === "p2_disable_play") {
           pb1.size = [0, 0];
-          } else if (bendit.messageFromBoard.content === "performer_2_disable_stop") {
+          } else if (bendit.messageFromBoard.content === "p2_disable_stop") {
           sb1.size = [0, 0];
-          } else if (bendit.messageFromBoard.content === "performer_2_disable_forward") {
+          } else if (bendit.messageFromBoard.content === "p2_disable_forward") {
           ffb1.size = [0, 0];
-          } else if (bendit.messageFromBoard.content === "performer_2_disable_esp") {
+          } else if (bendit.messageFromBoard.content === "p2_disable_esp") {
           espb1.size = [0, 0];
-          } else if (bendit.messageFromBoard.content === "performer_2_disable_DRAMBend") {
+          } else if (bendit.messageFromBoard.content === "p2_disable_DRAMBend") {
           trigBend_1.size = [0, 0];
           }
           //Enable Performer Controls
-          if (bendit.messageFromBoard.content === "performer_2_enable_play") {
+          if (bendit.messageFromBoard.content === "p2_enable_play") {
           pb1.size = [150, 50];
-          } else if (bendit.messageFromBoard.content === "performer_2_enable_stop") {
+          } else if (bendit.messageFromBoard.content === "p2_enable_stop") {
           sb1.size = [150, 50];
-          } else if (bendit.messageFromBoard.content === "performer_2_enable_forward") {
+          } else if (bendit.messageFromBoard.content === "p2_enable_forward") {
           ffb1.size = [150, 50];
-          } else if (bendit.messageFromBoard.content === "performer_2_enable_esp") {
+          } else if (bendit.messageFromBoard.content === "p2_enable_esp") {
           espb1.size = [150, 50];
-          } else if (bendit.messageFromBoard.content === "performer_2_enable_DRAMBend") {
+          } else if (bendit.messageFromBoard.content === "p2_enable_DRAMBend") {
           trigBend_1.size = [150, 50];
           }
           break;
           case 2:
           //Disable Performer Controls
-          if (bendit.messageFromBoard.content === "performer_1_disable_play") {
+          if (bendit.messageFromBoard.content === "p1_disable_play") {
           pb1_2.size = [0, 0];
-          } else if (bendit.messageFromBoard.content === "performer_1_disable_stop") {
+          } else if (bendit.messageFromBoard.content === "p1_disable_stop") {
           sb1_2.size = [0, 0];
-          } else if (bendit.messageFromBoard.content === "performer_1_disable_forward") {
+          } else if (bendit.messageFromBoard.content === "p1_disable_forward") {
           ffb1_2.size = [0, 0];
-          } else if (bendit.messageFromBoard.content === "performer_1_disable_esp") {
+          } else if (bendit.messageFromBoard.content === "p1_disable_esp") {
           espb1_2.size = [0, 0];
-          } else if (bendit.messageFromBoard.content === "performer_1_disable_DRAMBend") {
+          } else if (bendit.messageFromBoard.content === "p1_disable_DRAMBend") {
           trigBend_2.size = [0, 0];
           }
           //Enable Performer Controls
-          if (bendit.messageFromBoard.content === "performer_1_enable_play") {
+          if (bendit.messageFromBoard.content === "p1_enable_play") {
           pb1_2.size = [150, 50];
-          } else if (bendit.messageFromBoard.content === "performer_1_enable_stop") {
+          } else if (bendit.messageFromBoard.content === "p1_enable_stop") {
           sb1_2.size = [150, 50];
-          } else if (bendit.messageFromBoard.content === "performer_1_enable_forward") {
+          } else if (bendit.messageFromBoard.content === "p1_enable_forward") {
           ffb1_2.size = [150, 50];
-          } else if (bendit.messageFromBoard.content === "performer_1_enable_esp") {
+          } else if (bendit.messageFromBoard.content === "p1_enable_esp") {
           espb1_2.size = [150, 50];
-          } else if (bendit.messageFromBoard.content === "performer_1_enable_DRAMBend") {
+          } else if (bendit.messageFromBoard.content === "p1_enable_DRAMBend") {
           trigBend_2.size = [150, 50];
           }
           break;
@@ -302,7 +307,7 @@
 
 
 
-          */
+          
 
           //Device 2 Pedal Controls
           pot1.on('click', function (v) {

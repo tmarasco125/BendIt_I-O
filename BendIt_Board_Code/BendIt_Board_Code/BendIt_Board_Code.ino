@@ -27,6 +27,7 @@ Anthony T. Marasco - 2020
 
 #include <analogWrite.h>
 #include <Ticker.h>
+
 int i = 0;
 //instance of WiFiMulti library to hold multiple network ssid/password pairs
 WiFiMulti wifiMultiScan;
@@ -360,8 +361,14 @@ void switch_engage(const char *payload, size_t length)
     Serial.println(swNum);
     Serial.println("Open]");
   }
+
+  webSocket.emit("message_from_board", ("{\"Board\": \"" + String(deviceNumberString) + "\"}").c_str());
 }
 
+void board_message_send(const char *payload, size_t length)
+{
+
+}
 //Switches
 
 //toggle functions
