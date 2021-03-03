@@ -230,7 +230,14 @@
             'state': false
         });
 
+        //Pot Controls
 
+        let pot1 = new Nexus.TextButton('#potButton', {
+            'size': [150, 50],
+            'state': false,
+            'text': 'Set Pot'
+        });
+        
         //Collect info on connected boards from server, fill .availableBoards, and log to console
         bendit.getConnectedBenditBoards();
 
