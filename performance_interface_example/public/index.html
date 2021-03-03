@@ -246,16 +246,17 @@
 
           //Log available boards to console
           bendit.getConnectedBenditBoards();
-          
+
 
           if (bendit.receivedBoardMessage()){
+                let messageValues = [];
                 messageValues = bendit.messageFromBoard.split(",");
                 console.log(`Got This Message from Board ${messageValues[0]}: ${messageValues[1]}`);   
             }
           //React to Messages from Bendit Boards
           //Board 2 communicates with performer 1, board 1 communicates with performer 2
 
-          
+          /*
           switch (bendit.messageFromBoard.boardNumber) {
           case 1:
           //Disable Performer Controls
@@ -310,7 +311,7 @@
           }
           break;
           };
-
+          */
 
 
           
