@@ -133,6 +133,9 @@
           const Bendit = require('bendit');
           const bendit = new Bendit.Browser();
           let potValue =0;
+          let cd1, cd2;
+          
+          /*
           let cd1 = bendit.addDevice(6, 0, 0, 1);
           let cd2 = bendit.addDevice({
           "switches": 6,
@@ -140,7 +143,7 @@
           "motors": 0,
           "boardNumber": 2
           });
-
+          */
 
 
           //CD Player 1 Controls
@@ -243,9 +246,12 @@
 
           //Log available boards to console
           bendit.getConnectedBenditBoards();
+          
 
-
-
+          if (bendit.receivedBoardMessage()){
+                messageValues = bendit.messageFromBoard.split(",");
+                console.log(`Got This Message from Board ${messageValues[0]}: ${messageValues[1]}`);   
+            }
           //React to Messages from Bendit Boards
           //Board 2 communicates with performer 1, board 1 communicates with performer 2
 
