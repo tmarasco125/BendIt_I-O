@@ -239,24 +239,27 @@
         });
 
         //Collect info on connected boards from server, fill .availableBoards, and log to console
-        bendit.getConnectedBenditBoards();
+        bendit.getConnectedBenditBoards(function () {
 
-        //Init BenditDevices based on amount of connected boards
-        switch (bendit.availableBoards.length) {
-            case 1:
-                //init cd1 device
-                cd1 = bendit.addDevice(6, 0, 0, 1);
-                break;
-            case 2:
-                cd1 = bendit.addDevice(6, 0, 0, 1);
-                cd2 = bendit.addDevice({
-                    "switches": 6,
-                    "pots": 1,
-                    "motors": 0,
-                    "boardNumber": 2
-                });
-                break;
-        }
+            //Init BenditDevices based on amount of connected boards
+            switch (bendit.availableBoards.length) {
+                case 1:
+                    //init cd1 device
+                    cd1 = bendit.addDevice(6, 0, 0, 1);
+                    break;
+                case 2:
+                    cd1 = bendit.addDevice(6, 0, 0, 1);
+                    cd2 = bendit.addDevice({
+                        "switches": 6,
+                        "pots": 1,
+                        "motors": 0,
+                        "boardNumber": 2
+                    });
+                    break;
+            }
+        });
+
+
 
         //React to Messages from Bendit Boards
 
@@ -341,7 +344,7 @@
 
         //Play Button
         pb1.on('click', function () {
-            cd1.switches[0].setSwitch("close");
+            cd1.switches[0].setSwitch("closed");
         });
 
         pb1.on('release', function () {
@@ -349,7 +352,7 @@
         });
         //Stop Button
         sb1.on('click', function () {
-            cd1.switches[1].setSwitch("close");
+            cd1.switches[1].setSwitch("closed");
         });
 
         sb1.on('release', function () {
@@ -357,7 +360,7 @@
         });
         //Forward Seek Button
         ffb1.on('click', function () {
-            cd1.switches[2].setSwitch("close");
+            cd1.switches[2].setSwitch("closed");
 
         });
 
@@ -384,7 +387,7 @@
 
         //Play Button
         pb1_2.on('click', function (v) {
-            cd1.switches[0].setSwitch("close");
+            cd1.switches[0].setSwitch("closed");
         });
 
         pb1_2.on('release', function (v) {
@@ -393,7 +396,7 @@
 
         //Stop Button
         sb1_2.on('click', function (v) {
-            cd1.switches[1].setSwitch("close");
+            cd1.switches[1].setSwitch("closed");
 
         });
 
@@ -404,7 +407,7 @@
 
         //Forward Seek Button
         ffb1_2.on('click', function (v) {
-            cd1.switches[2].setSwitch("close");
+            cd1.switches[2].setSwitch("closed");
         });
 
         ffb1_2.on('release', function (v) {
