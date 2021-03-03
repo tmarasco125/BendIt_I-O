@@ -244,8 +244,10 @@
             //Init BenditDevices based on amount of connected boards
             switch (bendit.availableBoards.length) {
                 case 1:
+                    
                     //init cd1 device
                     cd1 = bendit.addDevice(6, 0, 0, 1);
+                    console.log("switch case works");
                     break;
                 case 2:
                     cd1 = bendit.addDevice(6, 0, 0, 1);
