@@ -127,7 +127,7 @@
         const Bendit = require('bendit');
         const bendit = new Bendit.Browser();
         //Declare device vars
-        let cd1, cd2, pot1;
+        let cd1, cd2;
         /*
         let cd1 = bendit.addDevice(6, 0, 0, 1);
         let cd2 = bendit.addDevice({
@@ -237,7 +237,7 @@
             'state': false,
             'text': 'Set Pot'
         });
-        
+
         //Collect info on connected boards from server, fill .availableBoards, and log to console
         bendit.getConnectedBenditBoards();
 
