@@ -4,7 +4,7 @@
 <head>
 
     <!-- <script src="/libraries/nexusUI/dist/nexusUI.min.js"></script> -->
-    
+
 
     <title>Bendit_I/O Simple Controller</title>
     <script src="/libraries//NexusUI.js"></script>
@@ -115,277 +115,309 @@
 </div> -->
 
 
-   
+
 
     <script>
-          /*
-          The Spinning Earth Shall Spread Before You (2020)
+        /*
+          The Spinning Earth Shall Spread Before You (2020) & gravity|density (2019)
           Performance Interface
-          Anthony T.Marasco - 2020
+          Anthony T. Marasco - 2020
           */
-          //Init Bendit and BenditDevices
-          const Bendit = require('bendit');
-          const bendit = new Bendit.Browser();
-          let cd1 = bendit.addDevice(6, 0, 0, 1);
-          let cd2 = bendit.addDevice({
-          "switches": 6,
-          "pots": 1,
-          "motors": 0,
-          "boardNumber": 2
-          });
+        //Load and Init Bendit module
+        const Bendit = require('bendit');
+        const bendit = new Bendit.Browser();
+        //Declare device vars
+        let cd1, cd2, pot1;
+        /*
+        let cd1 = bendit.addDevice(6, 0, 0, 1);
+        let cd2 = bendit.addDevice({
+        "switches": 6,
+        "pots": 1,
+        "motors": 0,
+        "boardNumber": 2
+        });
+        */
+
+
+        //CD Player 1 Controls
+
+        let pb1 = new Nexus.TextButton('#toggleButton1', {
+            'size': [150, 50],
+            'state': false,
+            'text': 'Play',
+            'alternateText': 'Pause'
+        });
+
+        let sb1 = new Nexus.TextButton('#toggleButton2', {
+            'size': [150, 50],
+            'state': false,
+            'text': 'Stop'
+        });
+
+        let ffb1 = new Nexus.TextButton('#toggleButton3', {
+            'size': [150, 50],
+            'state': false,
+            'text': 'Forward'
+        });
+
+        let espb1 = new Nexus.TextButton('#toggleButton4', {
+            'size': [150, 50],
+            'state': false,
+            'text': 'ESP on',
+            'alternateText': 'ESP off'
+        });
+
+
+        let trigMute_1 = new Nexus.Toggle('#toggleButton5', {
+            'size': [150, 50],
+            'state': false
+        });
+
+        let trigBend_1 = new Nexus.Toggle('#toggleButton6', {
+            'size': [150, 50],
+            'state': false
+        });
+
+        let dev1_dial1 = new Nexus.Dial('#metro1SpeedSlider', {
+            'size': [100, 100],
+            'interaction': 'radial',
+            'min': 250,
+            'max': 2000,
+            'step': 250
+        });
+
+        //CD Player 2 Controls
+
+        Nexus.colors.accent = "#FFA07A";
 
 
 
-          //CD Player 1 Controls
 
-          let pb1 = new Nexus.TextButton('#toggleButton1', {
-          'size': [150, 50],
-          'state': false,
-          'text': 'Play',
-          'alternateText': 'Pause'
-          });
-
-          let sb1 = new Nexus.TextButton('#toggleButton2', {
-          'size': [150, 50],
-          'state': false,
-          'text': 'Stop'
-          });
-
-          let ffb1 = new Nexus.TextButton('#toggleButton3', {
-          'size': [150, 50],
-          'state': false,
-          'text': 'Forward'
-          });
-
-          let espb1 = new Nexus.TextButton('#toggleButton4', {
-          'size': [150, 50],
-          'state': false,
-          'text': 'ESP on',
-          'alternateText': 'ESP off'
-          });
+        let pb1_2 = new Nexus.TextButton('#2_toggleButton1', {
+            'size': [150, 50],
+            'state': false,
+            'text': 'Play',
+            'alternate': 'Pause'
+        });
 
 
-          let trigMute_1 = new Nexus.Toggle('#toggleButton5', {
-          'size': [150, 50],
-          'state': false
-          });
+        let sb1_2 = new Nexus.TextButton('#2_toggleButton2', {
+            'size': [150, 50],
+            'state': false,
+            'text': 'Stop'
+        });
 
-          let trigBend_1 = new Nexus.Toggle('#toggleButton6', {
-          'size': [150, 50],
-          'state': false
-          });
+        let ffb1_2 = new Nexus.TextButton('#2_toggleButton3', {
+            'size': [150, 50],
+            'state': false,
+            'text': 'Forward'
+        });
 
-          let dev1_dial1 = new Nexus.Dial('#metro1SpeedSlider', {
-          'size': [100, 100],
-          'interaction': 'radial',
-          'min': 250,
-          'max': 2000,
-          'step': 250
-          });
+        let espb1_2 = new Nexus.TextButton('#2_toggleButton4', {
+            'size': [150, 50],
+            'state': false,
+            'text': 'ESP off',
+            'alternate': 'ESP on'
+        });
 
-          //CD Player 2 Controls
+        let trigMute_2 = new Nexus.Toggle('#2_toggleButton5', {
+            'size': [150, 50],
+            'state': false
+        });
 
-          Nexus.colors.accent = "#FFA07A";
-
-
-
-
-          let pb1_2 = new Nexus.TextButton('#2_toggleButton1', {
-          'size': [150, 50],
-          'state': false,
-          'text': 'Play',
-          'alternate': 'Pause'
-          });
+        let trigBend_2 = new Nexus.Toggle('#2_toggleButton6', {
+            'size': [150, 50],
+            'state': false
+        });
 
 
-          let sb1_2 = new Nexus.TextButton('#2_toggleButton2', {
-          'size': [150, 50],
-          'state': false,
-          'text': 'Stop'
-          });
+        //Collect info on connected boards from server, fill .availableBoards, and log to console
+        bendit.getConnectedBenditBoards();
 
-          let ffb1_2 = new Nexus.TextButton('#2_toggleButton3', {
-          'size': [150, 50],
-          'state': false,
-          'text': 'Forward'
-          });
+        //Init BenditDevices based on amount of connected boards
+        switch (bendit.availableBoards.length) {
+            case 1:
+                //init cd1 device
+                cd1 = bendit.addDevice(6, 0, 0, 1);
+                break;
+            case 2:
+                cd1 = bendit.addDevice(6, 0, 0, 1);
+                cd2 = bendit.addDevice({
+                    "switches": 6,
+                    "pots": 1,
+                    "motors": 0,
+                    "boardNumber": 2
+                });
+                break;
+        }
 
-          let espb1_2 = new Nexus.TextButton('#2_toggleButton4', {
-          'size': [150, 50],
-          'state': false,
-          'text': 'ESP off',
-          'alternate': 'ESP on'
-          });
+        //React to Messages from Bendit Boards
 
-          let trigMute_2 = new Nexus.Toggle('#2_toggleButton5', {
-          'size': [150, 50],
-          'state': false
-          });
+        /*
+                  switch (bendit.messageFromBoard.boardNumber) {
+                  case 1:
+                  //Disable Performer Controls
+                  if (bendit.messageFromBoard.content === "performer_2_disable_play") {
+                  pb1.size = [0, 0];
+                  } else if (bendit.messageFromBoard.content === "performer_2_disable_stop") {
+                  sb1.size = [0, 0];
+                  } else if (bendit.messageFromBoard.content === "performer_2_disable_forward") {
+                  ffb1.size = [0, 0];
+                  } else if (bendit.messageFromBoard.content === "performer_2_disable_esp") {
+                  espb1.size = [0, 0];
+                  } else if (bendit.messageFromBoard.content === "performer_2_disable_DRAMBend") {
+                  trigBend_1.size = [0, 0];
+                  }
+                  //Enable Performer Controls
+                  if (bendit.messageFromBoard.content === "performer_2_enable_play") {
+                  pb1.size = [150, 50];
+                  } else if (bendit.messageFromBoard.content === "performer_2_enable_stop") {
+                  sb1.size = [150, 50];
+                  } else if (bendit.messageFromBoard.content === "performer_2_enable_forward") {
+                  ffb1.size = [150, 50];
+                  } else if (bendit.messageFromBoard.content === "performer_2_enable_esp") {
+                  espb1.size = [150, 50];
+                  } else if (bendit.messageFromBoard.content === "performer_2_enable_DRAMBend") {
+                  trigBend_1.size = [150, 50];
+                  }
+                  break;
+                  case 2:
+                  //Disable Performer Controls
+                  if (bendit.messageFromBoard.content === "performer_1_disable_play") {
+                  pb1_2.size = [0, 0];
+                  } else if (bendit.messageFromBoard.content === "performer_1_disable_stop") {
+                  sb1_2.size = [0, 0];
+                  } else if (bendit.messageFromBoard.content === "performer_1_disable_forward") {
+                  ffb1_2.size = [0, 0];
+                  } else if (bendit.messageFromBoard.content === "performer_1_disable_esp") {
+                  espb1_2.size = [0, 0];
+                  } else if (bendit.messageFromBoard.content === "performer_1_disable_DRAMBend") {
+                  trigBend_2.size = [0, 0];
+                  }
+                  //Enable Performer Controls
+                  if (bendit.messageFromBoard.content === "performer_1_enable_play") {
+                  pb1_2.size = [150, 50];
+                  } else if (bendit.messageFromBoard.content === "performer_1_enable_stop") {
+                  sb1_2.size = [150, 50];
+                  } else if (bendit.messageFromBoard.content === "performer_1_enable_forward") {
+                  ffb1_2.size = [150, 50];
+                  } else if (bendit.messageFromBoard.content === "performer_1_enable_esp") {
+                  espb1_2.size = [150, 50];
+                  } else if (bendit.messageFromBoard.content === "performer_1_enable_DRAMBend") {
+                  trigBend_2.size = [150, 50];
+                  }
+                  break;
+                  };
 
-          let trigBend_2 = new Nexus.Toggle('#2_toggleButton6', {
-          'size': [150, 50],
-          'state': false
-          });
+                  
 
+        */
+        //For testing:
 
-          //React to Messages from Bendit Boards
+        if (bendit.receivedBoardMessage()) {
+            let messageValues = [];
+            messageValues = bendit.messageFromBoard.split(",");
+            console.log(`Got This Message from Board ${messageValues[0]}: ${messageValues[1]}`);
+        }
 
-/*
-          switch (bendit.messageFromBoard.boardNumber) {
-          case 1:
-          //Disable Performer Controls
-          if (bendit.messageFromBoard.content === "performer_2_disable_play") {
-          pb1.size = [0, 0];
-          } else if (bendit.messageFromBoard.content === "performer_2_disable_stop") {
-          sb1.size = [0, 0];
-          } else if (bendit.messageFromBoard.content === "performer_2_disable_forward") {
-          ffb1.size = [0, 0];
-          } else if (bendit.messageFromBoard.content === "performer_2_disable_esp") {
-          espb1.size = [0, 0];
-          } else if (bendit.messageFromBoard.content === "performer_2_disable_DRAMBend") {
-          trigBend_1.size = [0, 0];
-          }
-          //Enable Performer Controls
-          if (bendit.messageFromBoard.content === "performer_2_enable_play") {
-          pb1.size = [150, 50];
-          } else if (bendit.messageFromBoard.content === "performer_2_enable_stop") {
-          sb1.size = [150, 50];
-          } else if (bendit.messageFromBoard.content === "performer_2_enable_forward") {
-          ffb1.size = [150, 50];
-          } else if (bendit.messageFromBoard.content === "performer_2_enable_esp") {
-          espb1.size = [150, 50];
-          } else if (bendit.messageFromBoard.content === "performer_2_enable_DRAMBend") {
-          trigBend_1.size = [150, 50];
-          }
-          break;
-          case 2:
-          //Disable Performer Controls
-          if (bendit.messageFromBoard.content === "performer_1_disable_play") {
-          pb1_2.size = [0, 0];
-          } else if (bendit.messageFromBoard.content === "performer_1_disable_stop") {
-          sb1_2.size = [0, 0];
-          } else if (bendit.messageFromBoard.content === "performer_1_disable_forward") {
-          ffb1_2.size = [0, 0];
-          } else if (bendit.messageFromBoard.content === "performer_1_disable_esp") {
-          espb1_2.size = [0, 0];
-          } else if (bendit.messageFromBoard.content === "performer_1_disable_DRAMBend") {
-          trigBend_2.size = [0, 0];
-          }
-          //Enable Performer Controls
-          if (bendit.messageFromBoard.content === "performer_1_enable_play") {
-          pb1_2.size = [150, 50];
-          } else if (bendit.messageFromBoard.content === "performer_1_enable_stop") {
-          sb1_2.size = [150, 50];
-          } else if (bendit.messageFromBoard.content === "performer_1_enable_forward") {
-          ffb1_2.size = [150, 50];
-          } else if (bendit.messageFromBoard.content === "performer_1_enable_esp") {
-          espb1_2.size = [150, 50];
-          } else if (bendit.messageFromBoard.content === "performer_1_enable_DRAMBend") {
-          trigBend_2.size = [150, 50];
-          }
-          break;
-          };
+        //Set up controls for BenditDevices
 
-          
+        //Device 2 Pedal Controls
+        pot1.on('click', function (v) {
+            cd2.pots[0].setPot(v);
+        });
 
-*/
+        dev1_dial1.on('change', (v) => {
+            metroSpeed = v;
+        });
+        //CD 1 Controls
 
-//Device 2 Pedal Controls
-pot1.on('click', function (v) {
-cd2.pots[0].setPot(v);
-});
+        //Play Button
+        pb1.on('click', function () {
+            cd1.switches[0].setSwitch("close");
+        });
 
-dev1_dial1.on('change', (v) => {
-metroSpeed = v;
-});
-          //CD 1 Controls
+        pb1.on('release', function () {
+            cd1.switches[0].setSwitch("open");
+        });
+        //Stop Button
+        sb1.on('click', function () {
+            cd1.switches[1].setSwitch("close");
+        });
 
-          //Play Button
-          pb1.on('click', function () {
-          cd1.switches[0].setSwitch("close");
-          });
+        sb1.on('release', function () {
+            cd1.switches[1].setSwitch("open");
+        });
+        //Forward Seek Button
+        ffb1.on('click', function () {
+            cd1.switches[2].setSwitch("close");
 
-          pb1.on('release', function () {
-          cd1.switches[0].setSwitch("open");
-          });
-          //Stop Button
-          sb1.on('click', function () {
-          cd1.switches[1].setSwitch("close");
-          });
+        });
 
-          sb1.on('release', function () {
-          cd1.switches[1].setSwitch("open");
-          });
-          //Forward Seek Button
-          ffb1.on('click', function () {
-          cd1.switches[2].setSwitch("close");
+        ffb1.on('release', function () {
+            cd1.switches[2].setSwitch("open");
+        });
+        //ESP Toggle - needs .toggleSwitch to avoid holding system pin high for too long
+        espb1.on('change', function () {
+            cd1.switches[3].toggleSwitch(300);
+        });
 
-          });
+        //Mute Latch
+        trigMute_1.on('change', function () {
+            cd1.switches[4].flipSwitch();
+        });
 
-          ffb1.on('release', function () {
-          cd1.switches[2].setSwitch("open");
-          });
-          //ESP Toggle - needs .toggleSwitch to avoid holding system pin high for too long
-          espb1.on('change', function () {
-          cd1.switches[3].toggleSwitch(300);
-          });
-
-          //Mute Latch
-          trigMute_1.on('change', function () {
-          cd1.switches[4].flipSwitch();
-          });
-
-          //DRAM Bend
-          trigBend_1.on('change', function (v) {
-          cd1.switches[5].flipSwitch();
-          });
+        //DRAM Bend
+        trigBend_1.on('change', function (v) {
+            cd1.switches[5].flipSwitch();
+        });
 
 
-          //CD Player 2 Controls
+        //CD Player 2 Controls
 
-          //Play Button
-          pb1_2.on('click', function (v) {
-          cd1.switches[0].setSwitch("close");
-          });
+        //Play Button
+        pb1_2.on('click', function (v) {
+            cd1.switches[0].setSwitch("close");
+        });
 
-          pb1_2.on('release', function (v) {
-          cd1.switches[0].setSwitch("open");
-          });
+        pb1_2.on('release', function (v) {
+            cd1.switches[0].setSwitch("open");
+        });
 
-          //Stop Button
-          sb1_2.on('click', function (v) {
-          cd1.switches[1].setSwitch("close");
+        //Stop Button
+        sb1_2.on('click', function (v) {
+            cd1.switches[1].setSwitch("close");
 
-          });
+        });
 
-          sb1_2.on('release', function (v) {
-          cd1.switches[1].setSwitch("open");
+        sb1_2.on('release', function (v) {
+            cd1.switches[1].setSwitch("open");
 
-          });
+        });
 
-          //Forward Seek Button
-          ffb1_2.on('click', function (v) {
-          cd1.switches[2].setSwitch("close");
-          });
+        //Forward Seek Button
+        ffb1_2.on('click', function (v) {
+            cd1.switches[2].setSwitch("close");
+        });
 
-          ffb1_2.on('release', function (v) {
-          cd1.switches[2].setSwitch("open");
-          })
+        ffb1_2.on('release', function (v) {
+            cd1.switches[2].setSwitch("open");
+        })
 
-          //ESP Toggle - needs .toggleSwitch to avoid holding system pin high for too long
-          espb1_2.on('change', function () {
-          cd2.switches[4].toggleSwitch(300);
-          });
+        //ESP Toggle - needs .toggleSwitch to avoid holding system pin high for too long
+        espb1_2.on('change', function () {
+            cd2.switches[4].toggleSwitch(300);
+        });
 
-          //Mute Latch
-          trigMute_2.on('change', function (v) {
-          cd2.switches[3].flipSwitch();
-          });
+        //Mute Latch
+        trigMute_2.on('change', function (v) {
+            cd2.switches[3].flipSwitch();
+        });
 
-          //DRAM Bend
-          trigBend_2.on('change', function (v) {
-          cd2.switches[5].flipSwitch();
-          });
+        //DRAM Bend
+        trigBend_2.on('change', function (v) {
+            cd2.switches[5].flipSwitch();
+        });
     </script>
 </body>
 
