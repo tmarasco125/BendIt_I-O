@@ -258,7 +258,7 @@ Hub.prototype.init = function(sio,publicFolder,thePort) {
 
     var app = express();
     app.use(express.static(publicFolder));
-    console.log("Servivg files from " + publicFolder + " folder");
+    console.log("Serving files from " + publicFolder + " folder");
 
     // server is the node server (web app via express)
     // this code can launch the server on port 80 and switch the user id away from sudo

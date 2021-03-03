@@ -2,7 +2,7 @@
 //*  BenditHub: Server-side Library for Building Bendit_I/O*
 //   Servers                                               *
 //*	 by Anthony T. Marasco                                 *
-//*  v1.0 - 2020                                           *
+//*  v1.1.0 - 2021                                         *
 //*  Published under a Attribution-NonCommercial 4.0       *
 //*  International (CC BY-NC 4.0) License                  *
 //**********************************************************
@@ -19,7 +19,7 @@ class BenditHub {
         this.collectAssignedBoardData = this.collectAssignedBoardData.bind(this);
         this.removeBoardOnDisconnect = this.removeBoardOnDisconnect.bind(this);
 
-        this.version = 1.0;
+        this.version = "1.1.0";
         this.serverPort = process.env.PORT || 80;
         this.connectedUsers = [];
         this.connectedBenditBoards = [];
@@ -67,7 +67,7 @@ class BenditHub {
         // this.connectedBenditBoards.splice(this.connectedBenditBoards.findIndex(this.connectedBenditBoards, function (item) {
         //     return item.value === id;
         // }), 1);
-    };
+    }
 
     // myArray.splice(myArray.findIndex(myArray, function (item) {
     //     return item.value === 'money';
@@ -146,7 +146,7 @@ class BenditHub {
             socket.on('message_from_board', (data)=>{
                
                 console.log(`Got this from Board ${data.Board}: ${data}`);
-                let payload = data.Board + "," + Math.floor(Math.random() * Math.floor(127));
+                //let payload = data.Board + "," + Math.floor(Math.random() * Math.floor(127));
                 payload.toString();
                 console.log(`Sending this message from Board ${data.Board} to all clients: ${payload}`);
                 socket.broadcast.emit('fromBoard', payload);
