@@ -146,7 +146,7 @@ class BenditHub {
             socket.on('message_from_board', (data)=>{
                
                 console.log(`Got this from Board ${data.Board}: ${data}`);
-                //let payload = data.Board + "," + Math.floor(Math.random() * Math.floor(127));
+                let payload = data.Board + "," + Math.floor(Math.random() * Math.floor(127));
                 payload.toString();
                 console.log(`Sending this message from Board ${data.Board} to all clients: ${payload}`);
                 socket.broadcast.emit('fromBoard', payload);
@@ -351,7 +351,7 @@ class BenditHub {
                 // module.exports.collectAssignedDeviceData(socket.boardAssignedData);
                 //return socket.boardAssignedData
                 this.connectedBenditBoards.push(socket.boardAssignedData);
-                console.log("this works!");
+                
                 console.log(this.connectedBenditBoards);
 
             });
