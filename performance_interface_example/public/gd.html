@@ -240,7 +240,7 @@
 
         //Collect info on connected boards from server, fill .availableBoards, and log to console
         bendit.getConnectedBenditBoards(() => {
-
+            console.log("callback works" + " " + bendit.availableBoards.length);
             //Init BenditDevices based on amount of connected boards
             switch (bendit.availableBoards.length) {
                 case 1:
@@ -392,31 +392,31 @@
 
         //Play Button
         pb1_2.on('click', function (v) {
-            cd1.switches[0].setSwitch("closed");
+            cd2.switches[0].setSwitch("closed");
         });
 
         pb1_2.on('release', function (v) {
-            cd1.switches[0].setSwitch("open");
+            cd2.switches[0].setSwitch("open");
         });
 
         //Stop Button
         sb1_2.on('click', function (v) {
-            cd1.switches[1].setSwitch("closed");
+            cd2.switches[1].setSwitch("closed");
 
         });
 
         sb1_2.on('release', function (v) {
-            cd1.switches[1].setSwitch("open");
+            cd2.switches[1].setSwitch("open");
 
         });
 
         //Forward Seek Button
         ffb1_2.on('click', function (v) {
-            cd1.switches[2].setSwitch("closed");
+            cd2.switches[2].setSwitch("closed");
         });
 
         ffb1_2.on('release', function (v) {
-            cd1.switches[2].setSwitch("open");
+            cd2.switches[2].setSwitch("open");
         })
 
         //ESP Toggle - needs .toggleSwitch to avoid holding system pin high for too long

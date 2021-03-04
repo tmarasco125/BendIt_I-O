@@ -35,7 +35,7 @@ require = (function e(t, n, r) {
             *  International (CC BY-NC 4.0) License                  *
         =============================================================================
         */
-        
+
         /** 
         Bendit Browser JS
           @name benditBrowser.js
@@ -112,7 +112,7 @@ require = (function e(t, n, r) {
 
                 this._socket.emit('grab_board_list');
 
-                this._socket.on('fromBoard', (data)=>{
+                this._socket.on('fromBoard', (data) => {
                     let currentMessage = data;
 
                     this.messageFromBoard = currentMessage;
@@ -164,25 +164,26 @@ require = (function e(t, n, r) {
                         console.log("There are no Bendit boards connected.");
                     }
 
+                    let newCallbackMethod = aCallback;
+                    if (aCallback === null) {
+
+                    } else {
+                        newCallbackMethod();
+                    }
 
                 }, 800);
 
-                let newCallbackMethod = aCallback;
-                if (aCallback === null) {
 
-                } else {
-                    newCallbackMethod();
-                }
             };
 
-           receivedBoardMessage() {
-               if (this.messageFromBoard === undefined || this.messageFromBoard === null || this.messageFromBoard === '') {
-                   return false;
-               } else {
-                   return true;
-               }
+            receivedBoardMessage() {
+                if (this.messageFromBoard === undefined || this.messageFromBoard === null || this.messageFromBoard === '') {
+                    return false;
+                } else {
+                    return true;
+                }
 
-           };
+            };
 
             /**
              * Creates an instance of the BenditDevice class and adds that object to the Bendit.devices array.
@@ -571,7 +572,7 @@ require = (function e(t, n, r) {
 
                 setTimeout(() => {
                     this.state = !this.state;
-                  
+
                     this._socket.emit('switchEvent', {
                         switch_number: this.number,
                         state: this.state,
