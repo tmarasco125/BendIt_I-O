@@ -159,22 +159,22 @@ require = (function e(t, n, r) {
                         this.availableBoards != null &&
                         this.availableBoards.length != null &&
                         this.availableBoards.length > 0) {
-                        console.log(this.availableBoards);
+                        console.log(this.availableBoards);  
                     } else {
                         console.log("There are no Bendit boards connected.");
+                        return null;
                     }
-
+                    //accept and execute callback function passed in
                     let newCallbackMethod = aCallback;
-                    if (aCallback === null) {
 
+                    if (aCallback === null) {
+                        //do nothing
                     } else {
                         newCallbackMethod();
                     }
-
+                     return this.availableBoards;
                 }, 800);
-
-
-            };
+            }
 
             receivedBoardMessage() {
                 if (this.messageFromBoard === undefined || this.messageFromBoard === null || this.messageFromBoard === '') {
