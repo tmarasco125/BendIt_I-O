@@ -165,11 +165,12 @@ require = (function e(t, n, r) {
                         return null;
                     }
                     //accept and execute callback function passed in
-                    let newCallbackMethod = aCallback;
+                    
 
                     if (aCallback === null) {
                         //do nothing
                     } else {
+                        let newCallbackMethod = aCallback;
                         newCallbackMethod();
                     }
                      return this.availableBoards;
